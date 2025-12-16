@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terceirizados - Governo de Minas Gerais</title>
+    
+    <!-- ==================== ESTILOS E BIBLIOTECAS ==================== -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* ==================== VARIÁVEIS DE CORES ==================== */
+        :root {
+            --primary-dark: #2C5530;
+            --primary-darker: #1B3B1F;
+            --accent-green: #4CAF50;
+            --accent-bright: #8BC34A;
+            --background-light: #F5F7F0;
+            --success-green: #28a745;
+            --warning-yellow: #ffc107;
+            --info-blue: #17a2b8;
+            --secondary-blue: #3F704D;
+            --secondary-brown: #8B7355;
+            --secondary-teal: #20B2AA;
+        }
+        
+        /* ==================== ESTILOS GERAIS ==================== */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-light);
+            padding-bottom: 30px;
+        }
+        
+        /* ==================== HEADER PRINCIPAL ==================== */
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-darker) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom: 4px solid var(--accent-green);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-bright) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            box-shadow: 0 3px 8px rgba(139, 195, 74, 0.25);
+        }
+        
+        .header-title {
+            font-weight: 700;
+            font-size: 22px;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .header-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 5px 0 0 0;
+        }
+
+        .header-info {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .link-legislacao {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.3s;
+        }
+        
+        .link-legislacao:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .badge-atualizacao-header {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+        }
+        
+        /* ==================== FILTROS ==================== */
+        .filter-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--accent-green);
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            height: 42px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+        }
+        
+        /* ==================== CARDS DE MÉTRICAS ==================== */
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            border-top: 4px solid var(--accent-green);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            cursor: default;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-card.primary {
+            border-top-color: var(--primary-dark);
+        }
+        
+        .metric-card.success {
+            border-top-color: var(--success-green);
+        }
+        
+        .metric-card.warning {
+            border-top-color: var(--warning-yellow);
+        }
+        
+        .metric-card.info {
+            border-top-color: var(--info-blue);
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 8px 0;
+            line-height: 1;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: var(--primary-darker);
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .metric-change {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .metric-change.positive {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-green);
+        }
+        
+        /* ==================== CONTAINER DE GRÁFICOS ==================== */
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            height: 100%;
+            min-height: 280px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--background-light);
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin: 0;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 220px;
+            width: 100%;
+        }
+        
+        /* ==================== TABELAS ==================== */
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .table-badge {
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* Container para tabela com cabeçalho fixo */
+        .table-fixed-header-container {
+            position: relative;
+            max-height: 500px;
+            overflow: auto;
+            padding: 0;
+        }
+        
+        /* Cabeçalho fixo para todas as tabelas */
+        .table-fixed-header-container table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f8f9fa !important;
+        }
+        
+        .table-fixed-header-container table thead th {
+            background-color: #f8f9fa !important;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+        
+        .table-responsive {
+            padding: 0;
+            overflow-x: auto;
+        }
+        
+        .table {
+            margin: 0;
+            width: 100%;
+            font-size: 13px;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa !important;
+            color: var(--primary-dark);
+            font-weight: 600;
+            border: none;
+            padding: 12px 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            white-space: nowrap;
+        }
+        
+        .sort-icon {
+            opacity: 0.5;
+            margin-left: 4px;
+            font-size: 9px;
+            transition: opacity 0.2s ease;
+        }
+        
+        .table thead th:hover {
+            background-color: #f1f3f5 !important;
+        }
+        
+        .table thead th:hover .sort-icon {
+            opacity: 1;
+        }
+        
+        .table thead th.sorted-asc .sort-icon,
+        .table thead th.sorted-desc .sort-icon {
+            opacity: 1;
+        }
+        
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .table tbody tr:hover {
+            background-color: rgba(44, 85, 48, 0.04);
+        }
+        
+        .table tbody td {
+            padding: 12px 10px;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+        
+        /* ==================== BOTÕES ==================== */
+        .btn-primary-custom {
+            background: linear-gradient(to right, var(--accent-green), var(--accent-bright));
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: linear-gradient(to right, var(--accent-bright), var(--accent-green));
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 195, 74, 0.2);
+            color: white;
+        }
+        
+        .btn-secondary-custom {
+            background: white;
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+            padding: 10px 20px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        
+        .btn-secondary-custom:hover {
+            background-color: var(--primary-dark);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44, 85, 48, 0.15);
+        }
+        
+        .btn-export {
+            background: white;
+            border: 2px solid var(--primary-dark);
+            color: var(--primary-dark);
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        
+        .btn-export:hover {
+            background: var(--primary-dark);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        /* ==================== MENU DE NAVEGAÇÃO ==================== */
+        .nav-tabs-container {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+        
+        .nav-tabs {
+            border: none;
+            gap: 4px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            transition: all 0.3s ease;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            background-color: rgba(44, 85, 48, 0.05);
+            color: var(--accent-green);
+        }
+        
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+            color: white;
+        }
+        
+        /* ==================== AÇÕES ==================== */
+        .actions-container {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        /* ==================== LOADING OVERLAY ==================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(44, 85, 48, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-green);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ==================== RODAPÉ DA TABELA ==================== */
+        .table-total-row {
+            background-color: #f8f9fa !important;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .table-total-row td {
+            border-top: 2px solid #dee2e6 !important;
+        }
+
+        /* ==================== LINK CLICÁVEL ==================== */
+        .orgao-link {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .orgao-link:hover {
+            color: var(--accent-green);
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        
+        /* ==================== PAGINAÇÃO ==================== */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-top: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .pagination-info {
+            font-size: 12px;
+            color: var(--primary-darker);
+            font-weight: 600;
+        }
+        
+        .pagination .page-link {
+            border: 1px solid #dee2e6;
+            color: var(--primary-dark);
+            padding: 6px 10px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .pagination .page-link:hover {
+            background-color: var(--background-light);
+            color: var(--primary-dark);
+        }
+        
+        /* Itens por página */
+        .items-per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .items-per-page select {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            width: auto;
+            min-width: 70px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .items-per-page select option {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+        
+        /* ==================== CARDS ==================== */
+        .card-stats {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .card-stats .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin: 8px 0;
+        }
+
+        .card-stats .label {
+            font-size: 12px;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .card-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: var(--primary-dark);
+            font-size: 0.85rem;
+            border-top: 1px solid #dee2e6;
+            margin-top: 30px;
+        }
+        
+        /* ==================== BUSCA RÁPIDA ==================== */
+        .search-box-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-box-container label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        .search-box-container input {
+            border: 2px solid var(--primary-dark) !important;
+            border-radius: 6px !important;
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+            transition: all 0.3s ease !important;
+            width: 100% !important;
+            max-width: 300px !important;
+        }
+        
+        .search-box-container input:focus {
+            border-color: var(--accent-green) !important;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15) !important;
+            outline: none !important;
+        }
+        
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 15px 0;
+                margin-bottom: 20px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .header-title {
+                font-size: 18px;
+            }
+            
+            .header-subtitle {
+                font-size: 12px;
+            }
+            
+            .header-info {
+                justify-content: center;
+            }
+            
+            .metric-value {
+                font-size: 20px;
+            }
+            
+            .actions-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .export-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            .table-responsive {
+                font-size: 12px;
+            }
+            
+            .table thead th,
+            .table tbody td {
+                padding: 8px 6px;
+                font-size: 11px;
+            }
+            
+            .pagination-container {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                padding: 8px 15px;
+                font-size: 12px;
+            }
+            
+            .search-box-container {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .filter-container .row > div {
+                margin-bottom: 10px;
+            }
+            
+            .chart-container {
+                min-height: 240px;
+            }
+            
+            .chart-wrapper {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== LOADING OVERLAY ==================== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- ==================== HEADER PRINCIPAL ==================== -->
+    <header class="main-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h1 class="header-title">Empregados Terceirizados</h1>
+                        <p class="header-subtitle">Governo do Estado de Minas Gerais - Dados de Empregados Terceirizados</p>
+                        <div class="header-info">
+                            <a href="https://dados.mg.gov.br/" target="_blank" class="link-legislacao">
+                                <i class="fas fa-external-link-alt"></i> Portal de Dados Abertos MG
+                            </a>
+                            <span class="badge-atualizacao-header">
+                                <i class="fas fa-sync-alt"></i> Última atualização: <span id="data-atualizacao-header">Carregando...</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botão de Upload CSV -->
+                <div class="text-end">
+                    <label for="csvUpload" class="btn-export" style="cursor: pointer; margin-left: 10px; background: white; color: var(--primary-dark);">
+                        <i class="fas fa-upload me-2"></i> Upload CSV
+                    </label>
+                    <input type="file" id="csvUpload" accept=".csv" style="display: none;">
+                    <small class="text-white d-block mt-1" style="font-size: 10px;">Planilhas: relacao_empregados_mgs_xxxx.csv</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+    <div class="container">
+        <!-- ==================== MENU DE NAVEGAÇÃO ==================== -->
+        <div class="nav-tabs-container">
+            <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="dashboard1-tab" data-bs-toggle="tab" data-bs-target="#dashboard1" type="button" role="tab">
+                        <i class="fas fa-chart-bar me-2"></i>Visão Geral
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dashboard2-tab" data-bs-toggle="tab" data-bs-target="#dashboard2" type="button" role="tab">
+                        <i class="fas fa-user-tie me-2"></i>Consulta Individual
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dashboard3-tab" data-bs-toggle="tab" data-bs-target="#dashboard3" type="button" role="tab">
+                        <i class="fas fa-table me-2"></i>Downloads
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ==================== CONTEÚDO DAS ABAS ==================== -->
+        <div class="tab-content" id="dashboardTabsContent">
+            
+            <!-- ==================== DASHBOARD 1: VISÃO GERAL ==================== -->
+            <div class="tab-pane fade show active" id="dashboard1" role="tabpanel">
+                
+                <!-- Filtros Dashboard 1 -->
+                <div class="filter-container">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="anoDashboard1" class="form-label filter-label">Ano</label>
+                                <select class="form-select" id="anoDashboard1">
+                                    <!-- Opções serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="mesDashboard1" class="form-label filter-label">Mês</label>
+                                <select class="form-select" id="mesDashboard1">
+                                    <option value="all">Todos os Meses</option>
+                                    <option value="01">Janeiro</option>
+                                    <option value="02">Fevereiro</option>
+                                    <option value="03">Março</option>
+                                    <option value="04">Abril</option>
+                                    <option value="05">Maio</option>
+                                    <option value="06">Junho</option>
+                                    <option value="07">Julho</option>
+                                    <option value="08">Agosto</option>
+                                    <option value="09">Setembro</option>
+                                    <option value="10">Outubro</option>
+                                    <option value="11">Novembro</option>
+                                    <option value="12">Dezembro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="orgaoDashboard1" class="form-label filter-label">Órgão</label>
+                                <input type="text" class="form-control" list="orgaosListDashboard1" id="orgaoDashboard1" placeholder="Digite ou selecione...">
+                                <datalist id="orgaosListDashboard1">
+                                    <option value="all">Todos os Órgãos</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="cargoDashboard1" class="form-label filter-label">Cargo</label>
+                                <input type="text" class="form-control" list="cargosListDashboard1" id="cargoDashboard1" placeholder="Digite ou selecione...">
+                                <datalist id="cargosListDashboard1">
+                                    <option value="all">Todos os Cargos</option>
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn-primary-custom" id="aplicarFiltros">
+                                    <i class="fas fa-filter me-2"></i>Pesquisar
+                                </button>
+                                <button class="btn-secondary-custom" id="limparFiltros">
+                                    <i class="fas fa-redo me-2"></i>Limpar Filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards de Estatísticas Dashboard 1 -->
+                <div class="row mb-4" id="summaryCards">
+                    <!-- Cards serão carregados aqui -->
+                </div>
+
+                <!-- Gráficos Dashboard 1 -->
+                <div class="row mb-4">
+                    <div class="col-md-4 col-12">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4 class="chart-title">Empregados por Órgão</h4>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartOrgao"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4 class="chart-title">Empregados por Cargo</h4>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartCargo"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <div class="chart-container">
+                            <div class="chart-header">
+                                <h4 class="chart-title">Empregados por Empresa</h4>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartEmpresa"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ações Dashboard 1 -->
+                <div class="actions-container mb-4">
+                    <div class="export-buttons">
+                        <button class="btn-export" id="exportCSVDashboard1">
+                            <i class="fas fa-file-csv me-2"></i> CSV
+                        </button>
+                        <button class="btn-export" id="exportExcelDashboard1">
+                            <i class="fas fa-file-excel me-2"></i> Excel
+                        </button>
+                        <button class="btn-export" id="printDashboard1">
+                            <i class="fas fa-print me-2"></i> Imprimir
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabela Dashboard 1 -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Visão Geral por Órgão e Cargo</h3>
+                        <div class="d-flex align-items-center gap-3 ms-auto">
+                            <div class="items-per-page">
+                                <span>Itens por página:</span>
+                                <select id="itemsPerPageDashboard1">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <span class="table-badge" id="resumoCountDashboard1">0 registros</span>
+                        </div>
+                    </div>
+                    <div class="table-fixed-header-container">
+                        <table class="table table-hover" id="visaoGeralTable">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('visaoGeral', 'orgao')">
+                                        Órgão <span class="sort-icon">▼</span>
+                                    </th>
+                                    <th onclick="sortTable('visaoGeral', 'cargo')">
+                                        Cargo <span class="sort-icon">▼</span>
+                                    </th>
+                                    <th onclick="sortTable('visaoGeral', 'quantidade')">
+                                        Quantidade de Empregados <span class="sort-icon">▼</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="resumoTableBody">
+                                <!-- Dados serão carregados aqui -->
+                            </tbody>
+                            <tfoot id="resumoTableFooter">
+                                <!-- Total geral será carregado aqui -->
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- Paginação Dashboard 1 -->
+                    <div class="pagination-container">
+                        <div class="pagination-info" id="paginationInfoDashboard1">
+                            Mostrando 0-0 de 0 registros
+                        </div>
+                        <nav aria-label="Paginação">
+                            <ul class="pagination mb-0" id="paginationDashboard1">
+                                <!-- Paginação será gerada aqui -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                
+            </div> <!-- Fim Dashboard 1 -->
+
+            <!-- ==================== DASHBOARD 2: CONSULTA INDIVIDUAL ==================== -->
+            <div class="tab-pane fade" id="dashboard2" role="tabpanel">
+                
+                <!-- Filtros Dashboard 2 -->
+                <div class="filter-container">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="anoDashboard2" class="form-label filter-label">Ano</label>
+                                <select class="form-select" id="anoDashboard2">
+                                    <!-- Opções serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="mesDashboard2" class="form-label filter-label">Mês Referência</label>
+                                <input type="text" class="form-control" id="mesDashboard2" placeholder="MM/AAAA">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="nomeEmpregado" class="form-label filter-label">Nome do Empregado</label>
+                                <input type="text" class="form-control" id="nomeEmpregado" placeholder="Digite o nome...">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="cargoDashboard2" class="form-label filter-label">Cargo</label>
+                                <input type="text" class="form-control" list="cargosListDashboard2" id="cargoDashboard2" placeholder="Digite ou selecione...">
+                                <datalist id="cargosListDashboard2">
+                                    <option value="all">Todos os Cargos</option>
+                                </datalist>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="empresaDashboard2" class="form-label filter-label">Empresa</label>
+                                <input type="text" class="form-control" list="empresasListDashboard2" id="empresaDashboard2" placeholder="Digite ou selecione...">
+                                <datalist id="empresasListDashboard2">
+                                    <option value="all">Todas as Empresas</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="orgaoDashboard2" class="form-label filter-label">Órgão</label>
+                                <input type="text" class="form-control" list="orgaosListDashboard2" id="orgaoDashboard2" placeholder="Digite ou selecione...">
+                                <datalist id="orgaosListDashboard2">
+                                    <option value="all">Todos os Órgãos</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="matriculaDashboard2" class="form-label filter-label">Matrícula</label>
+                                <input type="text" class="form-control" id="matriculaDashboard2" placeholder="Digite a matrícula...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn-primary-custom" id="pesquisarEmpregados">
+                                    <i class="fas fa-search me-2"></i>Pesquisar
+                                </button>
+                                <button class="btn-secondary-custom" id="limparFiltrosDashboard2">
+                                    <i class="fas fa-times me-2"></i>Limpar Filtros
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo de Busca de Registros Dashboard 2 -->
+                <div class="actions-container mb-4">
+                    <div class="export-buttons">
+                        <button class="btn-export" id="exportCSVDashboard2">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                        <button class="btn-export" id="exportExcelDashboard2">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
+                        <button class="btn-export" id="printDashboard2">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    </div>
+
+                    <div class="search-box-container">
+                        <label for="searchEmpregados">Buscar registros:</label>
+                        <input type="text" id="searchEmpregados" placeholder="Buscar por nome, cargo, empresa ou órgão...">
+                    </div>
+                </div>
+
+                <!-- Tabela de Empregados Dashboard 2 -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Consulta Individual de Empregados</h3>
+                        <div class="d-flex align-items-center gap-3 ms-auto">
+                            <div class="items-per-page">
+                                <span>Itens por página:</span>
+                                <select id="itemsPerPageDashboard2">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                            <span class="table-badge" id="resumoCountDashboard2">0 empregados</span>
+                        </div>
+                    </div>
+                    <div class="table-fixed-header-container">
+                        <table class="table table-hover" id="empregadosTable">
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('empregados', 'matricula')">Matrícula <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'nome')">Nome <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'orgao')">Órgão <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'cargo')">Cargo <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'empresa')">Empresa <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'cnpj')">CNPJ Empresa <span class="sort-icon">▼</span></th>
+                                    <th onclick="sortTable('empregados', 'mes_referencia')">Mês Referência <span class="sort-icon">▼</span></th>
+                                </tr>
+                            </thead>
+                            <tbody id="empregadosTableBody">
+                                <!-- Dados serão carregados aqui -->
+                            </tbody>
+                            <tfoot id="empregadosTableFooter">
+                                <!-- Total geral será carregado aqui -->
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <!-- Paginação Dashboard 2 -->
+                    <div class="pagination-container">
+                        <div class="pagination-info" id="paginationInfoDashboard2">
+                            Mostrando 0-0 de 0 registros
+                        </div>
+                        <nav aria-label="Paginação">
+                            <ul class="pagination mb-0" id="paginationDashboard2">
+                                <!-- Paginação será gerada aqui -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                
+            </div> <!-- Fim Dashboard 2 -->
+
+            <!-- ==================== DASHBOARD 3: DOWNLOADS ==================== -->
+            <div class="tab-pane fade" id="dashboard3" role="tabpanel">
+                
+                <!-- Filtros Dashboard 3 -->
+                <div class="filter-container">
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="anoDownload" class="form-label filter-label">Ano</label>
+                                <select class="form-select" id="anoDownload">
+                                    <!-- Opções serão carregadas dinamicamente -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="mesDownload" class="form-label filter-label">Mês Referência</label>
+                                <input type="text" class="form-control" id="mesDownload" placeholder="MM/AAAA">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="formatoDownload" class="form-label filter-label">Formato</label>
+                                <select class="form-select" id="formatoDownload">
+                                    <option value="csv">CSV</option>
+                                    <option value="excel">Excel</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex gap-3 flex-wrap">
+                                <button class="btn-primary-custom" id="btnDownloadDados">
+                                    <i class="fas fa-download me-2"></i>Baixar Dados
+                                </button>
+                                <a href="https://dados.mg.gov.br/" 
+                                   class="btn-secondary-custom" 
+                                   id="btnPortalDadosAbertos"
+                                   target="_blank">
+                                    <i class="fas fa-external-link-alt me-2"></i>Acessar Portal de Dados Abertos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informações sobre as tabelas Dashboard 3 -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Metadados e Informações</h3>
+                    </div>
+                    <div class="p-4">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="card-stats">
+                                    <i class="fas fa-database fa-3x mb-3" style="color: var(--primary-dark);"></i>
+                                    <h4>Metadados dos Dados</h4>
+                                    <p class="text-muted" style="font-size: 13px;">Informações sobre a estrutura dos dados de empregados terceirizados</p>
+                                    <div class="mt-3">
+                                        <a href="#metadados" class="btn-export w-100 d-block text-decoration-none" onclick="scrollToMetadados()">
+                                            <i class="fas fa-info-circle me-2"></i>Ver Metadados
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="card-stats">
+                                    <i class="fas fa-upload fa-3x mb-3" style="color: var(--primary-dark);"></i>
+                                    <h4>Upload de Planilhas</h4>
+                                    <p class="text-muted" style="font-size: 13px;">Faça upload das planilhas anuais de empregados terceirizados</p>
+                                    <div class="mt-3">
+                                        <button class="btn-export w-100 d-block" onclick="showUploadSection()">
+                                            <i class="fas fa-upload me-2"></i>Fazer Upload
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4" id="metadados">
+                            <h5 class="mb-3">Metadados - Estrutura dos Dados</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Campo</th>
+                                            <th>Descrição</th>
+                                            <th>Tipo</th>
+                                            <th>Exemplo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>MAT.</td>
+                                            <td>Matrícula do empregado terceirizado</td>
+                                            <td>Texto/Número</td>
+                                            <td>12345</td>
+                                        </tr>
+                                        <tr>
+                                            <td>NOME</td>
+                                            <td>Nome completo do empregado terceirizado</td>
+                                            <td>Texto</td>
+                                            <td>JOÃO DA SILVA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ÓRGÃO</td>
+                                            <td>Órgão de trabalho do empregado</td>
+                                            <td>Texto</td>
+                                            <td>SECRETARIA DE EDUCAÇÃO</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CARGO</td>
+                                            <td>Cargo exercido pelo empregado</td>
+                                            <td>Texto</td>
+                                            <td>AUXILIAR ADMINISTRATIVO</td>
+                                        </tr>
+                                        <tr>
+                                            <td>EMPRESA</td>
+                                            <td>Nome da empresa terceirizada</td>
+                                            <td>Texto</td>
+                                            <td>EMPRESA XYZ LTDA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CNPJ EMPRESA</td>
+                                            <td>CNPJ da empresa terceirizada</td>
+                                            <td>Texto (14 dígitos)</td>
+                                            <td>12.345.678/0001-90</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MÊS REFERÊNCIA</td>
+                                            <td>Mês do contrato de trabalho (formato dd/mm/aaaa)</td>
+                                            <td>Data</td>
+                                            <td>01/01/2024</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="alert alert-info mt-3">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Formato das Planilhas:</strong> Os arquivos CSV devem seguir o padrão: relacao_empregados_mgs_XXXX.csv, onde XXXX é o ano (ex: relacao_empregados_mgs_2024.csv)
+                            </div>
+                        </div>
+
+                        <!-- Upload de Dados CSV -->
+                        <div class="filter-container mt-4" id="uploadSection" style="display: none;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mb-3"><i class="fas fa-upload me-2"></i>Upload de Planilhas CSV</h5>
+                                    <div class="card border">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label filter-label">Selecionar arquivo CSV</label>
+                                                        <input type="file" class="form-control" id="csvFileInput" accept=".csv">
+                                                        <small class="text-muted">Formatos suportados: CSV com ponto-e-vírgula (;) como separador</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label filter-label">Opções</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="appendData" checked>
+                                                            <label class="form-check-label" for="appendData">
+                                                                Adicionar aos dados existentes
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="validateData" checked>
+                                                            <label class="form-check-label" for="validateData">
+                                                                Validar dados antes de importar
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="d-flex gap-3 flex-wrap">
+                                                        <button class="btn-primary-custom" id="btnProcessCSV">
+                                                            <i class="fas fa-cogs me-2"></i>Processar CSV
+                                                        </button>
+                                                        <button class="btn-secondary-custom" id="btnDownloadTemplate">
+                                                            <i class="fas fa-download me-2"></i>Baixar Template
+                                                        </button>
+                                                        <button class="btn-secondary-custom" id="btnClearData">
+                                                            <i class="fas fa-trash me-2"></i>Limpar Todos os Dados
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mt-3" id="uploadStatus">
+                                                <!-- Status será mostrado aqui -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> <!-- Fim Dashboard 3 -->
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer mt-4 pt-4 border-top">
+        <div class="container text-center text-muted">
+            <p class="mb-1">
+                <i class="fas fa-sync-alt me-2"></i> 
+                Data de Atualização — 
+                <span id="footer-atualizacao">Carregando...</span>
+            </p>
+            <p class="mb-0" style="font-size: 0.85rem;">
+                © 2025 Empregados Terceirizados - Governo do Estado de Minas Gerais
+            </p>
+            <p class="mt-2 mb-0 small">
+                <a href="https://dados.mg.gov.br" style="color: var(--primary-dark); text-decoration: none; font-weight: 600;">
+                    <i class="fas fa-external-link-alt"></i> dados.mg.gov.br
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <!-- jQuery e DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ============================================
+        // VARIÁVEIS GLOBAIS
+        // ============================================
+        let terceirizadosData = [];
+        let filteredData = [];
+        let currentPageDashboard1 = 1;
+        let currentPageDashboard2 = 1;
+        let itemsPerPageDashboard1 = 50;
+        let itemsPerPageDashboard2 = 50;
+        let charts = {};
+        
+        const chartColors = {
+            primary: '#2C5530',
+            accent: '#4CAF50',
+            bright: '#8BC34A',
+            dark: '#1B3B1F',
+            secondaryBlue: '#3F704D',
+            secondaryBrown: '#8B7355',
+            secondaryTeal: '#20B2AA'
+        };
+
+        // ==================== FUNÇÕES DE INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== INICIANDO DASHBOARD TERCEIRIZADOS ===');
+
+            terceirizadosData = [];
+            filteredData = [];
+            
+            updateDataAtualizacao();
+            updateFilterOptions();
+            updateDashboard1();
+            initializeDashboard2();
+            updateDashboard3();
+            setupEventListeners();
+        });
+
+        // ==================== FUNÇÕES DE UPLOAD CSV ====================
+
+        // Função para baixar template
+        function downloadTemplate() {
+            const template = `MAT.;NOME;ÓRGÃO;CARGO;EMPRESA;CNPJ EMPRESA;MÊS REFERÊNCIA
+12345;JOÃO DA SILVA;SECRETARIA DE EDUCAÇÃO;AUXILIAR ADMINISTRATIVO;EMPRESA XYZ LTDA;12.345.678/0001-90;01/01/2024
+12346;MARIA SANTOS;SECRETARIA DE SAÚDE;ASSISTENTE ADMINISTRATIVO;EMPRESA ABC LTDA;98.765.432/0001-10;01/01/2024
+12347;PEDRO ALVES;POLICIA CIVIL;VIGILANTE;SEGURANÇA TOTAL LTDA;11.222.333/0001-44;01/01/2024`;
+            
+            const blob = new Blob([template], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'template_terceirizados.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Função para processar CSV
+        function processCSV(file) {
+            showLoading(true);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csvContent = e.target.result;
+                    const lines = csvContent.split('\n');
+                    
+                    // Detectar separador
+                    const firstLine = lines[0];
+                    const isSemicolonSeparated = firstLine.includes(';');
+                    const separator = isSemicolonSeparated ? ';' : ',';
+                    
+                    const headers = lines[0].split(separator).map(h => h.trim());
+                    
+                    // Validar cabeçalhos
+                    const requiredHeaders = [
+                        'MAT.', 'NOME', 'ÓRGÃO', 'CARGO', 'EMPRESA', 'CNPJ EMPRESA', 'MÊS REFERÊNCIA'
+                    ];
+                    
+                    const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+                    
+                    if (missingHeaders.length > 0) {
+                        showUploadStatus(`Erro: Cabeçalhos faltando: ${missingHeaders.join(', ')}`, 'danger');
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    // Processar dados
+                    const newData = [];
+                    for (let i = 1; i < lines.length; i++) {
+                        if (lines[i].trim() === '') continue;
+                        
+                        const values = parseCSVLine(lines[i], separator);
+                        if (values.length !== headers.length) {
+                            console.warn(`Linha ${i+1} ignorada: ${values.length} colunas, esperado ${headers.length}`);
+                            continue;
+                        }
+                        
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index] || '';
+                        });
+                        
+                        // Extrair ano do nome do arquivo ou do mês de referência
+                        let ano = '2024'; // Default
+                        if (file.name) {
+                            const anoMatch = file.name.match(/\d{4}/);
+                            if (anoMatch) {
+                                ano = anoMatch[0];
+                            }
+                        }
+                        
+                        // Adicionar ano extraído
+                        row.ANO = ano;
+                        
+                        // Formatar CNPJ
+                        if (row['CNPJ EMPRESA']) {
+                            row['CNPJ EMPRESA'] = formatarCNPJ(row['CNPJ EMPRESA']);
+                        }
+                        
+                        newData.push(row);
+                    }
+                    
+                    if (newData.length === 0) {
+                        showUploadStatus('Nenhum dado válido encontrado no arquivo CSV.', 'warning');
+                        showLoading(false);
+                        return;
+                    }
+                    
+                    if (document.getElementById('appendData').checked) {
+                        terceirizadosData = [...terceirizadosData, ...newData];
+                        showUploadStatus(`${newData.length} novos registros adicionados. Total: ${terceirizadosData.length} registros.`, 'success');
+                    } else {
+                        terceirizadosData = newData;
+                        showUploadStatus(`${newData.length} registros carregados. Dados anteriores substituídos.`, 'success');
+                    }
+                    
+                    // Atualizar toda a aplicação
+                    filteredData = [...terceirizadosData];
+                    updateDataAtualizacao();
+                    updateFilterOptions();
+                    updateDashboard1();
+                    updateDashboard2();
+                    updateDashboard3();
+                    
+                    showLoading(false);
+                    
+                } catch (error) {
+                    console.error('Erro ao processar CSV:', error);
+                    showUploadStatus(`Erro ao processar o arquivo CSV: ${error.message}`, 'danger');
+                    showLoading(false);
+                }
+            };
+            
+            reader.onerror = function() {
+                showUploadStatus('Erro ao ler o arquivo.', 'danger');
+                showLoading(false);
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function parseCSVLine(line, separator = ';') {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === separator && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            
+            return result.map(field => field.replace(/^"(.*)"$/, '$1'));
+        }
+
+        function formatarCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, '');
+            
+            if (cnpj.length === 14) {
+                return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+            }
+            
+            return cnpj;
+        }
+
+        function showUploadStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('uploadStatus');
+            const alertClass = type === 'success' ? 'alert-success' : 
+                              type === 'danger' ? 'alert-danger' : 
+                              type === 'warning' ? 'alert-warning' : 'alert-info';
+            
+            statusDiv.innerHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+        }
+
+        // ==================== CONFIGURAR EVENT LISTENERS ====================
+        function setupEventListeners() {
+            // Filtros Dashboard 1
+            document.getElementById('aplicarFiltros').addEventListener('click', function() {
+                applyFilters('dashboard1');
+            });
+            document.getElementById('limparFiltros').addEventListener('click', function() {
+                clearAllFilters();
+            });
+            
+            // Dashboard 2
+            document.getElementById('pesquisarEmpregados').addEventListener('click', function() {
+                applyFilters('dashboard2');
+            });
+            document.getElementById('limparFiltrosDashboard2').addEventListener('click', function() {
+                clearDashboard2Filters();
+            });
+            
+            // Exportação
+            document.getElementById('exportCSVDashboard1').addEventListener('click', () => exportToCSV('dashboard1'));
+            document.getElementById('exportExcelDashboard1').addEventListener('click', () => exportToExcel('dashboard1'));
+            document.getElementById('printDashboard1').addEventListener('click', () => printDashboard('dashboard1'));
+           
+            document.getElementById('exportCSVDashboard2').addEventListener('click', () => exportToCSV('dashboard2'));
+            document.getElementById('exportExcelDashboard2').addEventListener('click', () => exportToExcel('dashboard2'));
+            document.getElementById('printDashboard2').addEventListener('click', () => printDashboard('dashboard2'));
+            
+            // Campo de busca na Consulta Individual
+            document.getElementById('searchEmpregados').addEventListener('input', function(e) {
+                filterEmpregadosTable(e.target.value);
+            });
+            
+            // Troca de abas
+            document.getElementById('dashboard1-tab').addEventListener('click', function() {
+                setTimeout(updateDashboard1, 100);
+            });
+            document.getElementById('dashboard2-tab').addEventListener('click', function() {
+                setTimeout(updateDashboard2, 100);
+            });
+            
+            // Upload CSV no header
+            document.getElementById('csvUpload').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    processCSV(e.target.files[0]);
+                    e.target.value = '';
+                }
+            });
+            
+            // Upload CSV na aba Downloads
+            document.getElementById('csvFileInput').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    document.getElementById('btnProcessCSV').disabled = false;
+                }
+            });
+            
+            document.getElementById('btnProcessCSV').addEventListener('click', function() {
+                const fileInput = document.getElementById('csvFileInput');
+                if (fileInput.files.length > 0) {
+                    processCSV(fileInput.files[0]);
+                } else {
+                    showUploadStatus('Por favor, selecione um arquivo CSV.', 'danger');
+                }
+            });
+            
+            document.getElementById('btnDownloadTemplate').addEventListener('click', downloadTemplate);
+            
+            document.getElementById('btnClearData').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                    terceirizadosData = [];
+                    filteredData = [];
+                    
+                    updateDataAtualizacao();
+                    updateFilterOptions();
+                    updateDashboard1();
+                    updateDashboard2();
+                    updateDashboard3();
+                    
+                    showUploadStatus('Todos os dados foram limpos.', 'warning');
+                }
+            });
+            
+            // Itens por página
+            document.getElementById('itemsPerPageDashboard1').addEventListener('change', function() {
+                itemsPerPageDashboard1 = parseInt(this.value);
+                currentPageDashboard1 = 1;
+                updateResumoTable();
+            });
+            
+            document.getElementById('itemsPerPageDashboard2').addEventListener('change', function() {
+                itemsPerPageDashboard2 = parseInt(this.value);
+                currentPageDashboard2 = 1;
+                updateEmpregadosTable();
+            });
+        }
+
+        // ==================== FUNÇÕES DE UTILIDADE ====================
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+
+        function getAvailableYears() {
+            const yearsSet = new Set();
+            
+            terceirizadosData.forEach(empregado => {
+                if (empregado.ANO) {
+                    yearsSet.add(empregado.ANO);
+                }
+            });
+            
+            const years = Array.from(yearsSet).sort((a, b) => b - a);
+            return years;
+        }
+
+        function updateDataAtualizacao() {
+            const now = new Date();
+            const dataFormatada = now.toLocaleDateString('pt-BR');
+            document.getElementById('data-atualizacao-header').textContent = dataFormatada;
+            document.getElementById('footer-atualizacao').textContent = dataFormatada;
+        }
+
+        // ==================== FUNÇÕES DE FILTRO ====================
+        function updateFilterOptions() {
+            const years = getAvailableYears();
+            
+            // Atualizar selects de ano
+            const yearSelects = [
+                'anoDashboard1', 'anoDashboard2', 'anoDownload'
+            ];
+            
+            yearSelects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="all">Todos os Anos</option>';
+                    years.forEach(year => {
+                        const option = document.createElement('option');
+                        option.value = year;
+                        option.textContent = year;
+                        select.appendChild(option);
+                    });
+                }
+            });
+            
+            // Obter todos os órgãos únicos
+            const orgaosUnicos = [...new Set(terceirizadosData.map(e => e['ÓRGÃO']))].sort();
+            
+            // Dashboard 1 - datalist de órgãos
+            const orgaoDatalist1 = document.getElementById('orgaosListDashboard1');
+            if (orgaoDatalist1) {
+                orgaoDatalist1.innerHTML = '<option value="all">Todos os Órgãos</option>';
+                orgaosUnicos.forEach(orgao => {
+                    const option = document.createElement('option');
+                    option.value = orgao;
+                    orgaoDatalist1.appendChild(option);
+                });
+            }
+            
+            // Dashboard 2 - datalist de órgãos
+            const orgaoDatalist2 = document.getElementById('orgaosListDashboard2');
+            if (orgaoDatalist2) {
+                orgaoDatalist2.innerHTML = '<option value="all">Todos os Órgãos</option>';
+                orgaosUnicos.forEach(orgao => {
+                    const option = document.createElement('option');
+                    option.value = orgao;
+                    orgaoDatalist2.appendChild(option);
+                });
+            }
+            
+            // Obter todos os cargos únicos
+            const cargosUnicos = [...new Set(terceirizadosData.map(e => e['CARGO']))].sort();
+            
+            // Dashboard 1 - datalist de cargos
+            const cargoDatalist1 = document.getElementById('cargosListDashboard1');
+            if (cargoDatalist1) {
+                cargoDatalist1.innerHTML = '<option value="all">Todos os Cargos</option>';
+                cargosUnicos.forEach(cargo => {
+                    const option = document.createElement('option');
+                    option.value = cargo;
+                    cargoDatalist1.appendChild(option);
+                });
+            }
+            
+            // Dashboard 2 - datalist de cargos
+            const cargoDatalist2 = document.getElementById('cargosListDashboard2');
+            if (cargoDatalist2) {
+                cargoDatalist2.innerHTML = '<option value="all">Todos os Cargos</option>';
+                cargosUnicos.forEach(cargo => {
+                    const option = document.createElement('option');
+                    option.value = cargo;
+                    cargoDatalist2.appendChild(option);
+                });
+            }
+            
+            // Obter todas as empresas únicas
+            const empresasUnicas = [...new Set(terceirizadosData.map(e => e['EMPRESA']))].sort();
+            
+            // Dashboard 2 - datalist de empresas
+            const empresaDatalist2 = document.getElementById('empresasListDashboard2');
+            if (empresaDatalist2) {
+                empresaDatalist2.innerHTML = '<option value="all">Todas as Empresas</option>';
+                empresasUnicas.forEach(empresa => {
+                    const option = document.createElement('option');
+                    option.value = empresa;
+                    empresaDatalist2.appendChild(option);
+                });
+            }
+        }
+
+        function applyFilters(dashboard) {
+            showLoading(true);
+            
+            if (dashboard === 'dashboard1') {
+                const ano = document.getElementById('anoDashboard1').value;
+                const mes = document.getElementById('mesDashboard1').value;
+                const orgaoInput = document.getElementById('orgaoDashboard1').value;
+                const cargoInput = document.getElementById('cargoDashboard1').value;
+                
+                const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
+                const cargo = cargoInput === 'all' || cargoInput === '' ? 'all' : cargoInput;
+                
+                filteredData = terceirizadosData.filter(empregado => {
+                    // Filtro por ano
+                    if (ano !== 'all' && empregado.ANO !== ano) return false;
+                    
+                    // Filtro por mês
+                    if (mes !== 'all' && empregado['MÊS REFERÊNCIA']) {
+                        const mesReferencia = empregado['MÊS REFERÊNCIA'].split('/')[1];
+                        if (mesReferencia !== mes) return false;
+                    }
+                    
+                    // Filtro por órgão
+                    if (orgao !== 'all' && empregado['ÓRGÃO'] !== orgao) {
+                        return false;
+                    }
+                    
+                    // Filtro por cargo
+                    if (cargo !== 'all' && empregado['CARGO'] !== cargo) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                updateDashboard1();
+                
+            } else if (dashboard === 'dashboard2') {
+                const ano = document.getElementById('anoDashboard2').value;
+                const mesReferencia = document.getElementById('mesDashboard2').value;
+                const nome = document.getElementById('nomeEmpregado').value.toLowerCase();
+                const cargoInput = document.getElementById('cargoDashboard2').value;
+                const empresaInput = document.getElementById('empresaDashboard2').value;
+                const orgaoInput = document.getElementById('orgaoDashboard2').value;
+                const matricula = document.getElementById('matriculaDashboard2').value;
+                
+                const cargo = cargoInput === 'all' || cargoInput === '' ? 'all' : cargoInput;
+                const empresa = empresaInput === 'all' || empresaInput === '' ? 'all' : empresaInput;
+                const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
+                
+                filteredData = terceirizadosData.filter(empregado => {
+                    // Filtro por ano
+                    if (ano !== 'all' && empregado.ANO !== ano) return false;
+                    
+                    // Filtro por mês de referência
+                    if (mesReferencia && !empregado['MÊS REFERÊNCIA'].includes(mesReferencia)) {
+                        return false;
+                    }
+                    
+                    // Filtro por nome
+                    if (nome && !empregado['NOME'].toLowerCase().includes(nome)) {
+                        return false;
+                    }
+                    
+                    // Filtro por cargo
+                    if (cargo !== 'all' && empregado['CARGO'] !== cargo) {
+                        return false;
+                    }
+                    
+                    // Filtro por empresa
+                    if (empresa !== 'all' && empregado['EMPRESA'] !== empresa) {
+                        return false;
+                    }
+                    
+                    // Filtro por órgão
+                    if (orgao !== 'all' && empregado['ÓRGÃO'] !== orgao) {
+                        return false;
+                    }
+                    
+                    // Filtro por matrícula
+                    if (matricula && !empregado['MAT.'].toString().includes(matricula)) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                updateDashboard2();
+            }
+            
+            showLoading(false);
+        }
+
+        function filterEmpregadosTable(searchTerm) {
+            const searchLower = searchTerm.toLowerCase();
+            const rows = document.querySelectorAll('#empregadosTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchLower)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function clearAllFilters() {
+            document.getElementById('anoDashboard1').value = 'all';
+            document.getElementById('mesDashboard1').value = 'all';
+            document.getElementById('orgaoDashboard1').value = '';
+            document.getElementById('cargoDashboard1').value = '';
+            
+            filteredData = [...terceirizadosData];
+            updateDashboard1();
+        }
+
+        function clearDashboard2Filters() {
+            document.getElementById('anoDashboard2').value = 'all';
+            document.getElementById('mesDashboard2').value = '';
+            document.getElementById('nomeEmpregado').value = '';
+            document.getElementById('cargoDashboard2').value = '';
+            document.getElementById('empresaDashboard2').value = '';
+            document.getElementById('orgaoDashboard2').value = '';
+            document.getElementById('matriculaDashboard2').value = '';
+            document.getElementById('searchEmpregados').value = '';
+            
+            filteredData = [...terceirizadosData];
+            updateDashboard2();
+        }
+
+        // ==================== DASHBOARD 1: VISÃO GERAL ====================
+        function updateDashboard1() {
+            updateSummaryCards();
+            updateResumoTable();
+            updateCharts1();
+        }
+
+        function updateSummaryCards() {
+            const container = document.getElementById('summaryCards');
+            
+            if (filteredData.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center"><p class="text-muted">Nenhum dado encontrado. Faça upload de um arquivo CSV.</p></div>';
+                return;
+            }
+            
+            // Calcular métricas
+            const totalEmpregados = filteredData.length;
+            const orgaosUnicos = [...new Set(filteredData.map(e => e['ÓRGÃO']))].length;
+            const empresasUnicas = [...new Set(filteredData.map(e => e['EMPRESA']))].length;
+            const cargosUnicos = [...new Set(filteredData.map(e => e['CARGO']))].length;
+            
+            const cardsHTML = `
+                <div class="col-md-3 col-6">
+                    <div class="metric-card">
+                        <div class="metric-label">Total de Empregados</div>
+                        <div class="metric-value">${totalEmpregados.toLocaleString()}</div>
+                        <div class="update-info">
+                            <i class="fas fa-users"></i> Filtros aplicados
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="metric-card success">
+                        <div class="metric-label">Órgãos</div>
+                        <div class="metric-value">${orgaosUnicos}</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-building me-1"></i> Com empregados
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="metric-card primary">
+                        <div class="metric-label">Empresas Terceirizadas</div>
+                        <div class="metric-value">${empresasUnicas}</div>
+                        <div class="update-info">
+                            <i class="fas fa-industry"></i> Contratantes
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="metric-card info">
+                        <div class="metric-label">Cargos Diferentes</div>
+                        <div class="metric-value">${cargosUnicos}</div>
+                        <div class="d-flex justify-content-center mt-2">
+                            <span class="badge bg-secondary" style="font-size: 10px;">${((cargosUnicos/totalEmpregados)*100).toFixed(1)}% variedade</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = cardsHTML;
+        }
+
+        function updateResumoTable() {
+            const tbody = document.getElementById('resumoTableBody');
+            const tfoot = document.getElementById('resumoTableFooter');
+            const countElement = document.getElementById('resumoCountDashboard1');
+            const paginationInfo = document.getElementById('paginationInfoDashboard1');
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Nenhum dado encontrado. Faça upload de um arquivo CSV.</td></tr>';
+                tfoot.innerHTML = '';
+                if (countElement) countElement.textContent = '0 registros';
+                if (paginationInfo) paginationInfo.textContent = 'Mostrando 0-0 de 0 registros';
+                updatePaginationDashboard1(1, 1);
+                return;
+            }
+            
+            // Agrupar por órgão e cargo
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                const key = `${empregado['ÓRGÃO']}|${empregado['CARGO']}`;
+                if (!grupos[key]) {
+                    grupos[key] = {
+                        orgao: empregado['ÓRGÃO'],
+                        cargo: empregado['CARGO'],
+                        count: 0,
+                        empregados: []
+                    };
+                }
+                grupos[key].count++;
+                grupos[key].empregados.push(empregado);
+            });
+            
+            // Converter para array
+            const resumoArray = Object.values(grupos);
+            
+            // Ordenar por quantidade (desc)
+            resumoArray.sort((a, b) => b.count - a.count);
+            
+            // Calcular totais
+            const totalRegistros = resumoArray.length;
+            const totalEmpregados = resumoArray.reduce((sum, item) => sum + item.count, 0);
+            
+            // Paginação
+            const itemsPerPage = itemsPerPageDashboard1;
+            const totalPages = Math.ceil(resumoArray.length / itemsPerPage);
+            const startIndex = (currentPageDashboard1 - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, resumoArray.length);
+            const currentData = resumoArray.slice(startIndex, endIndex);
+            
+            // Gerar HTML da tabela
+            const rowsHTML = currentData.map(item => `
+                <tr>
+                    <td>
+                        <a href="#" class="orgao-link" onclick="filtrarPorOrgao('${item.orgao.replace(/'/g, "\\'")}')">
+                            <strong>${item.orgao}</strong>
+                        </a>
+                    </td>
+                    <td>${item.cargo}</td>
+                    <td>${item.count.toLocaleString()}</td>
+                </tr>
+            `).join('');
+            
+            // Gerar rodapé
+            const footerHTML = `
+                <tr class="table-total-row">
+                    <td colspan="2"><strong>TOTAL GERAL (${totalRegistros} combinações)</strong></td>
+                    <td><strong>${totalEmpregados.toLocaleString()}</strong></td>
+                </tr>
+            `;
+            
+            tbody.innerHTML = rowsHTML;
+            tfoot.innerHTML = footerHTML;
+            if (countElement) countElement.textContent = `${totalEmpregados.toLocaleString()} empregados`;
+            if (paginationInfo) paginationInfo.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${resumoArray.length.toLocaleString()} registros`;
+            
+            updatePaginationDashboard1(totalPages, currentPageDashboard1);
+        }
+
+        function updatePaginationDashboard1(totalPages, currentPage = 1) {
+            const pagination = document.getElementById('paginationDashboard1');
+            if (!pagination) return;
+            
+            let paginationHTML = '';
+            
+            // Botão anterior
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePageDashboard1(${currentPage - 1})" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            // Páginas
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            // Ajustar se estiver no final
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePageDashboard1(${i})">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Botão próximo
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePageDashboard1(${currentPage + 1})" aria-label="Próximo">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        window.changePageDashboard1 = function(page) {
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                const key = `${empregado['ÓRGÃO']}|${empregado['CARGO']}`;
+                if (!grupos[key]) {
+                    grupos[key] = { empregados: [] };
+                }
+                grupos[key].empregados.push(empregado);
+            });
+            
+            const totalItems = Object.keys(grupos).length;
+            const totalPages = Math.ceil(totalItems / itemsPerPageDashboard1);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPageDashboard1 = page;
+            updateResumoTable();
+            
+            const tableContainer = document.querySelector('#dashboard1 .table-container');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        function updateCharts1() {
+            if (filteredData.length === 0) return;
+            
+            updateOrgaoChart();
+            updateCargoChart();
+            updateEmpresaChart();
+        }
+
+        function updateOrgaoChart() {
+            const ctx = document.getElementById('chartOrgao')?.getContext('2d');
+            if (!ctx) return;
+            
+            // Agrupar por órgão e pegar top 8
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                if (!grupos[empregado['ÓRGÃO']]) {
+                    grupos[empregado['ÓRGÃO']] = 0;
+                }
+                grupos[empregado['ÓRGÃO']]++;
+            });
+            
+            const orgaosArray = Object.entries(grupos)
+                .map(([orgao, count]) => ({ orgao, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 8);
+            
+            // Cores para o gráfico
+            const pieColors = [
+                chartColors.primary, chartColors.secondaryBlue, chartColors.accent,
+                chartColors.secondaryBrown, chartColors.secondaryTeal, chartColors.bright,
+                '#4ECDC4', '#FF6B6B'
+            ];
+            
+            if (charts.orgao) {
+                charts.orgao.destroy();
+            }
+            
+            charts.orgao = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: orgaosArray.map(item => {
+                        return item.orgao.length > 15 ? item.orgao.substring(0, 15) + '...' : item.orgao;
+                    }),
+                    datasets: [{
+                        data: orgaosArray.map(item => item.count),
+                        backgroundColor: pieColors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} empregados (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCargoChart() {
+            const ctx = document.getElementById('chartCargo')?.getContext('2d');
+            if (!ctx) return;
+            
+            // Agrupar por cargo e pegar top 8
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                if (!grupos[empregado['CARGO']]) {
+                    grupos[empregado['CARGO']] = 0;
+                }
+                grupos[empregado['CARGO']]++;
+            });
+            
+            const cargosArray = Object.entries(grupos)
+                .map(([cargo, count]) => ({ cargo, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 8);
+            
+            if (charts.cargo) {
+                charts.cargo.destroy();
+            }
+            
+            charts.cargo = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cargosArray.map(item => {
+                        return item.cargo.length > 20 ? item.cargo.substring(0, 20) + '...' : item.cargo;
+                    }),
+                    datasets: [{
+                        label: 'Quantidade de Empregados',
+                        data: cargosArray.map(item => item.count),
+                        backgroundColor: chartColors.accent,
+                        borderColor: chartColors.primary,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateEmpresaChart() {
+            const ctx = document.getElementById('chartEmpresa')?.getContext('2d');
+            if (!ctx) return;
+            
+            // Agrupar por empresa e pegar top 8
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                if (!grupos[empregado['EMPRESA']]) {
+                    grupos[empregado['EMPRESA']] = 0;
+                }
+                grupos[empregado['EMPRESA']]++;
+            });
+            
+            const empresasArray = Object.entries(grupos)
+                .map(([empresa, count]) => ({ empresa, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 8);
+            
+            if (charts.empresa) {
+                charts.empresa.destroy();
+            }
+            
+            charts.empresa = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: empresasArray.map(item => {
+                        return item.empresa.length > 20 ? item.empresa.substring(0, 20) + '...' : item.empresa;
+                    }),
+                    datasets: [{
+                        data: empresasArray.map(item => item.count),
+                        backgroundColor: [
+                            '#2C5530', '#4CAF50', '#8BC34A', '#3F704D',
+                            '#8B7355', '#20B2AA', '#4ECDC4', '#FF6B6B'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} empregados (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==================== DASHBOARD 2: CONSULTA INDIVIDUAL ====================
+        function initializeDashboard2() {
+            updateDashboard2();
+        }
+
+        function updateDashboard2() {
+            updateEmpregadosTable();
+        }
+
+        function updateEmpregadosTable() {
+            const tbody = document.getElementById('empregadosTableBody');
+            const tfoot = document.getElementById('empregadosTableFooter');
+            const countElement = document.getElementById('resumoCountDashboard2');
+            const paginationInfo = document.getElementById('paginationInfoDashboard2');
+            
+            if (!tbody) return;
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum empregado encontrado. Faça upload de um arquivo CSV.</td></tr>';
+                if (tfoot) tfoot.innerHTML = '';
+                if (countElement) countElement.textContent = '0 empregados';
+                if (paginationInfo) paginationInfo.textContent = 'Mostrando 0-0 de 0 registros';
+                updatePaginationDashboard2(1, 1);
+                return;
+            }
+            
+            // Ordenar por nome
+            const empregadosArray = [...filteredData];
+            empregadosArray.sort((a, b) => a['NOME'].localeCompare(b['NOME']));
+            
+            // Calcular totais
+            const totalEmpregados = empregadosArray.length;
+            const orgaosUnicos = [...new Set(empregadosArray.map(e => e['ÓRGÃO']))].length;
+            const empresasUnicas = [...new Set(empregadosArray.map(e => e['EMPRESA']))].length;
+            
+            // Paginação
+            const itemsPerPage = itemsPerPageDashboard2;
+            const totalPages = Math.ceil(empregadosArray.length / itemsPerPage);
+            const startIndex = (currentPageDashboard2 - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, empregadosArray.length);
+            const currentData = empregadosArray.slice(startIndex, endIndex);
+            
+            // Gerar HTML da tabela
+            const rowsHTML = currentData.map(empregado => `
+                <tr>
+                    <td>${empregado['MAT.']}</td>
+                    <td><strong>${empregado['NOME']}</strong></td>
+                    <td>${empregado['ÓRGÃO']}</td>
+                    <td>${empregado['CARGO']}</td>
+                    <td>${empregado['EMPRESA']}</td>
+                    <td>${empregado['CNPJ EMPRESA']}</td>
+                    <td>${empregado['MÊS REFERÊNCIA']}</td>
+                </tr>
+            `).join('');
+            
+            // Gerar rodapé
+            const footerHTML = `
+                <tr class="table-total-row">
+                    <td colspan="2"><strong>TOTAL GERAL: ${totalEmpregados.toLocaleString()} empregados</strong></td>
+                    <td><strong>${orgaosUnicos} órgãos</strong></td>
+                    <td colspan="2"><strong>${empresasUnicas} empresas</strong></td>
+                    <td colspan="2"></td>
+                </tr>
+            `;
+            
+            tbody.innerHTML = rowsHTML;
+            if (tfoot) tfoot.innerHTML = footerHTML;
+            if (countElement) countElement.textContent = `${totalEmpregados.toLocaleString()} empregados`;
+            if (paginationInfo) paginationInfo.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${empregadosArray.length.toLocaleString()} registros`;
+            
+            updatePaginationDashboard2(totalPages, currentPageDashboard2);
+        }
+
+        function updatePaginationDashboard2(totalPages, currentPage = 1) {
+            const pagination = document.getElementById('paginationDashboard2');
+            if (!pagination) return;
+            
+            let paginationHTML = '';
+            
+            // Botão anterior
+            paginationHTML += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePageDashboard2(${currentPage - 1})" aria-label="Anterior">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            // Páginas
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePageDashboard2(${i})">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Botão próximo
+            paginationHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePageDashboard2(${currentPage + 1})" aria-label="Próximo">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        window.changePageDashboard2 = function(page) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPageDashboard2);
+            
+            if (page < 1 || page > totalPages) return;
+            
+            currentPageDashboard2 = page;
+            updateEmpregadosTable();
+            
+            const tableContainer = document.querySelector('#dashboard2 .table-container');
+            if (tableContainer) {
+                tableContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        // ==================== DASHBOARD 3: DOWNLOADS ====================
+        function updateDashboard3() {
+            const years = getAvailableYears();
+            const anoSelect = document.getElementById('anoDownload');
+            
+            if (anoSelect) {
+                anoSelect.innerHTML = '<option value="all">Todos os Anos</option>';
+                years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    anoSelect.appendChild(option);
+                });
+            }
+        }
+
+        // ==================== FUNÇÕES GLOBAIS E UTILITÁRIOS ====================
+
+        // Filtrar por órgão (ao clicar na tabela)
+        window.filtrarPorOrgao = function(orgao) {
+            const orgaoElement = document.getElementById('orgaoDashboard2');
+            if (orgaoElement) {
+                orgaoElement.value = orgao;
+            }
+            
+            // Mudar para a aba de Consulta Individual
+            const tabElement = document.getElementById('dashboard2-tab');
+            if (tabElement) {
+                const tab = new bootstrap.Tab(tabElement);
+                tab.show();
+                
+                setTimeout(() => {
+                    applyFilters('dashboard2');
+                }, 300);
+            }
+        }
+
+        // Função para mostrar seção de upload
+        window.showUploadSection = function() {
+            const uploadSection = document.getElementById('uploadSection');
+            uploadSection.style.display = 'block';
+            uploadSection.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Função para rolar até metadados
+        window.scrollToMetadados = function() {
+            const metadadosSection = document.getElementById('metadados');
+            metadadosSection.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // ==================== FUNÇÕES DE EXPORTAÇÃO ====================
+        function exportToCSV(source) {
+            if (source === 'dashboard1') {
+                exportResumoCSV();
+            } else if (source === 'dashboard2') {
+                exportEmpregadosCSV();
+            }
+        }
+
+        function exportToExcel(source) {
+            alert('Funcionalidade de exportação Excel em desenvolvimento');
+        }
+
+        function printDashboard(source) {
+            window.print();
+        }
+
+        function exportResumoCSV() {
+            if (filteredData.length === 0) return;
+            
+            // Agrupar por órgão e cargo
+            const grupos = {};
+            filteredData.forEach(empregado => {
+                const key = `${empregado['ÓRGÃO']}|${empregado['CARGO']}`;
+                if (!grupos[key]) {
+                    grupos[key] = {
+                        orgao: empregado['ÓRGÃO'],
+                        cargo: empregado['CARGO'],
+                        count: 0
+                    };
+                }
+                grupos[key].count++;
+            });
+            
+            const headers = ['Órgão', 'Cargo', 'Quantidade de Empregados'];
+            const data = Object.values(grupos).map(info => [
+                info.orgao,
+                info.cargo,
+                info.count
+            ]);
+            
+            const csvContent = [
+                headers.join(';'),
+                ...data.map(row => row.map(cell => `"${cell}"`).join(';'))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `visao_geral_terceirizados_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportEmpregadosCSV() {
+            if (filteredData.length === 0) return;
+            
+            const headers = ['MAT.', 'NOME', 'ÓRGÃO', 'CARGO', 'EMPRESA', 'CNPJ EMPRESA', 'MÊS REFERÊNCIA', 'ANO'];
+            const data = filteredData.map(empregado => [
+                empregado['MAT.'],
+                empregado['NOME'],
+                empregado['ÓRGÃO'],
+                empregado['CARGO'],
+                empregado['EMPRESA'],
+                empregado['CNPJ EMPRESA'],
+                empregado['MÊS REFERÊNCIA'],
+                empregado['ANO'] || ''
+            ]);
+            
+            const csvContent = [
+                headers.join(';'),
+                ...data.map(row => row.map(cell => `"${cell}"`).join(';'))
+            ].join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `empregados_terceirizados_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ==================== FUNÇÕES DE ORDENAÇÃO SIMPLIFICADA ====================
+        window.sortTable = function(tableType, column) {
+            console.log(`Ordenar ${tableType} por ${column}`);
+            // Implementação simplificada - pode ser expandida conforme necessário
+        };
+
+        // ==================== INICIALIZAÇÃO FINAL ====================
+        setTimeout(() => {
+            showLoading(false);
+            console.log('Dashboard Terceirizados carregado com sucesso!');
+        }, 1000);
+
+    </script>
+</body>
+</html>
