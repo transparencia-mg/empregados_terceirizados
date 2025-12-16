@@ -1423,10 +1423,8 @@ async function loadDataFromGitHub() {
                     if (dataRef.includes('/')) {
                         const partes = dataRef.split('/');
                         if (partes.length === 3) {
-                            // dd/mm/aaaa
                             mesExtraido = partes[1];
                         } else if (partes.length === 2) {
-                            // mm/aaaa
                             mesExtraido = partes[0];
                         }
                     }
@@ -1448,41 +1446,36 @@ async function loadDataFromGitHub() {
             complete: function () {
                 console.log(`CSV carregado: ${terceirizadosData.length} registros`);
 
-                // Descobrir o mês mais recente existente no CSV
-                const mesesDisponiveis = [...new Set(
-                    terceirizadosData
-                        .map(e => e.MES)
-                        .filter(Boolean)
-                )];
+                    const mesesDisponiveis = [...new Set(
+            terceirizadosData.map(e => e.MES).filter(Boolean)
+        )];
 
-                if (mesesDisponiveis.length === 0) {
-                    console.error('Nenhum mês válido encontrado no CSV');
-                    resolve();
-                    return;
-                }
+        if (mesesDisponiveis.length === 0) {
+            console.error('Nenhum mês válido encontrado no CSV');
+            resolve();
+            return;
+        }
 
-                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
-                currentMonth = mesesDisponiveis[0];
+        mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
+        currentMonth = mesesDisponiveis[0];
 
-                console.log('Mês mais recente no CSV:', currentMonth);
+        console.log('Mês mais recente no CSV:', currentMonth);
 
-                filteredData = terceirizadosData.filter(e =>
-                    e.ANO === currentYear.toString() &&
-                    e.MES === currentMonth
-                );
+        filteredData = terceirizadosData.filter(e =>
+            e.ANO === currentYear.toString() &&
+            e.MES === currentMonth
+        );
 
-                console.log(`Registros filtrados: ${filteredData.length}`);
+        console.log(`Registros filtrados: ${filteredData.length}`);
 
-                resolve();
-            },
+        resolve();
+    },
 
-            error: function (error) {
-                console.error('Erro ao carregar CSV:', error);
-                reject(error);
-            }
-        });
-    });
-}
+    error: function (error) {
+        console.error('Erro ao carregar CSV:', error);
+        reject(error);
+    }
+});
 
 
         // ==================== CONFIGURAR EVENT LISTENERS ====================
