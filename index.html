@@ -1376,7 +1376,8 @@
         });
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
-async function loadDataFromGitHub() {
+
+        async function loadDataFromGitHub() {
     terceirizadosData = [];
     filteredData = [];
 
@@ -1403,11 +1404,11 @@ async function loadDataFromGitHub() {
                     'MÊS REFERÊNCIA': row['MÊS REFERÊNCIA'] || ''
                 };
 
-                // Extrair ANO do nome do arquivo
+                // Ano pelo nome do arquivo
                 const anoMatch = CSV_ATUAL.match(/\d{4}/);
                 empregado.ANO = anoMatch ? anoMatch[0] : '';
 
-              // Extrair MÊS da data (suporta vários formatos)
+                // Extrair mês (dd/mm/aaaa, mm/aaaa, yyyy-mm, yyyy-mm-dd)
                 const dataRef =
                     row['MÊS REFERÊNCIA'] ||
                     row['MES REFERENCIA'] ||
@@ -1416,24 +1417,20 @@ async function loadDataFromGitHub() {
                     row['MES_ANO'] ||
                     '';
 
-                    if (dataRef) {
-                        let mesExtraido = null;
+                if (dataRef) {
+                    let mesExtraido = null;
 
-                    // dd/mm/aaaa ou mm/aaaa
                     if (dataRef.includes('/')) {
                         const partes = dataRef.split('/');
                         if (partes.length === 3) {
-                            mesExtraido = partes[1];
+                            mesExtraido = partes[1]; // dd/mm/aaaa
                         } else if (partes.length === 2) {
-                            mesExtraido = partes[0];
+                            mesExtraido = partes[0]; // mm/aaaa
                         }
-                    }
-
-                    // yyyy-mm ou yyyy-mm-dd
-                    if (!mesExtraido && dataRef.includes('-')) {
+                    } else if (dataRef.includes('-')) {
                         const partes = dataRef.split('-');
                         if (partes.length >= 2) {
-                            mesExtraido = partes[1];
+                            mesExtraido = partes[1]; // yyyy-mm
                         }
                     }
 
@@ -1441,42 +1438,44 @@ async function loadDataFromGitHub() {
                         empregado.MES = mesExtraido.padStart(2, '0');
                     }
                 }
-  
+
+                // ✅ ISSO É O MAIS IMPORTANTE
+                terceirizadosData.push(empregado);
+            },
 
             complete: function () {
                 console.log(`CSV carregado: ${terceirizadosData.length} registros`);
 
-                    const mesesDisponiveis = [...new Set(
-            terceirizadosData.map(e => e.MES).filter(Boolean)
-        )];
+                const mesesDisponiveis = [...new Set(
+                    terceirizadosData.map(e => e.MES).filter(Boolean)
+                )];
 
-        if (mesesDisponiveis.length === 0) {
-            console.error('Nenhum mês válido encontrado no CSV');
-            resolve();
-            return;
-        }
+                if (mesesDisponiveis.length === 0) {
+                    console.error('Nenhum mês válido encontrado no CSV');
+                    resolve();
+                    return;
+                }
 
-        mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
-        currentMonth = mesesDisponiveis[0];
+                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
+                currentMonth = mesesDisponiveis[0];
 
-        console.log('Mês mais recente no CSV:', currentMonth);
+                filteredData = terceirizadosData.filter(e =>
+                    e.ANO === currentYear.toString() &&
+                    e.MES === currentMonth
+                );
 
-        filteredData = terceirizadosData.filter(e =>
-            e.ANO === currentYear.toString() &&
-            e.MES === currentMonth
-        );
+                console.log(`Registros filtrados: ${filteredData.length}`);
+                resolve();
+            },
 
-        console.log(`Registros filtrados: ${filteredData.length}`);
-
-        resolve();
-    },
-
-    error: function (error) {
-        console.error('Erro ao carregar CSV:', error);
-        reject(error);
-    }
-});
-
+            error: function (error) {
+                console.error('Erro ao carregar CSV:', error);
+                reject(error);
+            }
+        });
+    });
+}
+        
 
         // ==================== CONFIGURAR EVENT LISTENERS ====================
         function setupEventListeners() {
