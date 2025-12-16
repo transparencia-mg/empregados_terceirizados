@@ -1326,7 +1326,8 @@
         // URLs dos CSVs no GitHub
         const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados/main/data/';
         <!-- INICIO LISTA CSV -->
-        const CSV_FILES = [
+        // CSV mais recente (sempre o último da lista gerada pelo Python)
+const CSV_ATUAL = CSV_FILES[CSV_FILES.length - 1];
             'terceirizados_2021.csv',
             'terceirizados_2022.csv',
             'terceirizados_2023.csv',
@@ -1364,134 +1365,68 @@
         });
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
-        async function loadDataFromGitHub() {
-            terceirizadosData = [];
-            
-            // Tentar carregar cada arquivo CSV
-            for (const csvFile of CSV_FILES) {
-                try {
-                    const url = `${GITHUB_BASE_URL}${csvFile}`;
-                    console.log(`Carregando: ${url}`);
-                    
-                    const response = await fetch(url);
-                    
-                    if (!response.ok) {
-                        console.warn(`Arquivo não encontrado ou erro: ${csvFile}`);
-                        continue;
+async function loadDataFromGitHub() {
+    terceirizadosData = [];
+    filteredData = [];
+
+    const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
+    console.log(`Carregando CSV mais recente (stream): ${url}`);
+
+    return new Promise((resolve, reject) => {
+        Papa.parse(url, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            worker: true, // 🔥 usa Web Worker
+            step: function (results) {
+                const row = results.data;
+
+                // Normalizar cabeçalhos (caso necessário)
+                const empregado = {
+                    'MAT.': row['MAT.'] || '',
+                    'NOME': row['NOME'] || '',
+                    'ÓRGÃO': row['ÓRGÃO'] || '',
+                    'CARGO': row['CARGO'] || '',
+                    'EMPRESA': row['EMPRESA'] || '',
+                    'CNPJ EMPRESA': row['CNPJ EMPRESA'] || '',
+                    'MÊS REFERÊNCIA': row['MÊS REFERÊNCIA'] || ''
+                };
+
+                // Extrair ANO do nome do arquivo
+                const anoMatch = CSV_ATUAL.match(/\d{4}/);
+                empregado.ANO = anoMatch ? anoMatch[0] : '';
+
+                // Extrair MÊS da data
+                if (empregado['MÊS REFERÊNCIA']) {
+                    const partes = empregado['MÊS REFERÊNCIA'].split('/');
+                    if (partes.length >= 2) {
+                        empregado.MES = partes[1].padStart(2, '0');
                     }
-                    
-                    const csvContent = await response.text();
-                    const data = parseCSVContent(csvContent, csvFile);
-                    
-                    if (data.length > 0) {
-                        terceirizadosData = [...terceirizadosData, ...data];
-                        console.log(`${data.length} registros carregados de ${csvFile}`);
-                    }
-                    
-                } catch (error) {
-                    console.error(`Erro ao carregar ${csvFile}:`, error);
                 }
-            }
-            
-            if (terceirizadosData.length === 0) {
-                console.warn('Nenhum dado foi carregado. Verificando arquivos disponíveis...');
-                
-                // Tentar carregar arquivos alternativos
-                const availableFiles = await checkAvailableFiles();
-                if (availableFiles.length > 0) {
-                    console.log(`Arquivos disponíveis: ${availableFiles.join(', ')}`);
-                } else {
-                    throw new Error('Nenhum arquivo CSV encontrado no repositório.');
-                }
-            } else {
-                console.log(`Total de registros carregados: ${terceirizadosData.length}`);
-                
-                // Atualizar ano e mês atual com base nos dados
+
+                terceirizadosData.push(empregado);
+            },
+            complete: function () {
+                console.log(`CSV carregado: ${terceirizadosData.length} registros`);
+
+                // Define ano e mês atuais com base nos dados
                 updateCurrentYearAndMonth();
-                
-                // Filtrar apenas os dados do ano/mês mais atuais
-                filteredData = terceirizadosData.filter(empregado => {
-                    return empregado.ANO === currentYear.toString() && 
-                           empregado.MES === currentMonth;
-                });
-            }
-        }
 
-        async function checkAvailableFiles() {
-            const availableFiles = [];
-            
-            // Verificar quais arquivos estão disponíveis
-            for (const csvFile of CSV_FILES) {
-                try {
-                    const url = `${GITHUB_BASE_URL}${csvFile}`;
-                    const response = await fetch(url, { method: 'HEAD' });
-                    
-                    if (response.ok) {
-                        availableFiles.push(csvFile);
-                    }
-                } catch (error) {
-                    // Ignorar erros
-                }
-            }
-            
-            return availableFiles;
-        }
+                // Filtra apenas o período atual
+                filteredData = terceirizadosData.filter(e =>
+                    e.ANO === currentYear.toString() &&
+                    e.MES === currentMonth
+                );
 
-        function parseCSVContent(csvContent, fileName) {
-            const lines = csvContent.split('\n');
-            
-            // Detectar separador
-            const firstLine = lines[0];
-            const isSemicolonSeparated = firstLine.includes(';');
-            const separator = isSemicolonSeparated ? ';' : ',';
-            
-            const headers = lines[0].split(separator).map(h => h.trim().toUpperCase());
-            
-            // Extrair ano do nome do arquivo
-            const yearMatch = fileName.match(/\d{4}/);
-            const fileYear = yearMatch ? yearMatch[0] : '2024';
-            
-            const data = [];
-            
-            for (let i = 1; i < lines.length; i++) {
-                if (lines[i].trim() === '') continue;
-                
-                try {
-                    const values = parseCSVLine(lines[i], separator);
-                    if (values.length !== headers.length) {
-                        console.warn(`Linha ${i+1} ignorada: ${values.length} colunas, esperado ${headers.length}`);
-                        continue;
-                    }
-                    
-                    const row = {};
-                    headers.forEach((header, index) => {
-                        row[header] = values[index] || '';
-                    });
-                    
-                    // Adicionar ano do arquivo
-                    row.ANO = fileYear;
-                    
-                    // Extrair mês da data de referência
-                    if (row['MÊS REFERÊNCIA']) {
-                        const dateParts = row['MÊS REFERÊNCIA'].split('/');
-                        if (dateParts.length >= 2) {
-                            row.MES = dateParts[1]; // MM
-                        }
-                    }
-                    
-                    // Formatar CNPJ
-                    if (row['CNPJ EMPRESA']) {
-                        row['CNPJ EMPRESA'] = formatarCNPJ(row['CNPJ EMPRESA']);
-                    }
-                    
-                    data.push(row);
-                } catch (error) {
-                    console.error(`Erro ao processar linha ${i+1}:`, error);
-                }
+                resolve();
+            },
+            error: function (error) {
+                console.error('Erro ao carregar CSV:', error);
+                reject(error);
             }
-            
-            return data;
-        }
+        });
+    });
+}
 
         function updateCurrentYearAndMonth() {
             if (terceirizadosData.length === 0) return;
@@ -1514,29 +1449,6 @@
             }
             
             console.log(`Ano atual configurado: ${currentYear}, Mês atual: ${currentMonth}`);
-        }
-
-        function parseCSVLine(line, separator = ';') {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === separator && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current.trim());
-            
-            return result.map(field => field.replace(/^"(.*)"$/, '$1'));
         }
 
         function formatarCNPJ(cnpj) {
