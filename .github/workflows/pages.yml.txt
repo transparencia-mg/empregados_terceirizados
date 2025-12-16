@@ -1,4 +1,0 @@
-- name: Rodar scripts de preparação
-  run: |
-    python scripts/normalizar_mes_referencia.py
-    python scripts/atualizar_index.py
