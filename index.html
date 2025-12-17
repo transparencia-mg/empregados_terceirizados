@@ -2508,6 +2508,27 @@
             document.body.removeChild(link);
         }
 
+	function finalizarCarga() {
+   	 const anos = [...new Set(terceirizadosData.map(e => e.ANO))].sort((a,b)=>b-a);
+   	 currentYear = anos[0];
+
+   	 const meses = [...new Set(
+  	      terceirizadosData
+    	        .filter(e => e.ANO === currentYear)
+   	         .map(e => e.MES)
+   	 )].sort((a,b)=>b-a);
+
+  	  currentMonth = meses[0];
+
+   	 filteredData = terceirizadosData.filter(e =>
+   	     e.ANO === currentYear && e.MES === currentMonth
+  	  );
+
+  	  console.log('Período ativo:', currentMonth, currentYear);
+  	  console.log('Registros filtrados:', filteredData.length);
+	}
+
+
         // ==================== FUNÇÕES DE ORDENAÇÃO SIMPLIFICADA ====================
         window.sortTable = function(tableType, column) {
             console.log(`Ordenar ${tableType} por ${column}`);
