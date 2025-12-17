@@ -1407,10 +1407,10 @@
                 const anoMatch = CSV_ATUAL.match(/\d{4}/);
                 empregado.ANO = anoMatch ? anoMatch[0] : '';
 
-                const dataRef = row['MÊS REFERÊNCIA'] || '';
+                const dataRef = (row['MÊS REFERÊNCIA'] || '').toString().trim();
 
-           if (dataRef && dataRef.includes('/')) {
-                    const partes = dataRef.split('/');
+            if (dataRef && dataRef.includes('/')) {
+                    const partes = dataRef.split('/').map(p => p.trim());
 
                 if (partes.length === 3) {
                     // DD/MM/AAAA
