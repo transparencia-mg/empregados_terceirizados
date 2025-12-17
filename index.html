@@ -2018,7 +2018,7 @@
             const rowsHTML = currentData.map(item => `
                 <tr>
                     <td>
-                        <a href="#" class="orgao-link" onclick="filtrarPorOrgao('${JSON.stringify(item.orgao)})"
+                        <a href="#" class="orgao-link" onclick="filtrarPorOrgao(${JSON.stringify(item.orgao)})"
                             <strong>${item.orgao}</strong>
                         </a>
                     </td>
