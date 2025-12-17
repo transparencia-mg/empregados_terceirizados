@@ -1389,13 +1389,24 @@
                     download: true,
                     header: true,
                     skipEmptyLines: true,
-                    worker: true,
-                    beforeFirstChunk: function(chunk) {
-                        // Remove BOM UTF-8 se existir
-                        return chunk.replace(/^\uFEFF/, '');
-                    },
-                    step: function (results) {
-                        const row = results.data;
+                    worker: false,  // disable worker to allow config functions
+                    beforeFirstChunk: c => c.replace(/^\uFEFF/, ''),
+
+           step: function (results) {
+                const row = results.data;
+                // normalize row...
+                terceirizadosData.push(empregado);
+            },
+
+            complete: function () {
+                // compute currentYear, currentMonth, filteredData...
+                resolve();
+            },
+
+            error: function (error) {
+                reject(error);
+            }
+    });
                         
                         // Extrair e normalizar os dados
                         const empregado = {
