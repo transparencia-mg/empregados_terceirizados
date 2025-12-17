@@ -1409,14 +1409,19 @@
 
                 const dataRef = row['MÊS REFERÊNCIA'] || '';
 
-                if (dataRef && dataRef.includes('/')) {
+           if (dataRef && dataRef.includes('/')) {
                     const partes = dataRef.split('/');
-                    if (partes.length === 2) {
-                        // MM/AAAA
-                        empregado.MES = partes[0].padStart(2, '0');
-                        empregado.ANO = partes[1];
-                    }
+
+                if (partes.length === 3) {
+                    // DD/MM/AAAA
+                    empregado.MES = partes[1].padStart(2, '0');
+                    empregado.ANO = partes[2];
+                } else if (partes.length === 2) {
+                    // MM/AAAA
+                    empregado.MES = partes[0].padStart(2, '0');
+                    empregado.ANO = partes[1];
                 }
+            }
                 
                 // ✅ ISSO É O MAIS IMPORTANTE
                 terceirizadosData.push(empregado);
