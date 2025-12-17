@@ -1378,7 +1378,6 @@
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
 
-                        
         async function loadDataFromGitHub() {
     terceirizadosData = [];
     filteredData = [];
@@ -1386,91 +1385,92 @@
     const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
     console.log(`Carregando CSV mais recente: ${url}`);
 
-    return new Promise((resolve, reject) => {
-        Papa.parse(url, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            worker: false, // ← desabilita o worker
-            beforeFirstChunk: function(chunk) {
-                return chunk.replace(/^\uFEFF/, '');
-            },
-            step: function (results) {
-                const row = results.data;
-                
-                // Extrair e normalizar os dados
-                const empregado = {
-                    matricula: row.matricula || row['MAT.'] || '',
-                    nome: row.nome || row.NOME || '',
-                    orgao: row.orgao || row['ÓRGÃO'] || '',
-                    cargo: row.cargo || row.CARGO || '',
-                    empresa: row.empresa || row.EMPRESA || '',
-                    cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
-                    mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
-                };
+    // Remover BOM e baixar o CSV como texto antes de parsear
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const cleanText = text.replace(/^\uFEFF/, '');
+        
+        return new Promise((resolve, reject) => {
+            Papa.parse(cleanText, {
+                header: true,
+                skipEmptyLines: true,
+                worker: false,  // ✨ SEM WORKER para evitar DataCloneError
 
-                // Extrair ano e mês do formato "jan-25"
-                if (empregado.mes_referencia) {
-                    const mesRef = empregado.mes_referencia.toLowerCase().trim();
-                    
-                    if (mesRef.includes('-')) {
-                        const [mesAbrev, anoAbrev] = mesRef.split('-');
-                        
-                        // Converter mês abreviado para número
-                        empregado.MES_NUM = mesesAbreviados[mesAbrev] || '01';
-                        
-                        // Converter ano abreviado para completo (assumindo 2000+)
-                        const anoCompleto = '20' + anoAbrev;
-                        empregado.ANO = anoCompleto;
-                        empregado.MES_ABREV = mesAbrev;
-                        empregado.ANO_ABREV = anoAbrev;
+                step: function (results) {
+                    const row = results.data;
+
+                    const empregado = {
+                        matricula: row.matricula   || row['MAT.']            || '',
+                        nome:      row.nome        || row['NOME']           || '',
+                        orgao:     row.orgao       || row['ÓRGÃO']         || '',
+                        cargo:     row.cargo       || row['CARGO']          || '',
+                        empresa:   row.empresa     || row['EMPRESA']        || '',
+                        cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
+                        mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
+                    };
+
+                    // Conversão de formato "jan-25" em mês/ano
+                    if (empregado.mes_referencia) {
+                        const mesRef = empregado.mes_referencia.toLowerCase().trim();
+                        if (mesRef.includes('-')) {
+                            const [mesAbrev, anoAbrev] = mesRef.split('-');
+                            empregado.MES_NUM = mesesAbreviados[mesAbrev] || '';
+                            empregado.ANO = '20' + anoAbrev;
+                        }
                     }
-                }
 
-                terceirizadosData.push(empregado);
-            },
-            complete: function () {
-                console.log(`CSV carregado: ${terceirizadosData.length} registros`);
+                    terceirizadosData.push(empregado);
+                },
 
-                // Encontrar o período mais recente
-                const anosDisponiveis = [...new Set(
-                    terceirizadosData.map(e => e.ANO).filter(Boolean)
-                )].sort((a, b) => parseInt(b) - parseInt(a));
-
-                if (anosDisponiveis.length > 0) {
-                    currentYear = anosDisponiveis[0];
+                complete: function () {
+                    console.log(`CSV carregado: ${terceirizadosData.length} registros`);
                     
-                    // Encontrar o mês mais recente do ano atual
-                    const mesesDoAno = [...new Set(
-                        terceirizadosData
-                            .filter(e => e.ANO === currentYear)
-                            .map(e => e.MES_NUM)
-                            .filter(Boolean)
+                    // Definir currentYear e currentMonth
+                    const anosDisponiveis = [...new Set(
+                        terceirizadosData.map(e => e.ANO).filter(Boolean)
                     )].sort((a, b) => parseInt(b) - parseInt(a));
-                    
-                    if (mesesDoAno.length > 0) {
-                        currentMonth = mesesDoAno[0];
+
+                    if (anosDisponiveis.length > 0) {
+                        currentYear = anosDisponiveis[0];
+
+                        const mesesDisponiveis = [...new Set(
+                            terceirizadosData
+                                .filter(e => e.ANO === currentYear)
+                                .map(e => e.MES_NUM)
+                                .filter(Boolean)
+                        )].sort((a, b) => parseInt(b) - parseInt(a));
+
+                        if (mesesDisponiveis.length > 0) {
+                            currentMonth = mesesDisponiveis[0];
+                        }
                     }
+
+                    filteredData = terceirizadosData.filter(e =>
+                        e.ANO === currentYear &&
+                        e.MES_NUM === currentMonth
+                    );
+
+                    console.log(`Período atual: ${currentMonth}/${currentYear}`);
+                    console.log(`Registros filtrados: ${filteredData.length}`);
+
+                    resolve();
+                },
+
+                error: function (err) {
+                    console.error('Erro no parse do CSV:', err);
+                    reject(err);
                 }
-
-                // Filtrar dados para o período atual
-                filteredData = terceirizadosData.filter(e => 
-                    e.ANO === currentYear && 
-                    e.MES_NUM === currentMonth
-                );
-
-                console.log(`Período atual: ${currentMonth}/${currentYear}`);
-                console.log(`Registros filtrados: ${filteredData.length}`);
-                resolve();
-            },
-            error: function (error) {
-                console.error('Erro ao carregar CSV:', error);
-                reject(error);
-            }
+            });
         });
-    });
-}
 
+    } catch (err) {
+        console.error('Erro ao baixar CSV:', err);
+        throw err;
+    }
+}
+               
+        
         // ==================== CONFIGURAR EVENT LISTENERS ====================
         function setupEventListeners() {
             // Filtros Dashboard 1
