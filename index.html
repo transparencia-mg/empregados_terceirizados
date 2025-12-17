@@ -1394,14 +1394,28 @@
                 const row = results.data;
 
                 const empregado = {
-                    'MAT.': row['MAT.'] || '',
-                    'NOME': row['NOME'] || '',
-                    'ÓRGÃO': row['ÓRGÃO'] || '',
-                    'CARGO': row['CARGO'] || '',
-                    'EMPRESA': row['EMPRESA'] || '',
-                    'CNPJ EMPRESA': row['CNPJ EMPRESA'] || '',
-                    'MÊS REFERÊNCIA': row['MÊS REFERÊNCIA'] || ''
+                    matricula: row['matricula'] || '',
+    		    nome: row['nome'] || '',
+    		    orgao: row['orgao'] || '',
+    		    cargo: row['cargo'] || '',
+    		    empresa: row['empresa'] || '',
+    		    cnpj_empresa: row['cnpj_empresa'] || '',
+    		    mes_referencia: row['mes_referencia'] || ''
                 };
+
+
+		if (empregado.mes_referencia) {
+    		    const [mesAbrev, anoAbrev] = empregado.mes_referencia.split('-');
+
+    		const meses = {
+        	   jan: '01', fev: '02', mar: '03', abr: '04',
+        	   mai: '05', jun: '06', jul: '07', ago: '08',
+        	   set: '09', out: '10', nov: '11', dez: '12'
+    		};
+
+    		empregado.MES = meses[mesAbrev.toLowerCase()] || '';
+    		empregado.ANO = `20${anoAbrev}`;
+		}
 
                 // Ano pelo nome do arquivo
                 const anoMatch = CSV_ATUAL.match(/\d{4}/);
@@ -1729,27 +1743,27 @@
                     }
                     
                     // Filtro por nome
-                    if (nome && !empregado['NOME'].toLowerCase().includes(nome)) {
+                    if (nome && !empregado.nome.toLowerCase().includes(nome)) {
                         return false;
                     }
                     
                     // Filtro por cargo
-                    if (cargo !== 'all' && empregado['CARGO'] !== cargo) {
+                    if (cargo !== 'all' && empregado.cargo !== cargo) {
                         return false;
                     }
                     
                     // Filtro por empresa
-                    if (empresa !== 'all' && empregado['EMPRESA'] !== empresa) {
+                    if (empresa !== 'all' && empregado.empresa !== empresa) {
                         return false;
                     }
                     
                     // Filtro por órgão
-                    if (orgao !== 'all' && empregado['ÓRGÃO'] !== orgao) {
+                    if (orgao !== 'all' && empregado.orgao !== orgao) {
                         return false;
                     }
                     
                     // Filtro por matrícula
-                    if (matricula && !empregado['MAT.'].toString().includes(matricula)) {
+                    if (matricula && !empregado.matricula.toString().includes(matricula)) {
                         return false;
                     }
                     
@@ -2276,13 +2290,13 @@
             // Gerar HTML da tabela
             const rowsHTML = currentData.map(empregado => `
                 <tr>
-                    <td>${empregado['MAT.']}</td>
-                    <td><strong>${empregado['NOME']}</strong></td>
-                    <td>${empregado['ÓRGÃO']}</td>
-                    <td>${empregado['CARGO']}</td>
-                    <td>${empregado['EMPRESA']}</td>
-                    <td>${empregado['CNPJ EMPRESA']}</td>
-                    <td>${empregado['MÊS REFERÊNCIA']}</td>
+                    <td>${empregado.matricula}</td>
+                    <td><strong>${empregado.nome}</strong></td>
+                    <td>${empregado.orgao}</td>
+                    <td>${empregado.cargo}</td>
+                    <td>${empregado.empresa}</td>
+                    <td>${empregado.cnpj_empresa}</td>
+                    <td>${empregado.mes_referencia}</td>
                 </tr>
             `).join('');
             
@@ -2457,14 +2471,14 @@
             
             const headers = ['MAT.', 'NOME', 'ÓRGÃO', 'CARGO', 'EMPRESA', 'CNPJ EMPRESA', 'MÊS REFERÊNCIA', 'ANO'];
             const data = filteredData.map(empregado => [
-                empregado['MAT.'],
-                empregado['NOME'],
-                empregado['ÓRGÃO'],
-                empregado['CARGO'],
-                empregado['EMPRESA'],
-                empregado['CNPJ EMPRESA'],
-                empregado['MÊS REFERÊNCIA'],
-                empregado['ANO'] || ''
+                empregado.matricula,
+                empregado.nome,
+                empregado.orgao,
+                empregado.cargo,
+                empregado.empresa,
+                empregado.cnpj_empresa,
+                empregado.mes_referencia,
+                empregado.ano || ''
             ]);
             
             const csvContent = [
