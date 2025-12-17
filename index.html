@@ -1377,108 +1377,100 @@
         });
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
+
+                        
         async function loadDataFromGitHub() {
-            terceirizadosData = [];
-            filteredData = [];
+    terceirizadosData = [];
+    filteredData = [];
 
-            const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
-            console.log(`Carregando CSV mais recente: ${url}`);
+    const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
+    console.log(`Carregando CSV mais recente: ${url}`);
 
-            return new Promise((resolve, reject) => {
-                Papa.parse(url, {
-                    download: true,
-                    header: true,
-                    skipEmptyLines: true,
-                    worker: false,  // disable worker to allow config functions
-                    beforeFirstChunk: c => c.replace(/^\uFEFF/, ''),
-
-           step: function (results) {
+    return new Promise((resolve, reject) => {
+        Papa.parse(url, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            worker: true,
+            beforeFirstChunk: function(chunk) {
+                // Remove BOM UTF-8 se existir
+                return chunk.replace(/^\uFEFF/, '');
+            },
+            step: function (results) {
                 const row = results.data;
-                // normalize row...
+                
+                // Extrair e normalizar os dados
+                const empregado = {
+                    matricula: row.matricula || row['MAT.'] || '',
+                    nome: row.nome || row.NOME || '',
+                    orgao: row.orgao || row['ÓRGÃO'] || '',
+                    cargo: row.cargo || row.CARGO || '',
+                    empresa: row.empresa || row.EMPRESA || '',
+                    cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
+                    mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
+                };
+
+                // Extrair ano e mês do formato "jan-25"
+                if (empregado.mes_referencia) {
+                    const mesRef = empregado.mes_referencia.toLowerCase().trim();
+                    
+                    if (mesRef.includes('-')) {
+                        const [mesAbrev, anoAbrev] = mesRef.split('-');
+                        
+                        // Converter mês abreviado para número
+                        empregado.MES_NUM = mesesAbreviados[mesAbrev] || '01';
+                        
+                        // Converter ano abreviado para completo (assumindo 2000+)
+                        const anoCompleto = '20' + anoAbrev;
+                        empregado.ANO = anoCompleto;
+                        empregado.MES_ABREV = mesAbrev;
+                        empregado.ANO_ABREV = anoAbrev;
+                    }
+                }
+
                 terceirizadosData.push(empregado);
             },
-
             complete: function () {
-                // compute currentYear, currentMonth, filteredData...
+                console.log(`CSV carregado: ${terceirizadosData.length} registros`);
+
+                // Encontrar o período mais recente
+                const anosDisponiveis = [...new Set(
+                    terceirizadosData.map(e => e.ANO).filter(Boolean)
+                )].sort((a, b) => parseInt(b) - parseInt(a));
+
+                if (anosDisponiveis.length > 0) {
+                    currentYear = anosDisponiveis[0];
+                    
+                    // Encontrar o mês mais recente do ano atual
+                    const mesesDoAno = [...new Set(
+                        terceirizadosData
+                            .filter(e => e.ANO === currentYear)
+                            .map(e => e.MES_NUM)
+                            .filter(Boolean)
+                    )].sort((a, b) => parseInt(b) - parseInt(a));
+                    
+                    if (mesesDoAno.length > 0) {
+                        currentMonth = mesesDoAno[0];
+                    }
+                }
+
+                // Filtrar dados para o período atual
+                filteredData = terceirizadosData.filter(e => 
+                    e.ANO === currentYear && 
+                    e.MES_NUM === currentMonth
+                );
+
+                console.log(`Período atual: ${currentMonth}/${currentYear}`);
+                console.log(`Registros filtrados: ${filteredData.length}`);
                 resolve();
             },
-
             error: function (error) {
+                console.error('Erro ao carregar CSV:', error);
                 reject(error);
             }
+        });
     });
-                        
-                        // Extrair e normalizar os dados
-                        const empregado = {
-                            matricula: row.matricula || row['MAT.'] || '',
-                            nome: row.nome || row.NOME || '',
-                            orgao: row.orgao || row['ÓRGÃO'] || '',
-                            cargo: row.cargo || row.CARGO || '',
-                            empresa: row.empresa || row.EMPRESA || '',
-                            cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
-                            mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
-                        };
-
-                        // Extrair ano e mês do formato "jan-25"
-                        if (empregado.mes_referencia) {
-                            const mesRef = empregado.mes_referencia.toLowerCase().trim();
-                            
-                            if (mesRef.includes('-')) {
-                                const [mesAbrev, anoAbrev] = mesRef.split('-');
-                                
-                                // Converter mês abreviado para número
-                                empregado.MES_NUM = mesesAbreviados[mesAbrev] || '01';
-                                
-                                // Converter ano abreviado para completo (assumindo 2000+)
-                                const anoCompleto = '20' + anoAbrev;
-                                empregado.ANO = anoCompleto;
-                                empregado.MES_ABREV = mesAbrev;
-                                empregado.ANO_ABREV = anoAbrev;
-                            }
-                        }
-
-                        terceirizadosData.push(empregado);
-                    },
-                    complete: function () {
-                        console.log(`CSV carregado: ${terceirizadosData.length} registros`);
-
-                        // Encontrar o período mais recente
-                        const anosDisponiveis = [...new Set(
-                            terceirizadosData.map(e => e.ANO).filter(Boolean)
-                        )].sort((a, b) => parseInt(b) - parseInt(a));
-
-                        if (anosDisponiveis.length > 0) {
-                            currentYear = anosDisponiveis[0];
-                            
-                            // Encontrar o mês mais recente do ano atual
-                            const mesesDoAno = terceirizadosData
-                                .filter(e => e.ANO === currentYear)
-                                .map(e => e.MES_NUM)
-                                .filter(Boolean);
-                            
-                            if (mesesDoAno.length > 0) {
-                                // Encontrar o maior número de mês
-                                currentMonth = mesesDoAno.sort((a, b) => parseInt(b) - parseInt(a))[0];
-                            }
-                        }
-
-                        // Filtrar dados para o período atual
-                        filteredData = terceirizadosData.filter(e => 
-                            e.ANO === currentYear && 
-                            e.MES_NUM === currentMonth
-                        );
-
-                        console.log(`Período atual: ${currentMonth}/${currentYear}`);
-                        console.log(`Registros filtrados: ${filteredData.length}`);
-                        resolve();
-                    },
-                    error: function (error) {
-                        console.error('Erro ao carregar CSV:', error);
-                        reject(error);
-                    }
-                });
-            });
-        }
+}
 
         // ==================== CONFIGURAR EVENT LISTENERS ====================
         function setupEventListeners() {
