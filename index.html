@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -1198,46 +1198,46 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>MAT.</td>
+                                            <td>matricula</td>
                                             <td>Matrícula do empregado terceirizado</td>
                                             <td>Texto/Número</td>
-                                            <td>12345</td>
+                                            <td>130380</td>
                                         </tr>
                                         <tr>
-                                            <td>NOME</td>
+                                            <td>nome</td>
                                             <td>Nome completo do empregado terceirizado</td>
                                             <td>Texto</td>
-                                            <td>JOÃO DA SILVA</td>
+                                            <td>AARAO PECOA MACIEL</td>
                                         </tr>
                                         <tr>
-                                            <td>ÓRGÃO</td>
+                                            <td>orgao</td>
                                             <td>Órgão de trabalho do empregado</td>
                                             <td>Texto</td>
-                                            <td>SECRETARIA DE EDUCAÇÃO</td>
+                                            <td>PBH SMED</td>
                                         </tr>
                                         <tr>
-                                            <td>CARGO</td>
+                                            <td>cargo</td>
                                             <td>Cargo exercido pelo empregado</td>
                                             <td>Texto</td>
-                                            <td>AUXILIAR ADMINISTRATIVO</td>
+                                            <td>PORTEIRO ESCOLAR</td>
                                         </tr>
                                         <tr>
-                                            <td>EMPRESA</td>
+                                            <td>empresa</td>
                                             <td>Nome da empresa terceirizada</td>
                                             <td>Texto</td>
-                                            <td>EMPRESA XYZ LTDA</td>
+                                            <td>Minas Gerais Administração e Serviços S.A</td>
                                         </tr>
                                         <tr>
-                                            <td>CNPJ EMPRESA</td>
+                                            <td>cnpj_empresa</td>
                                             <td>CNPJ da empresa terceirizada</td>
                                             <td>Texto (14 dígitos)</td>
-                                            <td>12.345.678/0001-90</td>
+                                            <td>33.224.254/0001-42</td>
                                         </tr>
                                         <tr>
-                                            <td>MÊS REFERÊNCIA</td>
-                                            <td>Mês do contrato de trabalho (formato dd/mm/aaaa)</td>
-                                            <td>Data</td>
-                                            <td>01/01/2024</td>
+                                            <td>mes_referencia</td>
+                                            <td>Mês do contrato de trabalho (formato abreviado)</td>
+                                            <td>Texto</td>
+                                            <td>jan-25</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1285,12 +1285,12 @@
         </div>
     </footer>
 
-                <!-- ==================== LOADING OVERLAY ==================== -->
+    <!-- ==================== LOADING OVERLAY ==================== -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
-        </div>
+    </div>
 
-        <!-- ==================== SCRIPTS ==================== -->
+    <!-- ==================== SCRIPTS ==================== -->
 
     <!-- PapaParse (TEM QUE VIR PRIMEIRO) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
@@ -1304,8 +1304,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-    
-   
         // ============================================
         // VARIÁVEIS GLOBAIS
         // ============================================
@@ -1316,7 +1314,8 @@
         let itemsPerPageDashboard1 = 50;
         let itemsPerPageDashboard2 = 50;
         let charts = {};
-        let currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+        let currentYear = new Date().getFullYear().toString();
+        let currentMonth = '';
         
         const chartColors = {
             primary: '#2C5530',
@@ -1328,11 +1327,10 @@
             secondaryTeal: '#20B2AA'
         };
 
-        
         // URLs dos CSVs no GitHub
         const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados/main/data/';
 
-        // INICIO LISTA CSV
+        // LISTA CSV
         const CSV_FILES = [
             'terceirizados_2021.csv',
             'terceirizados_2022.csv',
@@ -1340,12 +1338,16 @@
             'terceirizados_2024.csv',
             'terceirizados_2025.csv'
         ];
-        // FIM LISTA CSV
 
         // CSV mais recente (sempre o último da lista)
         const CSV_ATUAL = CSV_FILES[CSV_FILES.length - 1];
 
-        
+        // Mapeamento de meses abreviados para números
+        const mesesAbreviados = {
+            'jan': '01', 'fev': '02', 'mar': '03', 'abr': '04', 'mai': '05', 'jun': '06',
+            'jul': '07', 'ago': '08', 'set': '09', 'out': '10', 'nov': '11', 'dez': '12'
+        };
+
         // ==================== FUNÇÕES DE INICIALIZAÇÃO ====================
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('=== INICIANDO DASHBOARD TERCEIRIZADOS ===');
@@ -1375,133 +1377,97 @@
         });
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
-
         async function loadDataFromGitHub() {
-    terceirizadosData = [];
-    filteredData = [];
+            terceirizadosData = [];
+            filteredData = [];
 
-    const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
-    console.log(`Carregando CSV mais recente (stream): ${url}`);
+            const url = `${GITHUB_BASE_URL}${CSV_ATUAL}`;
+            console.log(`Carregando CSV mais recente: ${url}`);
 
-    return new Promise((resolve, reject) => {
-        Papa.parse(url, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            worker: true,
+            return new Promise((resolve, reject) => {
+                Papa.parse(url, {
+                    download: true,
+                    header: true,
+                    skipEmptyLines: true,
+                    worker: true,
+                    beforeFirstChunk: function(chunk) {
+                        // Remove BOM UTF-8 se existir
+                        return chunk.replace(/^\uFEFF/, '');
+                    },
+                    step: function (results) {
+                        const row = results.data;
+                        
+                        // Extrair e normalizar os dados
+                        const empregado = {
+                            matricula: row.matricula || row['MAT.'] || '',
+                            nome: row.nome || row.NOME || '',
+                            orgao: row.orgao || row['ÓRGÃO'] || '',
+                            cargo: row.cargo || row.CARGO || '',
+                            empresa: row.empresa || row.EMPRESA || '',
+                            cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
+                            mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
+                        };
 
-	beforeFirstChunk: function(chunk) {
-        	// Remove BOM UTF-8 se existir
-        	return chunk.replace(/^\uFEFF/, '');
-    	},
+                        // Extrair ano e mês do formato "jan-25"
+                        if (empregado.mes_referencia) {
+                            const mesRef = empregado.mes_referencia.toLowerCase().trim();
+                            
+                            if (mesRef.includes('-')) {
+                                const [mesAbrev, anoAbrev] = mesRef.split('-');
+                                
+                                // Converter mês abreviado para número
+                                empregado.MES_NUM = mesesAbreviados[mesAbrev] || '01';
+                                
+                                // Converter ano abreviado para completo (assumindo 2000+)
+                                const anoCompleto = '20' + anoAbrev;
+                                empregado.ANO = anoCompleto;
+                                empregado.MES_ABREV = mesAbrev;
+                                empregado.ANO_ABREV = anoAbrev;
+                            }
+                        }
 
-            step: function (results) {
-                const row = results.data;
+                        terceirizadosData.push(empregado);
+                    },
+                    complete: function () {
+                        console.log(`CSV carregado: ${terceirizadosData.length} registros`);
 
-                const empregado = {
-                    matricula: row.matricula || '',
-    		    nome: row.nome || '',
-    		    orgao: row.orgao || '',
-    		    cargo: row.cargo || '',
-    		    empresa: row.empresa || '',
-    		    cnpj_empresa: row.cnpj_empresa || '',
-    		    mes_referencia: row.mes_referencia || ''
-                };
+                        // Encontrar o período mais recente
+                        const anosDisponiveis = [...new Set(
+                            terceirizadosData.map(e => e.ANO).filter(Boolean)
+                        )].sort((a, b) => parseInt(b) - parseInt(a));
 
+                        if (anosDisponiveis.length > 0) {
+                            currentYear = anosDisponiveis[0];
+                            
+                            // Encontrar o mês mais recente do ano atual
+                            const mesesDoAno = terceirizadosData
+                                .filter(e => e.ANO === currentYear)
+                                .map(e => e.MES_NUM)
+                                .filter(Boolean);
+                            
+                            if (mesesDoAno.length > 0) {
+                                // Encontrar o maior número de mês
+                                currentMonth = mesesDoAno.sort((a, b) => parseInt(b) - parseInt(a))[0];
+                            }
+                        }
 
-		// converter jan-25 → MES / ANO
-        	if (empregado.mes_referencia.includes('-')) {
-            		const [mesAbrev, anoAbrev] = empregado.mes_referencia.split('-');
+                        // Filtrar dados para o período atual
+                        filteredData = terceirizadosData.filter(e => 
+                            e.ANO === currentYear && 
+                            e.MES_NUM === currentMonth
+                        );
 
-    		const meses = {
-        	   jan: '01', fev: '02', mar: '03', abr: '04',
-        	   mai: '05', jun: '06', jul: '07', ago: '08',
-        	   set: '09', out: '10', nov: '11', dez: '12'
-    		};
-
-    		empregado.MES = meses[mesAbrev.toLowerCase()] || '';
-    		empregado.ANO = `20${anoAbrev}`;
-		}
-
-		terceirizadosData.push(empregado);
-    	},
-
-    	complete: function () {
-        finalizarCarga();
-    	}
-});
-
-            const dataRef = (row.mes_referencia || '').toString().trim();
-
-            if (dataRef && dataRef.includes('/')) {
-                    const partes = dataRef.split('/').map(p => p.trim());
-
-                if (partes.length === 3) {
-                    // DD/MM/AAAA
-                    empregado.MES = partes[1].padStart(2, '0');
-                    empregado.ANO = partes[2];
-                } else if (partes.length === 2) {
-                    // MM/AAAA
-                    empregado.MES = partes[0].padStart(2, '0');
-                    empregado.ANO = partes[1];
-                }
-            }
-                
-                // ✅ ISSO É O MAIS IMPORTANTE
-                terceirizadosData.push(empregado);
-            },
-
-            complete: function () {
-                console.log(`CSV carregado: ${terceirizadosData.length} registros`);
-
-            // Descobrir o ANO mais recente presente no CSV
-            const anosDisponiveis = [...new Set(
-                terceirizadosData.map(e => e.ANO).filter(Boolean)
-            )].sort((a, b) => parseInt(b) - parseInt(a));
-
-            if (anosDisponiveis.length === 0) {
-                console.error('Nenhum ano válido encontrado no CSV');
-                resolve();
-                return;
-            }
-
-            currentYear = anosDisponiveis[0];
-
-            // Descobrir o MÊS mais recente do ano atual
-            const mesesDisponiveis = [...new Set(
-                terceirizadosData
-                    .filter(e => e.ANO === currentYear)
-                    .map(e => e.MES)
-                    .filter(Boolean)
-            )].sort((a, b) => parseInt(b) - parseInt(a));
-
-            if (mesesDisponiveis.length === 0) {
-                console.error('Nenhum mês válido encontrado para o ano', currentYear);
-                resolve();
-                return;
-            }
-
-            currentMonth = mesesDisponiveis[0];
-
-            // Filtrar período atual corretamente
-            filteredData = terceirizadosData.filter(e =>
-                e.ANO === currentYear &&
-                e.MES === currentMonth
-            );
-
-            console.log(`Período atual: ${currentMonth}/${currentYear}`);
-            console.log(`Registros filtrados: ${filteredData.length}`);
-                resolve();
-            },
-
-            error: function (error) {
-                console.error('Erro ao carregar CSV:', error);
-                reject(error);
-            }
-        });
-    });
-}
-        
+                        console.log(`Período atual: ${currentMonth}/${currentYear}`);
+                        console.log(`Registros filtrados: ${filteredData.length}`);
+                        resolve();
+                    },
+                    error: function (error) {
+                        console.error('Erro ao carregar CSV:', error);
+                        reject(error);
+                    }
+                });
+            });
+        }
 
         // ==================== CONFIGURAR EVENT LISTENERS ====================
         function setupEventListeners() {
@@ -1569,7 +1535,7 @@
                 } catch (error) {
                     console.error('Erro ao atualizar dados:', error);
                 }
-            }, 5 * 60 * 1000); // 5 minutos
+            }, 5 * 60 * 1000);
         }
 
         // ==================== FUNÇÕES DE UTILIDADE ====================
@@ -1599,14 +1565,33 @@
 
         // ==================== FUNÇÕES DE FILTRO ====================
         function updateFilterOptions() {
-            // Dashboard 1 - Ano (apenas o ano atual)
+            // Obter todos os anos disponíveis
+            const anosDisponiveis = [...new Set(
+                terceirizadosData.map(e => e.ANO).filter(Boolean)
+            )].sort((a, b) => parseInt(b) - parseInt(a));
+            
+            // Obter todos os meses disponíveis para o ano atual
+            const mesesDoAnoAtual = [...new Set(
+                terceirizadosData
+                    .filter(e => e.ANO === currentYear)
+                    .map(e => e.MES_NUM)
+                    .filter(Boolean)
+            )].sort((a, b) => parseInt(b) - parseInt(a));
+            
+            // Dashboard 1 - Ano
             const anoSelect1 = document.getElementById('anoDashboard1');
             if (anoSelect1) {
-                anoSelect1.innerHTML = `<option value="${currentYear}">${currentYear}</option>`;
-                anoSelect1.disabled = true;
+                anoSelect1.innerHTML = '';
+                anosDisponiveis.forEach(ano => {
+                    const option = document.createElement('option');
+                    option.value = ano;
+                    option.textContent = ano;
+                    if (ano === currentYear) option.selected = true;
+                    anoSelect1.appendChild(option);
+                });
             }
             
-            // Dashboard 1 - Mês (apenas o mês atual)
+            // Dashboard 1 - Mês
             const mesSelect1 = document.getElementById('mesDashboard1');
             if (mesSelect1) {
                 const monthNames = {
@@ -1615,18 +1600,31 @@
                     '07': 'Julho', '08': 'Agosto', '09': 'Setembro',
                     '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
                 };
-                mesSelect1.innerHTML = `<option value="${currentMonth}">${monthNames[currentMonth] || currentMonth}</option>`;
-                mesSelect1.disabled = true;
+                
+                mesSelect1.innerHTML = '';
+                mesesDoAnoAtual.forEach(mesNum => {
+                    const option = document.createElement('option');
+                    option.value = mesNum;
+                    option.textContent = monthNames[mesNum] || mesNum;
+                    if (mesNum === currentMonth) option.selected = true;
+                    mesSelect1.appendChild(option);
+                });
             }
             
-            // Dashboard 2 - Ano (apenas o ano atual)
+            // Dashboard 2 - Ano
             const anoSelect2 = document.getElementById('anoDashboard2');
             if (anoSelect2) {
-                anoSelect2.innerHTML = `<option value="${currentYear}">${currentYear}</option>`;
-                anoSelect2.disabled = true;
+                anoSelect2.innerHTML = '';
+                anosDisponiveis.forEach(ano => {
+                    const option = document.createElement('option');
+                    option.value = ano;
+                    option.textContent = ano;
+                    if (ano === currentYear) option.selected = true;
+                    anoSelect2.appendChild(option);
+                });
             }
             
-            // Dashboard 2 - Mês (apenas o mês atual)
+            // Dashboard 2 - Mês
             const mesSelect2 = document.getElementById('mesDashboard2');
             if (mesSelect2) {
                 const monthNames = {
@@ -1635,21 +1633,30 @@
                     '07': 'Julho', '08': 'Agosto', '09': 'Setembro',
                     '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
                 };
-                mesSelect2.innerHTML = `<option value="${currentMonth}">${monthNames[currentMonth] || currentMonth}</option>`;
-                mesSelect2.disabled = true;
+                
+                mesSelect2.innerHTML = '';
+                mesesDoAnoAtual.forEach(mesNum => {
+                    const option = document.createElement('option');
+                    option.value = mesNum;
+                    option.textContent = monthNames[mesNum] || mesNum;
+                    if (mesNum === currentMonth) option.selected = true;
+                    mesSelect2.appendChild(option);
+                });
             }
             
             // Obter todos os órgãos únicos do período atual
-            const orgaosUnicos = [...new Set(filteredData.map(e => e['ÓRGÃO']))].sort();
+            const orgaosUnicos = [...new Set(filteredData.map(e => e.orgao))].sort();
             
             // Dashboard 1 - datalist de órgãos
             const orgaoDatalist1 = document.getElementById('orgaosListDashboard1');
             if (orgaoDatalist1) {
                 orgaoDatalist1.innerHTML = '<option value="all">Todos os Órgãos</option>';
                 orgaosUnicos.forEach(orgao => {
-                    const option = document.createElement('option');
-                    option.value = orgao;
-                    orgaoDatalist1.appendChild(option);
+                    if (orgao) {
+                        const option = document.createElement('option');
+                        option.value = orgao;
+                        orgaoDatalist1.appendChild(option);
+                    }
                 });
             }
             
@@ -1658,23 +1665,27 @@
             if (orgaoDatalist2) {
                 orgaoDatalist2.innerHTML = '<option value="all">Todos os Órgãos</option>';
                 orgaosUnicos.forEach(orgao => {
-                    const option = document.createElement('option');
-                    option.value = orgao;
-                    orgaoDatalist2.appendChild(option);
+                    if (orgao) {
+                        const option = document.createElement('option');
+                        option.value = orgao;
+                        orgaoDatalist2.appendChild(option);
+                    }
                 });
             }
             
             // Obter todos os cargos únicos do período atual
-            const cargosUnicos = [...new Set(filteredData.map(e => e['CARGO']))].sort();
+            const cargosUnicos = [...new Set(filteredData.map(e => e.cargo))].sort();
             
             // Dashboard 1 - datalist de cargos
             const cargoDatalist1 = document.getElementById('cargosListDashboard1');
             if (cargoDatalist1) {
                 cargoDatalist1.innerHTML = '<option value="all">Todos os Cargos</option>';
                 cargosUnicos.forEach(cargo => {
-                    const option = document.createElement('option');
-                    option.value = cargo;
-                    cargoDatalist1.appendChild(option);
+                    if (cargo) {
+                        const option = document.createElement('option');
+                        option.value = cargo;
+                        cargoDatalist1.appendChild(option);
+                    }
                 });
             }
             
@@ -1683,23 +1694,27 @@
             if (cargoDatalist2) {
                 cargoDatalist2.innerHTML = '<option value="all">Todos os Cargos</option>';
                 cargosUnicos.forEach(cargo => {
-                    const option = document.createElement('option');
-                    option.value = cargo;
-                    cargoDatalist2.appendChild(option);
+                    if (cargo) {
+                        const option = document.createElement('option');
+                        option.value = cargo;
+                        cargoDatalist2.appendChild(option);
+                    }
                 });
             }
             
             // Obter todas as empresas únicas do período atual
-            const empresasUnicas = [...new Set(filteredData.map(e => e['EMPRESA']))].sort();
+            const empresasUnicas = [...new Set(filteredData.map(e => e.empresa))].sort();
             
             // Dashboard 2 - datalist de empresas
             const empresaDatalist2 = document.getElementById('empresasListDashboard2');
             if (empresaDatalist2) {
                 empresaDatalist2.innerHTML = '<option value="all">Todas as Empresas</option>';
                 empresasUnicas.forEach(empresa => {
-                    const option = document.createElement('option');
-                    option.value = empresa;
-                    empresaDatalist2.appendChild(option);
+                    if (empresa) {
+                        const option = document.createElement('option');
+                        option.value = empresa;
+                        empresaDatalist2.appendChild(option);
+                    }
                 });
             }
         }
@@ -1708,15 +1723,20 @@
             showLoading(true);
             
             if (dashboard === 'dashboard1') {
+                const ano = document.getElementById('anoDashboard1').value;
+                const mes = document.getElementById('mesDashboard1').value;
                 const orgaoInput = document.getElementById('orgaoDashboard1').value;
                 const cargoInput = document.getElementById('cargoDashboard1').value;
                 
                 const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
                 const cargo = cargoInput === 'all' || cargoInput === '' ? 'all' : cargoInput;
                 
+                currentYear = ano;
+                currentMonth = mes;
+                
                 filteredData = terceirizadosData.filter(empregado => {
-                    // Filtrar apenas pelo ano e mês atuais
-                    if (empregado.ANO !== currentYear.toString() || empregado.MES !== currentMonth) {
+                    // Filtrar por ano e mês selecionados
+                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
                         return false;
                     }
                     
@@ -1736,6 +1756,8 @@
                 updateDashboard1();
                 
             } else if (dashboard === 'dashboard2') {
+                const ano = document.getElementById('anoDashboard2').value;
+                const mes = document.getElementById('mesDashboard2').value;
                 const nome = document.getElementById('nomeEmpregado').value.toLowerCase();
                 const cargoInput = document.getElementById('cargoDashboard2').value;
                 const empresaInput = document.getElementById('empresaDashboard2').value;
@@ -1746,9 +1768,12 @@
                 const empresa = empresaInput === 'all' || empresaInput === '' ? 'all' : empresaInput;
                 const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
                 
+                currentYear = ano;
+                currentMonth = mes;
+                
                 filteredData = terceirizadosData.filter(empregado => {
-                    // Filtrar apenas pelo ano e mês atuais
-                    if (empregado.ANO !== currentYear.toString() || empregado.MES !== currentMonth) {
+                    // Filtrar por ano e mês selecionados
+                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
                         return false;
                     }
                     
@@ -1801,13 +1826,36 @@
         }
 
         function clearAllFilters() {
+            // Resetar filtros do Dashboard 1
             document.getElementById('orgaoDashboard1').value = '';
             document.getElementById('cargoDashboard1').value = '';
             
+            // Filtrar para o período mais recente
+            const anosDisponiveis = [...new Set(
+                terceirizadosData.map(e => e.ANO).filter(Boolean)
+            )].sort((a, b) => parseInt(b) - parseInt(a));
+            
+            if (anosDisponiveis.length > 0) {
+                currentYear = anosDisponiveis[0];
+                
+                const mesesDoAno = [...new Set(
+                    terceirizadosData
+                        .filter(e => e.ANO === currentYear)
+                        .map(e => e.MES_NUM)
+                        .filter(Boolean)
+                )].sort((a, b) => parseInt(b) - parseInt(a));
+                
+                if (mesesDoAno.length > 0) {
+                    currentMonth = mesesDoAno[0];
+                }
+            }
+            
             filteredData = terceirizadosData.filter(empregado => {
-                return empregado.ANO === currentYear.toString() && 
-                       empregado.MES === currentMonth;
+                return empregado.ANO === currentYear && 
+                       empregado.MES_NUM === currentMonth;
             });
+            
+            updateFilterOptions();
             updateDashboard1();
         }
 
@@ -1819,10 +1867,32 @@
             document.getElementById('matriculaDashboard2').value = '';
             document.getElementById('searchEmpregados').value = '';
             
+            // Filtrar para o período mais recente
+            const anosDisponiveis = [...new Set(
+                terceirizadosData.map(e => e.ANO).filter(Boolean)
+            )].sort((a, b) => parseInt(b) - parseInt(a));
+            
+            if (anosDisponiveis.length > 0) {
+                currentYear = anosDisponiveis[0];
+                
+                const mesesDoAno = [...new Set(
+                    terceirizadosData
+                        .filter(e => e.ANO === currentYear)
+                        .map(e => e.MES_NUM)
+                        .filter(Boolean)
+                )].sort((a, b) => parseInt(b) - parseInt(a));
+                
+                if (mesesDoAno.length > 0) {
+                    currentMonth = mesesDoAno[0];
+                }
+            }
+            
             filteredData = terceirizadosData.filter(empregado => {
-                return empregado.ANO === currentYear.toString() && 
-                       empregado.MES === currentMonth;
+                return empregado.ANO === currentYear && 
+                       empregado.MES_NUM === currentMonth;
             });
+            
+            updateFilterOptions();
             updateDashboard2();
         }
 
@@ -1843,9 +1913,9 @@
             
             // Calcular métricas
             const totalEmpregados = filteredData.length;
-            const orgaosUnicos = [...new Set(filteredData.map(e => e['ÓRGÃO']))].length;
-            const empresasUnicas = [...new Set(filteredData.map(e => e['EMPRESA']))].length;
-            const cargosUnicos = [...new Set(filteredData.map(e => e['CARGO']))].length;
+            const orgaosUnicos = [...new Set(filteredData.map(e => e.orgao))].length;
+            const empresasUnicas = [...new Set(filteredData.map(e => e.empresa))].length;
+            const cargosUnicos = [...new Set(filteredData.map(e => e.cargo))].length;
             
             const monthNames = {
                 '01': 'Janeiro', '02': 'Fevereiro', '03': 'Março',
@@ -1914,10 +1984,10 @@
             // Agrupar por órgão e cargo
             const grupos = {};
             filteredData.forEach(empregado => {
-                const key = `${empregado.orgao}|${empregado.cargo]}`;
+                const key = `${empregado.orgao}|${empregado.cargo}`;
                 if (!grupos[key]) {
                     grupos[key] = {
-                        orgao: empregado.orgao],
+                        orgao: empregado.orgao,
                         cargo: empregado.cargo,
                         count: 0,
                         empregados: []
@@ -2283,12 +2353,12 @@
             
             // Ordenar por nome
             const empregadosArray = [...filteredData];
-            empregadosArray.sort((a, b) => a['NOME'].localeCompare(b['NOME']));
+            empregadosArray.sort((a, b) => a.nome.localeCompare(b.nome));
             
             // Calcular totais
             const totalEmpregados = empregadosArray.length;
-            const orgaosUnicos = [...new Set(empregadosArray.map(e => e['ÓRGÃO']))].length;
-            const empresasUnicas = [...new Set(empregadosArray.map(e => e['EMPRESA']))].length;
+            const orgaosUnicos = [...new Set(empregadosArray.map(e => e.orgao))].length;
+            const empresasUnicas = [...new Set(empregadosArray.map(e => e.empresa))].length;
             
             // Paginação
             const itemsPerPage = itemsPerPageDashboard2;
@@ -2388,7 +2458,7 @@
 
         // ==================== DASHBOARD 3: DOWNLOADS ====================
         function updateDashboard3() {
-            // Nada a fazer aqui - removida a funcionalidade de upload
+            // Nada a fazer aqui
         }
 
         // ==================== FUNÇÕES GLOBAIS E UTILITÁRIOS ====================
@@ -2441,7 +2511,7 @@
             // Agrupar por órgão e cargo
             const grupos = {};
             filteredData.forEach(empregado => {
-                const key = `${empregado.orgao}|${empregado.orgao}`;
+                const key = `${empregado.orgao}|${empregado.cargo}`;
                 if (!grupos[key]) {
                     grupos[key] = {
                         orgao: empregado.orgao,
@@ -2479,7 +2549,7 @@
         function exportEmpregadosCSV() {
             if (filteredData.length === 0) return;
             
-            const headers = ['MAT.', 'NOME', 'ÓRGÃO', 'CARGO', 'EMPRESA', 'CNPJ EMPRESA', 'MÊS REFERÊNCIA', 'ANO'];
+            const headers = ['matricula', 'nome', 'orgao', 'cargo', 'empresa', 'cnpj_empresa', 'mes_referencia', 'ANO'];
             const data = filteredData.map(empregado => [
                 empregado.matricula,
                 empregado.nome,
@@ -2488,7 +2558,7 @@
                 empregado.empresa,
                 empregado.cnpj_empresa,
                 empregado.mes_referencia,
-                empregado.ano || ''
+                empregado.ANO || ''
             ]);
             
             const csvContent = [
@@ -2507,27 +2577,6 @@
             link.click();
             document.body.removeChild(link);
         }
-
-	function finalizarCarga() {
-   	 const anos = [...new Set(terceirizadosData.map(e => e.ANO))].sort((a,b)=>b-a);
-   	 currentYear = anos[0];
-
-   	 const meses = [...new Set(
-  	      terceirizadosData
-    	        .filter(e => e.ANO === currentYear)
-   	         .map(e => e.MES)
-   	 )].sort((a,b)=>b-a);
-
-  	  currentMonth = meses[0];
-
-   	 filteredData = terceirizadosData.filter(e =>
-   	     e.ANO === currentYear && e.MES === currentMonth
-  	  );
-
-  	  console.log('Período ativo:', currentMonth, currentYear);
-  	  console.log('Registros filtrados:', filteredData.length);
-	}
-
 
         // ==================== FUNÇÕES DE ORDENAÇÃO SIMPLIFICADA ====================
         window.sortTable = function(tableType, column) {
