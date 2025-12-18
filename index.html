@@ -1836,49 +1836,36 @@
         // ==================== FUNÇÕES DE ANO E MES====================
 
 
-	// 1 funções utilitárias
-	function determineLatestMonth() {
-    const mesesComDados = [...new Set(
+		function determineLatestMonth() {
+    if (!terceirizadosData || terceirizadosData.length === 0) {
+        console.warn('Dados ainda não carregados.');
+        filteredData = [];
+        return;
+    }
+
+    const referencias = [...new Set(
         terceirizadosData
-            .map(e => e.MES_NUM)
-            .filter(Boolean)
-    )].sort((a, b) => parseInt(b) - parseInt(a));
+            .filter(e => e.ANO && e.MES_NUM)
+            .map(e => `${e.ANO}-${e.MES_NUM}`)
+    )].sort().reverse();
 
-    if (mesesComDados.length > 0) {
-        currentMonth = mesesComDados[0];
-        currentYear = '2025';
-
-        filteredData = terceirizadosData.filter(e =>
-            e.ANO === currentYear &&
-            e.MES_NUM === currentMonth
-        );
-
-        console.log(`Mês mais recente encontrado: ${currentMonth}/${currentYear}`);
-    } else {
+    if (referencias.length === 0) {
         console.warn('Nenhum mês encontrado nos dados.');
         filteredData = terceirizadosData;
+        return;
     }
-	}
 
-	// 2  loaders (loadYearData etc.)
-	async function loadYearData(year) {
-	}
+    const [ano, mes] = referencias[0];
 
-	// 3 inicialização
-	document.addEventListener('DOMContentLoaded', async () => {
-    	try {
-      	  console.log('Buscando dados do GitHub...');
-      	  await loadYearData(currentYear);
-      	  determineLatestMonth(); // ← agora existe
-       	 updateFilterOptions();
-      	  updateDashboard1();
-       	 updateDashboard2();
-       	 console.log('Dashboard carregado com sucesso!');
-    	} catch (err) {
-       	 console.error('Erro ao carregar dados:', err);
-   	 }
-	});
-	
+    currentYear = ano;
+    currentMonth = mes;
+
+    filteredData = terceirizadosData.filter(e =>
+        e.ANO === currentYear && e.MES_NUM === currentMonth
+    );
+
+    console.log(`Mês mais recente encontrado: ${currentMonth}/${currentYear}`);
+}
 
         // ==================== FUNÇÕES DE FILTRO ====================
         function updateFilterOptions() {
