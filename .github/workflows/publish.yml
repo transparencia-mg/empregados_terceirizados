@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "datapackage/datapackage.json"
 
 jobs:
   publish_update:
@@ -46,13 +44,12 @@ jobs:
           CKAN_HOST: ${{ secrets.CKAN_HOST }}
           CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
         run: |
-        dpckan \
-          --datastore \
-          --datapackage datapackage/datapackage.json \
-          --ckan-host "$CKAN_HOST" \
-          --ckan-key "$CKAN_KEY" \
-          dataset create
-
+          dpckan \
+            --datastore \
+            --datapackage datapackage/datapackage.json \
+            --ckan-host "$CKAN_HOST" \
+            --ckan-key "$CKAN_KEY" \
+            dataset create
 
       - name: Update dataset in CKAN (se existir)
         if: ${{ !cancelled() }}
@@ -60,9 +57,9 @@ jobs:
           CKAN_HOST: ${{ secrets.CKAN_HOST }}
           CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
         run: |
-        dpckan \
-          --datastore \
-          --datapackage datapackage/datapackage.json \
-          --ckan-host "$CKAN_HOST" \
-          --ckan-key "$CKAN_KEY" \
-          dataset update
+          dpckan \
+            --datastore \
+            --datapackage datapackage/datapackage.json \
+            --ckan-host "$CKAN_HOST" \
+            --ckan-key "$CKAN_KEY" \
+            dataset update
