@@ -27,23 +27,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install dpckan frictionless requests
 
-      # ===============================
-      # 1. Gerar datapackage.json
-      # ===============================
       - name: Gerar datapackage.json
         run: python scripts/gerar_datapackage.py
 
-      # ===============================
-      # 2. Commit datapackage.json
-      # ===============================
       - name: Commit datapackage.json
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Atualiza datapackage.json automaticamente
 
-      # ===============================
-      # 3. Publicar no CKAN (create)
-      # ===============================
       - id: string
         uses: ASzc/change-string-case-action@v1
         with:
@@ -57,14 +48,13 @@ jobs:
         run: |
           dpckan \
             --datastore \
+            --organization controladoria-geral-do-estado-cge \
+            --dataset-name empregados-terceirizados \
             --datapackage datapackage/datapackage.json \
             --ckan-host "$CKAN_HOST" \
             --ckan-key "$CKAN_KEY" \
             dataset create
 
-      # ===============================
-      # 4. Publicar no CKAN (update)
-      # ===============================
       - name: Update dataset in CKAN (se existir)
         if: ${{ !cancelled() }}
         env:
@@ -79,4 +69,3 @@ jobs:
             --ckan-host "$CKAN_HOST" \
             --ckan-key "$CKAN_KEY" \
             dataset update
-
