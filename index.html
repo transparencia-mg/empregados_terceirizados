@@ -1683,27 +1683,38 @@
                             mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
                         };
 
-                        // Conversão "jan/25" ou "jan-25" → MES_NUM + ANO
-                        if (empregado.mes_referencia) {
-                            const mesRef = empregado.mes_referencia.toLowerCase().trim();
+					if (empregado.mes_referencia) {
+    const mesRef = empregado.mes_referencia
+        .toLowerCase()
+        .replace(/\u00a0/g, '')   // remove espaço não quebrável
+        .replace(/\s+/g, '')
+        .trim();
 
-                            let separador = null;
-                            if (mesRef.includes('/')) separador = '/';
-                            else if (mesRef.includes('-')) separador = '-';
+    const match = mesRef.match(/^([a-z]{3})[\/\-](\d{2}|\d{4})$/);
 
-                            if (separador) {
-                                const [mesAbrev, anoAbrev] = mesRef.split(separador);
+    if (match) {
+        const mesAbrev = match[1];
+        const anoAbrev = match[2];
 
-                                empregado.MES_NUM = mesesAbreviados[mesAbrev] || '';
-                                empregado.ANO = anoAbrev.length === 2
-                                    ? '20' + anoAbrev
-                                    : anoAbrev;
-                            }
-                        }
+        if (mesesAbreviados[mesAbrev]) {
+            empregado.MES_NUM = mesesAbreviados[mesAbrev];
+            empregado.ANO = anoAbrev.length === 2
+                ? '20' + anoAbrev
+                : anoAbrev;
+        } else {
+            empregado.MES_NUM = null;
+            empregado.ANO = null;
+        }
+    } else {
+        empregado.MES_NUM = null;
+        empregado.ANO = null;
+    }
+}
+
 
                         return empregado;
                     })
-                    .filter(e => e.mes_referencia); // somente registros válidos
+                    .filter(e => e.MES_NUM && e.ANO); // somente registros válidos
 
                 allData[year] = data;
                 terceirizadosData = data;
