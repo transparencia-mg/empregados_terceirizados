@@ -2,9 +2,8 @@ name: Gerar datapackage e publicar no CKAN
 
 on:
   push:
-    paths:
-      - "data/*.csv"
-      - "scripts/*.py"
+    branches:
+      - main
 
 jobs:
   publish:
