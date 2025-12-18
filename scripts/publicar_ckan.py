@@ -1,17 +1,26 @@
-# scripts/publicar_ckan.py
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import os
 import subprocess
+import sys
 
-CKAN_URL = "https://www.dados.mg.gov.br"
-DATASET_NAME = "empregados-terceirizados"
+CKAN_API_KEY = os.getenv("CKAN_API_KEY")
 
-subprocess.run([
-    "dpckan",
-    "publish",
+if not CKAN_API_KEY:
+    print("ERRO: variável de ambiente CKAN_API_KEY não definida")
+    sys.exit(1)
+
+cmd = [
+    "dpckan", "publish",
     "datapackage/datapackage.json",
-    "--ckan-host", CKAN_URL,
-    "--api-key", os.environ["CKAN_API_KEY"],
-    "--dataset-name", DATASET_NAME,
+    "--ckan-host", "https://www.dados.mg.gov.br",
+    "--api-key", CKAN_API_KEY,
+    "--dataset-name", "empregados-terceirizados",
     "--organization", "controladoria-geral-do-estado-cge",
     "--force"
-], check=True)
+]
+
+print("Executando:", " ".join(cmd[:-1] + ["***"]))
+
+subprocess.run(cmd, check=True)
