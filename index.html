@@ -1552,19 +1552,65 @@
 
         // Mapeamento de siglas para nomes completos de órgãos
         const orgaosExtenso = {
-            'PBH': 'Prefeitura Municipal de Belo Horizonte',
-            'PMBH': 'Prefeitura Municipal de Belo Horizonte',
-            'CBM': 'Corpo de Bombeiros Militar',
-            'PM': 'Polícia Militar',
-            'TJMG': 'Tribunal de Justiça de Minas Gerais',
-            'MPMG': 'Ministério Público de Minas Gerais',
-            'ALMG': 'Assembleia Legislativa de Minas Gerais',
-            'SEPLAG': 'Secretaria de Estado de Planejamento e Gestão',
-            'SEDESE': 'Secretaria de Estado de Desenvolvimento Social',
-            'SEDEC': 'Secretaria de Estado de Defesa Civil',
-            'SEDU': 'Secretaria de Estado de Educação',
-            'SES': 'Secretaria de Estado de Saúde',
-            'SEMAD': 'Secretaria de Estado de Meio Ambiente e Desenvolvimento Sustentável'
+                    'AGE': 'Assembleia Geral do Estado',
+        'ARMVA': 'Administração Regional do Médio Vale do Aço',
+        'ARSAE': 'Agência Reguladora de Serviços de Abastecimento de Água e de Esgotamento Sanitário do Estado de Minas Gerais',
+        'ARTEMIG': 'Agência Reguladora de Transportes do Estado de Minas Gerais',
+        'CBMMG': 'Corpo de Bombeiros Militar de Minas Gerais',
+        'CGE': 'Controladoria-Geral do Estado',
+        'CODEMGE': 'Companhia de Desenvolvimento de Minas Gerais',
+        'COHAB': 'Companhia de Habitação do Estado de Minas Gerais',
+        'DEER': 'Departamento de Edificações e Estradas de Rodagem',
+        'DPMG': 'Defensoria Pública do Estado de Minas Gerais',
+        'EPAMIG': 'Empresa de Pesquisa Agropecuária de Minas Gerais',
+        'ESP': 'Escola de Saúde Pública do Estado de Minas Gerais',
+        'FAOP': 'Fundação de Arte de Ouro Preto',
+        'FAPEMIG': 'Fundação de Amparo à Pesquisa do Estado de Minas Gerais',
+        'FCS': 'Fundação Clóvis Salgado',
+        'FEAM': 'Fundação Estadual do Meio Ambiente',
+        'FHEMIG': 'Fundação Hospitalar do Estado de Minas Gerais',
+        'FJP': 'Fundação João Pinheiro',
+        'FUCAM': 'Fundação Caio Martins',
+        'FUND. HELENA ANTIPOFF': 'Fundação Helena Antipoff',
+        'FUNED': 'Fundação Ezequiel Dias',
+        'GMG': 'Gabinete Militar do Governador',
+        'HEMOMINAS': 'Fundação Centro de Hematologia e Hemoterapia de Minas Gerais',
+        'HPM': 'Hospital da Polícia Militar',
+        'IDENE': 'Instituto de Desenvolvimento do Norte e Nordeste de Minas Gerais',
+        'IEF': 'Instituto Estadual de Florestas',
+        'IEPHA': 'Instituto Estadual do Patrimônio Histórico e Artístico de Minas Gerais',
+        'IGAM': 'Instituto Mineiro de Gestão das Águas',
+        'IMA': 'Instituto Mineiro de Agropecuária',
+        'INVESTE MINAS': 'Agência de Promoção de Investimentos e Comércio Exterior de Minas Gerais',
+        'IPEM': 'Instituto de Pesos e Medidas',
+        'IPSEMG': 'Instituto de Previdência dos Servidores',
+        'IPSM': 'Instituto de Previdência dos Servidores Militares',
+        'JUCEMG/UBERLÂNDIA': 'Junta Comercial do Estado de Minas Gerais',
+        'LEMG': 'Loteria Mineira',
+        'OGE': 'Ouvidoria-Geral do Estado',
+        'PCMG': 'Polícia Civil',
+        'PRODEMGE': 'Empresa de Tecnologia da Informação do Estado de Minas Gerais S.A.',
+        'SCC': 'Secretaria de Estado da Casa Civil',
+        'SEAPA': 'Secretaria de Estado de Agricultura, Pecuária e Abastecimento',
+        'SEC': 'Secretaria de Estado de Cultura',
+        'SECOM': 'Secretaria de Estado de Comunicação Social',
+        'SEDE': 'Secretaria de Estado de Desenvolvimento Econômico',
+        'SEDESE': 'Secretaria de Estado de Desenvolvimento Social',
+        'SEE': 'Secretaria de Estado de Educação',
+        'SEF': 'Secretaria de Estado de Fazenda',
+        'SEGOV': 'Secretaria de Estado de Governo',
+        'SEINFRA': 'Secretaria de Estado de Infraestrutura e Mobilidade',
+        'SEJUSP': 'Secretaria de Estado de Justiça e Segurança Pública',
+        'SEMAD': 'Secretaria de Estado de Meio Ambiente e Desenvolvimento Sustentável',
+        'SEPLAG': 'Secretaria de Estado de Planejamento e Gestão',
+        'SEPLAG UAI': 'Secretaria de Estado de Planejamento e Gestão',
+        'SES': 'Secretaria de Estado de Saúde',
+        'SG': 'Secretaria Geral do Estado',
+        'TJMG': 'Tribunal de Justiça de Minas Gerais',
+        'TV MINAS': 'Empresa Mineira de Comunicação',
+        'UEMG': 'Universidade do Estado de Minas Gerais',
+        'UNIMONTES': 'Universidade Estadual de Montes Claros',
+        'UTRAMIG': 'Fundação de Educação para o Trabalho de Minas Gerais'
         };
 
         // ==================== FUNÇÕES DE INICIALIZAÇÃO ====================
@@ -1622,64 +1668,24 @@
                     download: true,
                     header: true,
                     skipEmptyLines: true,
-                    encoding: 'UTF-8',
+                    encoding: 'ISO-8859-1',
                     complete: function (results) {
                         const data = results.data.map(row => {
-                            // CORREÇÃO DOS CARACTERES ESPECIAIS
-                            const decodeField = (field) => {
-                                if (!field) return '';
-                                // Corrigir caracteres especiais comuns
-                                let decoded = field
-                                    .replace(/Ã§/g, 'ç')
-                                    .replace(/Ã¡/g, 'á')
-                                    .replace(/Ã©/g, 'é')
-                                    .replace(/Ã-/g, 'í')
-                                    .replace(/Ã³/g, 'ó')
-                                    .replace(/Ãº/g, 'ú')
-                                    .replace(/Ã£/g, 'ã')
-                                    .replace(/Ãµ/g, 'õ')
-                                    .replace(/Ã¢/g, 'â')
-                                    .replace(/Ãª/g, 'ê')
-                                    .replace(/Ã®/g, 'î')
-                                    .replace(/Ã´/g, 'ô')
-                                    .replace(/Ã»/g, 'û')
-                                    .replace(/Ã /g, 'à')
-                                    .replace(/Ã¨/g, 'è')
-                                    .replace(/Ã¬/g, 'ì')
-                                    .replace(/Ã²/g, 'ò')
-                                    .replace(/Ã¹/g, 'ù')
-                                    .replace(/Ã/g, 'Ç')
-                                    .replace(/Ã/g, 'Á')
-                                    .replace(/Ã/g, 'É')
-                                    .replace(/Ã/g, 'Í')
-                                    .replace(/Ã/g, 'Ó')
-                                    .replace(/Ã/g, 'Ú')
-                                    .replace(/Ã/g, 'Ã')
-                                    .replace(/Ã/g, 'Õ')
-                                    .replace(/Ã/g, 'Â')
-                                    .replace(/Ã/g, 'Ê')
-                                    .replace(/Ã/g, 'Î')
-                                    .replace(/Ã/g, 'Ô')
-                                    .replace(/Ã/g, 'Û')
-                                    .replace(/Â°/g, '°')
-                                    .replace(/&ccedil;/g, 'ç')
-                                    .replace(/&atilde;/g, 'ã')
-                                    .replace(/&otilde;/g, 'õ')
-                                    .replace(/&aacute;/g, 'á')
-                                    .replace(/&eacute;/g, 'é')
-                                    .replace(/&iacute;/g, 'í')
-                                    .replace(/&oacute;/g, 'ó')
-                                    .replace(/&uacute;/g, 'ú');
-                                
-                                // CORREÇÃO ESPECÍFICA PARA MINAS GERAIS ADMINISTRAÇÃO E SERVIÇOS S.A
-                                if (decoded.includes('MINAS GERAIS ADMINISTRA') || 
-                                    decoded.includes('MINAS GERAIS ADMINISTRAÇ') ||
-                                    decoded.includes('MINAS GERAIS ADMINISTRAC')) {
-                                    decoded = 'MINAS GERAIS ADMINISTRAÇÃO E SERVIÇOS S.A';
-                                }
-                                
-                                return decoded;
-                            };
+                                ...row
+        		}));
+
+        		allData[year] = data;
+        		terceirizadosData = data;
+
+        		console.log(`Dados de ${year} carregados: ${data.length} registros`);
+        		resolve();
+    		},
+    		error: function (err) {
+        		console.error(`Erro ao carregar dados de ${year}:`, err);
+        		reject(err);
+    		}
+	});
+
 
                             const empregado = {
                                 matricula: row.matricula || row['MAT.'] || '',
