@@ -38,28 +38,28 @@ jobs:
         with:
           string: ${{ github.actor }}
 
-      - name: Create dataset in CKAN (se não existir)
-        continue-on-error: true
-        env:
-          CKAN_HOST: ${{ secrets.CKAN_HOST }}
-          CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
-        run: |
-          dpckan \
-            --datastore \
-            --datapackage datapackage/datapackage.json \
-            --ckan-host "$CKAN_HOST" \
-            --ckan-key "$CKAN_KEY" \
-            dataset create
+- name: Create dataset in CKAN (se não existir)
+  continue-on-error: true
+  env:
+    CKAN_HOST: ${{ secrets.CKAN_HOST }}
+    CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
+  run: |
+    dpckan \
+      --datapackage datapackage/datapackage.json \
+      --ckan-host "$CKAN_HOST" \
+      --ckan-key "$CKAN_KEY" \
+      dataset create
 
-      - name: Update dataset in CKAN (se existir)
-        if: ${{ !cancelled() }}
-        env:
-          CKAN_HOST: ${{ secrets.CKAN_HOST }}
-          CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
-        run: |
-          dpckan \
-            --datastore \
-            --datapackage datapackage/datapackage.json \
-            --ckan-host "$CKAN_HOST" \
-            --ckan-key "$CKAN_KEY" \
-            dataset update
+- name: Update dataset in CKAN (se existir)
+  if: ${{ !cancelled() }}
+  env:
+    CKAN_HOST: ${{ secrets.CKAN_HOST }}
+    CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
+  run: |
+    dpckan \
+      --datastore \
+      --datapackage datapackage/datapackage.json \
+      --ckan-host "$CKAN_HOST" \
+      --ckan-key "$CKAN_KEY" \
+      dataset update
+
