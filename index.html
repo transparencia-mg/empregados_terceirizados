@@ -958,7 +958,7 @@
             <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="dashboard1-tab" data-bs-toggle="tab" data-bs-target="#dashboard1" type="button" role="tab">
-                        <i class="fas fa-chart-bar me-2"></i>Visão Geral
+                        <i class="fas fa-chart-bar me-2"></i>Visão Geral por Órgão
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -977,7 +977,7 @@
         <!-- ==================== CONTEÚDO DAS ABAS ==================== -->
         <div class="tab-content" id="dashboardTabsContent">
             
-            <!-- ==================== DASHBOARD 1: VISÃO GERAL ==================== -->
+            <!-- ==================== DASHBOARD 1: VISÃO GERAL POR ÓRGÃO ==================== -->
             <div class="tab-pane fade show active" id="dashboard1" role="tabpanel">
                 
                 <!-- Filtros Dashboard 1 -->
@@ -999,21 +999,12 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3 col-6">
+                        <div class="col-md-6 col-12">
                             <div class="mb-3">
                                 <label for="orgaoDashboard1" class="form-label filter-label">Órgão</label>
                                 <input type="text" class="form-control" list="orgaosListDashboard1" id="orgaoDashboard1" placeholder="Digite ou selecione...">
                                 <datalist id="orgaosListDashboard1">
                                     <option value="all">Todos os Órgãos</option>
-                                </datalist>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="mb-3">
-                                <label for="cargoDashboard1" class="form-label filter-label">Cargo</label>
-                                <input type="text" class="form-control" list="cargosListDashboard1" id="cargoDashboard1" placeholder="Digite ou selecione...">
-                                <datalist id="cargosListDashboard1">
-                                    <option value="all">Todos os Cargos</option>
                                 </datalist>
                             </div>
                         </div>
@@ -1083,10 +1074,10 @@
                     </div>
                 </div>
 
-                <!-- Tabela Dashboard 1 -->
+                <!-- Tabela Dashboard 1 - AGORA APENAS POR ÓRGÃO -->
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Visão Geral por Órgão e Cargo</h3>
+                        <h3 class="table-title">Visão Geral por Órgão</h3>
                         <div class="d-flex align-items-center gap-3 ms-auto">
                             <div class="items-per-page">
                                 <span>Itens por página:</span>
@@ -1107,12 +1098,10 @@
                                     <th data-sort="orgao" data-order="asc" onclick="sortTable('visaoGeral', 'orgao')">
                                         Órgão <span class="sort-icon">▼</span>
                                     </th>
-                                    <th data-sort="cargo" data-order="asc" onclick="sortTable('visaoGeral', 'cargo')">
-                                        Cargo <span class="sort-icon">▼</span>
-                                    </th>
                                     <th data-sort="quantidade" data-order="desc" onclick="sortTable('visaoGeral', 'quantidade')">
                                         Quantidade de Empregados <span class="sort-icon">▼</span>
                                     </th>
+                                    <th>Total por Cargos</th>
                                 </tr>
                             </thead>
                             <tbody id="resumoTableBody">
@@ -1562,6 +1551,23 @@
             '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
         };
 
+        // Mapeamento de siglas para nomes completos de órgãos
+        const orgaosExtenso = {
+            'PBH': 'Prefeitura Municipal de Belo Horizonte',
+            'PMBH': 'Prefeitura Municipal de Belo Horizonte',
+            'CBM': 'Corpo de Bombeiros Militar',
+            'PM': 'Polícia Militar',
+            'TJMG': 'Tribunal de Justiça de Minas Gerais',
+            'MPMG': 'Ministério Público de Minas Gerais',
+            'ALMG': 'Assembleia Legislativa de Minas Gerais',
+            'SEPLAG': 'Secretaria de Estado de Planejamento e Gestão',
+            'SEDESE': 'Secretaria de Estado de Desenvolvimento Social',
+            'SEDEC': 'Secretaria de Estado de Defesa Civil',
+            'SEDU': 'Secretaria de Estado de Educação',
+            'SES': 'Secretaria de Estado de Saúde',
+            'SEMAD': 'Secretaria de Estado de Meio Ambiente e Desenvolvimento Sustentável'
+        };
+
         // ==================== FUNÇÕES DE INICIALIZAÇÃO ====================
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('=== INICIANDO DASHBOARD TERCEIRIZADOS ===');
@@ -1620,15 +1626,65 @@
                     encoding: 'UTF-8',
                     complete: function (results) {
                         const data = results.data.map(row => {
-                            // Corrigir caracteres especiais
+                            // CORREÇÃO DOS CARACTERES ESPECIAIS
                             const decodeField = (field) => {
                                 if (!field) return '';
-                                return field.replace(/�/g, 'ç').replace(/Ã§/g, 'ç');
+                                // Corrigir caracteres especiais comuns
+                                let decoded = field
+                                    .replace(/Ã§/g, 'ç')
+                                    .replace(/Ã¡/g, 'á')
+                                    .replace(/Ã©/g, 'é')
+                                    .replace(/Ã-/g, 'í')
+                                    .replace(/Ã³/g, 'ó')
+                                    .replace(/Ãº/g, 'ú')
+                                    .replace(/Ã£/g, 'ã')
+                                    .replace(/Ãµ/g, 'õ')
+                                    .replace(/Ã¢/g, 'â')
+                                    .replace(/Ãª/g, 'ê')
+                                    .replace(/Ã®/g, 'î')
+                                    .replace(/Ã´/g, 'ô')
+                                    .replace(/Ã»/g, 'û')
+                                    .replace(/Ã /g, 'à')
+                                    .replace(/Ã¨/g, 'è')
+                                    .replace(/Ã¬/g, 'ì')
+                                    .replace(/Ã²/g, 'ò')
+                                    .replace(/Ã¹/g, 'ù')
+                                    .replace(/Ã/g, 'Ç')
+                                    .replace(/Ã/g, 'Á')
+                                    .replace(/Ã/g, 'É')
+                                    .replace(/Ã/g, 'Í')
+                                    .replace(/Ã/g, 'Ó')
+                                    .replace(/Ã/g, 'Ú')
+                                    .replace(/Ã/g, 'Ã')
+                                    .replace(/Ã/g, 'Õ')
+                                    .replace(/Ã/g, 'Â')
+                                    .replace(/Ã/g, 'Ê')
+                                    .replace(/Ã/g, 'Î')
+                                    .replace(/Ã/g, 'Ô')
+                                    .replace(/Ã/g, 'Û')
+                                    .replace(/Â°/g, '°')
+                                    .replace(/&ccedil;/g, 'ç')
+                                    .replace(/&atilde;/g, 'ã')
+                                    .replace(/&otilde;/g, 'õ')
+                                    .replace(/&aacute;/g, 'á')
+                                    .replace(/&eacute;/g, 'é')
+                                    .replace(/&iacute;/g, 'í')
+                                    .replace(/&oacute;/g, 'ó')
+                                    .replace(/&uacute;/g, 'ú');
+                                
+                                // CORREÇÃO ESPECÍFICA PARA MINAS GERAIS ADMINISTRAÇÃO E SERVIÇOS S.A
+                                if (decoded.includes('MINAS GERAIS ADMINISTRA') || 
+                                    decoded.includes('MINAS GERAIS ADMINISTRAÇ') ||
+                                    decoded.includes('MINAS GERAIS ADMINISTRAC')) {
+                                    decoded = 'MINAS GERAIS ADMINISTRAÇÃO E SERVIÇOS S.A';
+                                }
+                                
+                                return decoded;
                             };
 
                             const empregado = {
                                 matricula: row.matricula || row['MAT.'] || '',
-                                nome: row.nome || row['NOME'] || '',
+                                nome: decodeField(row.nome || row['NOME'] || ''),
                                 orgao: decodeField(row.orgao || row['ÓRGÃO'] || ''),
                                 cargo: decodeField(row.cargo || row['CARGO'] || ''),
                                 empresa: decodeField(row.empresa || row['EMPRESA'] || ''),
@@ -1839,6 +1895,21 @@
             document.getElementById('footer-atualizacao').textContent = dataFormatada;
         }
 
+        // Função para converter sigla em nome completo do órgão
+        function getOrgaoExtenso(orgaoSigla) {
+            if (!orgaoSigla) return '';
+            
+            // Verificar se é uma sigla conhecida
+            for (const [sigla, nome] of Object.entries(orgaosExtenso)) {
+                if (orgaoSigla.toUpperCase().includes(sigla)) {
+                    return nome;
+                }
+            }
+            
+            // Se não encontrar, retorna o próprio nome
+            return orgaoSigla;
+        }
+
         // ==================== FUNÇÕES DE FILTRO ====================
         function updateFilterOptions() {
             // Dashboard 1 - Ano
@@ -1937,18 +2008,7 @@
             // Obter todos os cargos únicos do período atual
             const cargosUnicos = [...new Set(filteredData.map(e => e.cargo))].sort();
             
-            // Dashboard 1 - datalist de cargos
-            const cargoDatalist1 = document.getElementById('cargosListDashboard1');
-            if (cargoDatalist1) {
-                cargoDatalist1.innerHTML = '<option value="all">Todos os Cargos</option>';
-                cargosUnicos.forEach(cargo => {
-                    if (cargo) {
-                        const option = document.createElement('option');
-                        option.value = cargo;
-                        cargoDatalist1.appendChild(option);
-                    }
-                });
-            }
+            // Dashboard 1 - datalist de cargos (removido conforme solicitado)
             
             // Dashboard 2 - datalist de cargos
             const cargoDatalist2 = document.getElementById('cargosListDashboard2');
@@ -1987,16 +2047,14 @@
                 const ano = document.getElementById('anoDashboard1').value;
                 const mes = document.getElementById('mesDashboard1').value;
                 const orgaoInput = document.getElementById('orgaoDashboard1').value;
-                const cargoInput = document.getElementById('cargoDashboard1').value;
                 
                 const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
-                const cargo = cargoInput === 'all' || cargoInput === '' ? 'all' : cargoInput;
                 
                 // Se o ano mudou, carregar os dados do ano
                 if (ano !== currentYear) {
                     switchYearData(ano).then(() => {
                         // Após carregar o ano, aplicar os filtros
-                        applyFiltersAfterYearLoad(dashboard, mes, orgao, cargo);
+                        applyFiltersAfterYearLoad(dashboard, mes, orgao);
                     });
                     return;
                 }
@@ -2011,11 +2069,6 @@
                     
                     // Filtro por órgão
                     if (orgao !== 'all' && empregado.orgao !== orgao) {
-                        return false;
-                    }
-                    
-                    // Filtro por cargo
-                    if (cargo !== 'all' && empregado.cargo !== cargo) {
                         return false;
                     }
                     
@@ -2092,7 +2145,7 @@
             currentMonth = mes;
             
             if (dashboard === 'dashboard1') {
-                const [orgao, cargo] = otherFilters;
+                const [orgao] = otherFilters;
                 
                 filteredData = (allData[currentYear] || []).filter(empregado => {
                     if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
@@ -2100,10 +2153,6 @@
                     }
                     
                     if (orgao !== 'all' && empregado.orgao !== orgao) {
-                        return false;
-                    }
-                    
-                    if (cargo !== 'all' && empregado.cargo !== cargo) {
                         return false;
                     }
                     
@@ -2205,7 +2254,6 @@
         function clearAllFilters() {
             // Resetar filtros do Dashboard 1
             document.getElementById('orgaoDashboard1').value = '';
-            document.getElementById('cargoDashboard1').value = '';
             
             // Voltar para o mês mais recente do ano atual
             const mesesDoAno = [...new Set(
@@ -2256,7 +2304,7 @@
             updateDashboard2();
         }
 
-        // ==================== DASHBOARD 1: VISÃO GERAL ====================
+        // ==================== DASHBOARD 1: VISÃO GERAL POR ÓRGÃO ====================
         function updateDashboard1() {
             updateSummaryCards();
             updateResumoTable();
@@ -2334,20 +2382,24 @@
                 return;
             }
             
-            // Agrupar por órgão e cargo
+            // Agrupar por órgão
             const grupos = {};
             filteredData.forEach(empregado => {
-                const key = `${empregado.orgao}|${empregado.cargo}`;
-                if (!grupos[key]) {
-                    grupos[key] = {
-                        orgao: empregado.orgao,
-                        cargo: empregado.cargo,
+                const orgao = empregado.orgao;
+                if (!grupos[orgao]) {
+                    grupos[orgao] = {
+                        orgao: orgao,
                         count: 0,
-                        empregados: []
+                        cargos: {}
                     };
                 }
-                grupos[key].count++;
-                grupos[key].empregados.push(empregado);
+                grupos[orgao].count++;
+                
+                // Contar cargos por órgão
+                if (!grupos[orgao].cargos[empregado.cargo]) {
+                    grupos[orgao].cargos[empregado.cargo] = 0;
+                }
+                grupos[orgao].cargos[empregado.cargo]++;
             });
             
             // Converter para array
@@ -2359,8 +2411,6 @@
                 
                 if (currentSortDashboard1.column === 'orgao') {
                     return order * a.orgao.localeCompare(b.orgao);
-                } else if (currentSortDashboard1.column === 'cargo') {
-                    return order * a.cargo.localeCompare(b.cargo);
                 } else if (currentSortDashboard1.column === 'quantidade') {
                     return order * (a.count - b.count);
                 }
@@ -2368,7 +2418,7 @@
             });
             
             // Calcular totais
-            const totalRegistros = resumoArray.length;
+            const totalOrgaos = resumoArray.length;
             const totalEmpregados = resumoArray.reduce((sum, item) => sum + item.count, 0);
             
             // Paginação
@@ -2379,29 +2429,47 @@
             const currentData = resumoArray.slice(startIndex, endIndex);
             
             // Gerar HTML da tabela
-            const rowsHTML = currentData.map(item => `
+            const rowsHTML = currentData.map(item => {
+                // Formatar lista de cargos
+                const cargosList = Object.entries(item.cargos)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3) // Mostrar apenas os 3 principais cargos
+                    .map(([cargo, count]) => `${cargo} (${count})`)
+                    .join(', ');
+                
+                const cargosCount = Object.keys(item.cargos).length;
+                const cargosText = cargosCount > 3 ? 
+                    `${cargosList}... (+${cargosCount - 3} mais)` : 
+                    cargosList;
+                
+                return `
                 <tr>
                     <td>
                         <a href="#" class="orgao-link" onclick="filtrarPorOrgao('${item.orgao.replace(/'/g, "\\'")}')">
-                            <strong>${item.orgao}</strong>
+                            <strong>${getOrgaoExtenso(item.orgao)}</strong><br>
+                            <small class="text-muted">${item.orgao}</small>
                         </a>
                     </td>
-                    <td>${item.cargo}</td>
                     <td>${item.count.toLocaleString()}</td>
+                    <td>
+                        <small>${cargosText}</small><br>
+                        <span class="badge bg-secondary" style="font-size: 10px;">${cargosCount} cargos diferentes</span>
+                    </td>
                 </tr>
-            `).join('');
+            `}).join('');
             
             // Gerar rodapé
             const footerHTML = `
                 <tr class="table-total-row">
-                    <td colspan="2"><strong>TOTAL GERAL (${totalRegistros} combinações)</strong></td>
+                    <td><strong>TOTAL GERAL (${totalOrgaos} órgãos)</strong></td>
                     <td><strong>${totalEmpregados.toLocaleString()}</strong></td>
+                    <td></td>
                 </tr>
             `;
             
             tbody.innerHTML = rowsHTML;
             tfoot.innerHTML = footerHTML;
-            if (countElement) countElement.textContent = `${totalEmpregados.toLocaleString()} empregados`;
+            if (countElement) countElement.textContent = `${totalOrgaos.toLocaleString()} órgãos`;
             if (paginationInfo) paginationInfo.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${resumoArray.length.toLocaleString()} registros`;
             
             updatePaginationDashboard1(totalPages, currentPageDashboard1);
@@ -2478,11 +2546,11 @@
         window.changePageDashboard1 = function(page) {
             const grupos = {};
             filteredData.forEach(empregado => {
-                const key = `${empregado.orgao}|${empregado.cargo}`;
-                if (!grupos[key]) {
-                    grupos[key] = { empregados: [] };
+                const orgao = empregado.orgao;
+                if (!grupos[orgao]) {
+                    grupos[orgao] = { empregados: [] };
                 }
-                grupos[key].empregados.push(empregado);
+                grupos[orgao].empregados.push(empregado);
             });
             
             const totalItems = Object.keys(grupos).length;
@@ -2540,7 +2608,8 @@
                 type: 'pie',
                 data: {
                     labels: orgaosArray.map(item => {
-                        return item.orgao.length > 15 ? item.orgao.substring(0, 15) + '...' : item.orgao;
+                        const orgaoNome = getOrgaoExtenso(item.orgao);
+                        return orgaoNome.length > 15 ? orgaoNome.substring(0, 15) + '...' : orgaoNome;
                     }),
                     datasets: [{
                         data: orgaosArray.map(item => item.count),
@@ -2778,7 +2847,7 @@
                 <tr>
                     <td>${empregado.matricula}</td>
                     <td><strong>${empregado.nome}</strong></td>
-                    <td>${empregado.orgao}</td>
+                    <td>${getOrgaoExtenso(empregado.orgao)}<br><small class="text-muted">${empregado.orgao}</small></td>
                     <td>${empregado.cargo}</td>
                     <td>${empregado.empresa}</td>
                     <td>${empregado.cnpj_empresa}</td>
@@ -2892,7 +2961,7 @@
             }
         };
 
-        // ==================== FUNÇÃO PARA MOSTRAR HISTÓRICO ====================
+        // ==================== FUNÇÃO PARA MOSTRAR HISTÓRICO (AGORA BUSCA EM TODOS OS ANOS) ====================
         window.showEmployeeHistory = function(matricula, nome) {
             showLoading(true);
             
@@ -2901,104 +2970,121 @@
                 const historico = [];
                 let ultimoRegistro = null;
                 
-                // Procurar em todos os anos carregados
-                Object.keys(allData).forEach(ano => {
-                    const dadosAno = allData[ano];
-                    const registrosAno = dadosAno.filter(e => 
-                        e.matricula === matricula || e.nome === nome
-                    );
-                    
-                    registrosAno.forEach(registro => {
-                        historico.push(registro);
-                        if (!ultimoRegistro || 
-                            (registro.ANO > ultimoRegistro.ANO) ||
-                            (registro.ANO === ultimoRegistro.ANO && 
-                             registro.MES_NUM > ultimoRegistro.MES_NUM)) {
-                            ultimoRegistro = registro;
+                // Primeiro, garantir que todos os anos estão carregados
+                const loadAllYears = async () => {
+                    const years = Object.keys(CSV_FILES_BY_YEAR);
+                    for (const year of years) {
+                        if (!allData[year]) {
+                            await loadYearData(year);
                         }
+                    }
+                };
+                
+                // Carregar todos os anos se necessário
+                loadAllYears().then(() => {
+                    // Procurar em todos os anos carregados
+                    Object.keys(allData).forEach(ano => {
+                        const dadosAno = allData[ano];
+                        const registrosAno = dadosAno.filter(e => 
+                            e.matricula === matricula || e.nome === nome
+                        );
+                        
+                        registrosAno.forEach(registro => {
+                            historico.push(registro);
+                            if (!ultimoRegistro || 
+                                (registro.ANO > ultimoRegistro.ANO) ||
+                                (registro.ANO === ultimoRegistro.ANO && 
+                                 registro.MES_NUM > ultimoRegistro.MES_NUM)) {
+                                ultimoRegistro = registro;
+                            }
+                        });
                     });
+                    
+                    // Ordenar histórico por data (mais recente primeiro)
+                    historico.sort((a, b) => {
+                        if (a.ANO !== b.ANO) return parseInt(b.ANO) - parseInt(a.ANO);
+                        return parseInt(b.MES_NUM) - parseInt(a.MES_NUM);
+                    });
+                    
+                    // Preparar informações do empregado
+                    const empregado = ultimoRegistro || historico[0];
+                    
+                    // Atualizar modal
+                    const modal = new bootstrap.Modal(document.getElementById('historicModal'));
+                    
+                    // Informações do empregado
+                    const infoHTML = `
+                        <div class="employee-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Matrícula</span>
+                                <span class="info-value">${empregado.matricula}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Nome</span>
+                                <span class="info-value">${empregado.nome}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Órgão Atual</span>
+                                <span class="info-value">${getOrgaoExtenso(empregado.orgao)}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Cargo Atual</span>
+                                <span class="info-value">${empregado.cargo}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Empresa Atual</span>
+                                <span class="info-value">${empregado.empresa}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">CNPJ Empresa</span>
+                                <span class="info-value">${empregado.cnpj_empresa}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Total de Registros</span>
+                                <span class="info-value">${historico.length} meses</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Período</span>
+                                <span class="info-value">${historico.length > 0 ? 
+                                    `${historico[historico.length-1].mes_referencia} a ${historico[0].mes_referencia}` : 
+                                    'N/A'}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('employeeInfo').innerHTML = infoHTML;
+                    
+                    // Atualizar título do modal
+                    document.getElementById('historicModalLabel').innerHTML = `
+                        <i class="fas fa-history me-2"></i>Histórico de ${empregado.nome}
+                    `;
+                    
+                    // Tabela de histórico
+                    const historicHTML = historico.map(registro => `
+                        <tr>
+                            <td>${registro.mes_referencia}</td>
+                            <td>${getOrgaoExtenso(registro.orgao)}<br><small>${registro.orgao}</small></td>
+                            <td>${registro.cargo}</td>
+                            <td>${registro.empresa}</td>
+                            <td>${registro.cnpj_empresa}</td>
+                        </tr>
+                    `).join('');
+                    
+                    document.getElementById('historicTableBody').innerHTML = historicHTML || 
+                        '<tr><td colspan="5" class="text-center text-muted">Nenhum histórico encontrado</td></tr>';
+                    
+                    // Mostrar modal
+                    modal.show();
+                    showLoading(false);
+                }).catch(error => {
+                    console.error('Erro ao carregar histórico:', error);
+                    showError('Erro ao carregar histórico do empregado.');
+                    showLoading(false);
                 });
-                
-                // Ordenar histórico por data (mais recente primeiro)
-                historico.sort((a, b) => {
-                    if (a.ANO !== b.ANO) return parseInt(b.ANO) - parseInt(a.ANO);
-                    return parseInt(b.MES_NUM) - parseInt(a.MES_NUM);
-                });
-                
-                // Preparar informações do empregado
-                const empregado = ultimoRegistro || historico[0];
-                
-                // Atualizar modal
-                const modal = new bootstrap.Modal(document.getElementById('historicModal'));
-                
-                // Informações do empregado
-                const infoHTML = `
-                    <div class="employee-info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Matrícula</span>
-                            <span class="info-value">${empregado.matricula}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Nome</span>
-                            <span class="info-value">${empregado.nome}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Órgão Atual</span>
-                            <span class="info-value">${empregado.orgao}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Cargo Atual</span>
-                            <span class="info-value">${empregado.cargo}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Empresa Atual</span>
-                            <span class="info-value">${empregado.empresa}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">CNPJ Empresa</span>
-                            <span class="info-value">${empregado.cnpj_empresa}</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Total de Registros</span>
-                            <span class="info-value">${historico.length} meses</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Período</span>
-                            <span class="info-value">${historico.length > 0 ? 
-                                `${historico[historico.length-1].mes_referencia} a ${historico[0].mes_referencia}` : 
-                                'N/A'}</span>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('employeeInfo').innerHTML = infoHTML;
-                
-                // Atualizar título do modal
-                document.getElementById('historicModalLabel').innerHTML = `
-                    <i class="fas fa-history me-2"></i>Histórico de ${empregado.nome}
-                `;
-                
-                // Tabela de histórico
-                const historicHTML = historico.map(registro => `
-                    <tr>
-                        <td>${registro.mes_referencia}</td>
-                        <td>${registro.orgao}</td>
-                        <td>${registro.cargo}</td>
-                        <td>${registro.empresa}</td>
-                        <td>${registro.cnpj_empresa}</td>
-                    </tr>
-                `).join('');
-                
-                document.getElementById('historicTableBody').innerHTML = historicHTML || 
-                    '<tr><td colspan="5" class="text-center text-muted">Nenhum histórico encontrado</td></tr>';
-                
-                // Mostrar modal
-                modal.show();
                 
             } catch (error) {
                 console.error('Erro ao carregar histórico:', error);
                 showError('Erro ao carregar histórico do empregado.');
-            } finally {
                 showLoading(false);
             }
         };
@@ -3136,24 +3222,24 @@
         function exportResumoCSV() {
             if (filteredData.length === 0) return;
             
-            // Agrupar por órgão e cargo
+            // Agrupar por órgão
             const grupos = {};
             filteredData.forEach(empregado => {
-                const key = `${empregado.orgao}|${empregado.cargo}`;
-                if (!grupos[key]) {
-                    grupos[key] = {
-                        orgao: empregado.orgao,
-                        cargo: empregado.cargo,
+                const orgao = empregado.orgao;
+                if (!grupos[orgao]) {
+                    grupos[orgao] = {
+                        orgao: orgao,
+                        orgao_extenso: getOrgaoExtenso(orgao),
                         count: 0
                     };
                 }
-                grupos[key].count++;
+                grupos[orgao].count++;
             });
             
-            const headers = ['Órgão', 'Cargo', 'Quantidade de Empregados'];
+            const headers = ['Órgão (Sigla)', 'Órgão (Nome Completo)', 'Quantidade de Empregados'];
             const data = Object.values(grupos).map(info => [
                 info.orgao,
-                info.cargo,
+                info.orgao_extenso,
                 info.count
             ]);
             
@@ -3167,7 +3253,7 @@
             const url = URL.createObjectURL(blob);
             
             link.setAttribute('href', url);
-            link.setAttribute('download', `visao_geral_terceirizados_${currentYear}_${currentMonth}.csv`);
+            link.setAttribute('download', `visao_geral_orgaos_terceirizados_${currentYear}_${currentMonth}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -3177,11 +3263,12 @@
         function exportEmpregadosCSV() {
             if (filteredData.length === 0) return;
             
-            const headers = ['matricula', 'nome', 'orgao', 'cargo', 'empresa', 'cnpj_empresa', 'mes_referencia', 'ANO'];
+            const headers = ['matricula', 'nome', 'orgao_sigla', 'orgao_nome_completo', 'cargo', 'empresa', 'cnpj_empresa', 'mes_referencia', 'ANO'];
             const data = filteredData.map(empregado => [
                 empregado.matricula,
                 empregado.nome,
                 empregado.orgao,
+                getOrgaoExtenso(empregado.orgao),
                 empregado.cargo,
                 empregado.empresa,
                 empregado.cnpj_empresa,
