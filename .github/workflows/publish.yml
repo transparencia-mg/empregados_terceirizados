@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
@@ -20,8 +22,10 @@ jobs:
         run: |
           pip install dpckan
 
-      - name: Atualizar index.html
-        run: python scripts/atualizar_index.py
+      - name: Rodar scripts de preparação
+        run: |
+          python scripts/normalizar_mes_referencia.py
+          python scripts/atualizar_index.py
 
       - name: Gerar datapackage
         run: python scripts/gerar_datapackage.py
