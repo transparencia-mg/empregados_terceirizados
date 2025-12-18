@@ -1832,6 +1832,55 @@
             return orgaoSigla;
         }
 
+
+        // ==================== FUNÇÕES DE ANO E MES====================
+
+
+	// 1 funções utilitárias
+	function determineLatestMonth() {
+    const mesesComDados = [...new Set(
+        terceirizadosData
+            .map(e => e.MES_NUM)
+            .filter(Boolean)
+    )].sort((a, b) => parseInt(b) - parseInt(a));
+
+    if (mesesComDados.length > 0) {
+        currentMonth = mesesComDados[0];
+        currentYear = '2025';
+
+        filteredData = terceirizadosData.filter(e =>
+            e.ANO === currentYear &&
+            e.MES_NUM === currentMonth
+        );
+
+        console.log(`Mês mais recente encontrado: ${currentMonth}/${currentYear}`);
+    } else {
+        console.warn('Nenhum mês encontrado nos dados.');
+        filteredData = terceirizadosData;
+    }
+	}
+
+	// 2  loaders (loadYearData etc.)
+	async function loadYearData(year) {
+   	...
+	}
+
+	// 3 inicialização
+	document.addEventListener('DOMContentLoaded', async () => {
+    	try {
+      	  console.log('Buscando dados do GitHub...');
+      	  await loadYearData(currentYear);
+      	  determineLatestMonth(); // ← agora existe
+       	 updateFilterOptions();
+      	  updateDashboard1();
+       	 updateDashboard2();
+       	 console.log('Dashboard carregado com sucesso!');
+    	} catch (err) {
+       	 console.error('Erro ao carregar dados:', err);
+   	 }
+	});
+	
+
         // ==================== FUNÇÕES DE FILTRO ====================
         function updateFilterOptions() {
             // Dashboard 1 - Ano
