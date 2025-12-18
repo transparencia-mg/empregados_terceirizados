@@ -21,9 +21,9 @@ datapackage = json.loads(
     Path("datapackage/datapackage.json").read_text(encoding="utf-8")
 )
 
-# =================================================
-# 1. Criar ou atualizar dataset
-# =================================================
+# =============================
+# Criar ou atualizar dataset
+# =============================
 dataset_payload = {
     "name": DATASET_NAME,
     "title": datapackage["title"],
@@ -39,12 +39,7 @@ r = requests.post(
     json={"id": DATASET_NAME}
 )
 
-if r.status_code == 200:
-    print("Dataset existe, atualizando...")
-    action = "package_update"
-else:
-    print("Dataset não existe, criando...")
-    action = "package_create"
+action = "package_update" if r.ok else "package_create"
 
 r = requests.post(
     f"{CKAN_URL}/api/3/action/{action}",
@@ -55,9 +50,11 @@ r = requests.post(
 if not r.ok:
     raise RuntimeError(f"Erro ao criar/atualizar dataset: {r.text}")
 
-# =================================================
-# 2. Criar recursos (um por CSV)
-# =================================================
+print("✔️ Dataset publicado/atualizado com sucesso.")
+
+# =============================
+# Criar recursos
+# =============================
 for res in datapackage["resources"]:
     resource_payload = {
         "package_id": DATASET_NAME,
@@ -74,10 +71,11 @@ for res in datapackage["resources"]:
         json=resource_payload
     )
 
-    if not r.ok:
-        print(f"⚠️ Erro ao criar recurso {res['name']}: {r.text}")
+    if r.ok:
+        print(f"✔️ Recurso publicado: {res['title']}")
     else:
-        print(f"Recurso publicado: {res['title']}")
+        print(f"⚠️ Erro ao criar recurso {res['title']}: {r.text}")
 
-print("✔️ Publicação no CKAN finalizada.")
+print("🏁 Publicação no CKAN finalizada.")
+
 
