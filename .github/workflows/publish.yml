@@ -33,7 +33,6 @@ jobs:
       - name: Publicar no CKAN
         env:
           CKAN_API_KEY: ${{ secrets.CKAN_KEY_KBOMFA }}
-	  CKAN_API_KEY: ${{ secrets.CKAN_KEY_KESIABOMFA }}
 	  CKAN_API_KEY: ${{ secrets.CKAN_KEY_SILVIANAFARIA }}
         run: python scripts/publicar_ckan.py
 
