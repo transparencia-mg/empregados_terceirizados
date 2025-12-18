@@ -4,10 +4,10 @@ import requests
 from pathlib import Path
 
 CKAN_URL = "https://www.dados.mg.gov.br"
-API_KEY = os.environ.get("CKAN_API_KEY")
+API_KEY = os.environ.get("CKAN_KEY")
 
 if not API_KEY:
-    raise RuntimeError("CKAN_API_KEY não encontrada como variável de ambiente")
+    raise RuntimeError("CKAN_KEY não encontrada como variável de ambiente")
 
 HEADERS = {
     "Authorization": API_KEY,
