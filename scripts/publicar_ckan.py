@@ -1,26 +1,40 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# scripts/gerar_datapackage.py
+import json
+from pathlib import Path
 
-import os
-import subprocess
-import sys
+DATA_DIR = Path("data")
+OUTPUT = Path("datapackage/datapackage.json")
 
-CKAN_API_KEY = os.getenv("CKAN_API_KEY")
+resources = []
 
-if not CKAN_API_KEY:
-    print("ERRO: variável de ambiente CKAN_API_KEY não definida")
-    sys.exit(1)
+for csv in sorted(DATA_DIR.glob("terceirizados_*.csv")):
+    ano = csv.stem.split("_")[-1]
 
-cmd = [
-    "dpckan", "publish",
-    "datapackage/datapackage.json",
-    "--ckan-host", "https://www.dados.mg.gov.br",
-    "--api-key", CKAN_API_KEY,
-    "--dataset-name", "empregados-terceirizados",
-    "--organization", "controladoria-geral-do-estado-cge",
-    "--force"
-]
+    resources.append({
+        "name": f"terceirizados-{ano}",
+        "title": f"Empregados Terceirizados – {ano}",
+        "path": f"data/{csv.name}",
+        "format": "csv",
+        "mediatype": "text/csv",
+        "encoding": "utf-8",
+        "description": f"Dados de empregados terceirizados do ano de {ano}"
+    })
 
-print("Executando:", " ".join(cmd[:-1] + ["***"]))
+datapackage = {
+    "profile": "data-package",
+    "name": "empregados-terceirizados",
+    "title": "Empregados Terceirizados do Governo de Minas Gerais",
+    "owner_org": "controladoria-geral-do-estado-cge",
+    "license": {
+        "type": "CC-BY-4.0",
+        "title": "Creative Commons Attribution 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "resources": resources
+}
 
-subprocess.run(cmd, check=True)
+OUTPUT.parent.mkdir(exist_ok=True)
+OUTPUT.write_text(
+    json.dumps(datapackage, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
