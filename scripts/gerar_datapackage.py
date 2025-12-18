@@ -21,12 +21,24 @@ for csv in sorted(DATA_DIR.glob("terceirizados_*.csv")):
     })
 
 datapackage = {
+    "profile": "data-package",
     "name": "empregados-terceirizados",
     "title": "Empregados Terceirizados do Governo de Minas Gerais",
+    "description": "Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
     "owner_org": "controladoria-geral-do-estado-cge",
-    "license": "CC-BY-4.0",
+    "license": {
+        "type": "CC-BY-4.0",
+        "title": "Creative Commons Attribution 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
     "resources": resources
 }
 
 OUTPUT.parent.mkdir(exist_ok=True)
-OUTPUT.write_text(json.dumps(datapackage, indent=2, ensure_ascii=False), encoding="utf-8")
+OUTPUT.write_text(
+    json.dumps(datapackage, indent=2, ensure_ascii=False),
+    encoding="utf-8"
+)
+
+print("datapackage.json gerado com sucesso.")
+
