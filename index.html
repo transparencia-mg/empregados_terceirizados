@@ -1647,7 +1647,7 @@
 
         // ==================== CARREGAR DADOS DO GITHUB ====================
 
-	async function loadYearData(year) {
+		async function loadYearData(year) {
     if (allData[year]) {
         console.log(`Dados de ${year} já carregados.`);
         terceirizadosData = allData[year];
@@ -1663,6 +1663,12 @@
     const url = `${GITHUB_BASE_URL}${filename}`;
     console.log(`Carregando dados de ${year}: ${url}`);
 
+    const MESES = {
+        jan: '01', fev: '02', mar: '03', abr: '04',
+        mai: '05', jun: '06', jul: '07', ago: '08',
+        set: '09', out: '10', nov: '11', dez: '12'
+    };
+
     return new Promise((resolve, reject) => {
         Papa.parse(url, {
             download: true,
@@ -1671,50 +1677,39 @@
             encoding: 'ISO-8859-1',
             complete: function (results) {
 
-                const data = results.data
-                    .map(row => {
-                        const empregado = {
-                            matricula: row.matricula || row['MAT.'] || '',
-                            nome: row.nome || row['NOME'] || '',
-                            orgao: row.orgao || row['ÓRGÃO'] || '',
-                            cargo: row.cargo || row['CARGO'] || '',
-                            empresa: row.empresa || row['EMPRESA'] || '',
-                            cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
-                            mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
-                        };
+                const data = results.data.map(row => {
+                    const empregado = {
+                        matricula: row.matricula || row['MAT.'] || '',
+                        nome: row.nome || row['NOME'] || '',
+                        orgao: row.orgao || row['ÓRGÃO'] || '',
+                        cargo: row.cargo || row['CARGO'] || '',
+                        empresa: row.empresa || row['EMPRESA'] || '',
+                        cnpj_empresa: row.cnpj_empresa || row['CNPJ EMPRESA'] || '',
+                        mes_referencia: row.mes_referencia || row['MÊS REFERÊNCIA'] || ''
+                    };
 
-					if (empregado.mes_referencia) {
-    const mesRef = empregado.mes_referencia
-        .toLowerCase()
-        .replace(/\u00a0/g, '')   // remove espaço não quebrável
-        .replace(/\s+/g, '')
-        .trim();
+                    // === NORMALIZAÇÃO DEFINITIVA DO MÊS ===
+                    const ref = empregado.mes_referencia
+                        .toLowerCase()
+                        .replace(/\u00a0/g, '')
+                        .replace(/\s+/g, '')
+                        .trim();
 
-    const match = mesRef.match(/^([a-z]{3})[\/\-](\d{2}|\d{4})$/);
+                    // aceita: jan/25 | jan-25 | jan/2025 | jan-2025
+                    const m = ref.match(/^([a-z]{3})[\/\-](\d{2}|\d{4})$/);
 
-    if (match) {
-        const mesAbrev = match[1];
-        const anoAbrev = match[2];
+                    if (m && MESES[m[1]]) {
+                        const mes = MESES[m[1]];
+                        const ano = m[2].length === 2 ? `20${m[2]}` : m[2];
 
-        if (mesesAbreviados[mesAbrev]) {
-            empregado.MES_NUM = mesesAbreviados[mesAbrev];
-            empregado.ANO = anoAbrev.length === 2
-                ? '20' + anoAbrev
-                : anoAbrev;
-        } else {
-            empregado.MES_NUM = null;
-            empregado.ANO = null;
-        }
-    } else {
-        empregado.MES_NUM = null;
-        empregado.ANO = null;
-    }
-}
+                        // CHAVE ÚNICA E CONFIÁVEL
+                        empregado.COMPETENCIA = `${ano}-${mes}`; // ex: 2025-01
+                    } else {
+                        empregado.COMPETENCIA = null;
+                    }
 
-
-                        return empregado;
-                    })
-                    .filter(e => e.MES_NUM && e.ANO); // somente registros válidos
+                    return empregado;
+                }).filter(e => e.COMPETENCIA); // só registros válidos
 
                 allData[year] = data;
                 terceirizadosData = data;
@@ -1846,7 +1841,6 @@
 
         // ==================== FUNÇÕES DE ANO E MES====================
 
-
 		function determineLatestMonth() {
     if (!terceirizadosData || terceirizadosData.length === 0) {
         console.warn('Dados ainda não carregados.');
@@ -1854,29 +1848,28 @@
         return;
     }
 
-    const referencias = [...new Set(
-        terceirizadosData
-            .filter(e => e.ANO && e.MES_NUM)
-            .map(e => `${e.ANO}-${e.MES_NUM}`)
+    const competencias = [...new Set(
+        terceirizadosData.map(e => e.COMPETENCIA)
     )].sort().reverse();
 
-    if (referencias.length === 0) {
-        console.warn('Nenhum mês encontrado nos dados.');
+    if (competencias.length === 0) {
+        console.warn('Nenhuma competência encontrada.');
         filteredData = terceirizadosData;
         return;
     }
 
-    const [ano, mes] = referencias[0];
+    const [ano, mes] = competencias[0].split('-');
 
     currentYear = ano;
     currentMonth = mes;
 
-    filteredData = terceirizadosData.filter(e =>
-        e.ANO === currentYear && e.MES_NUM === currentMonth
+    filteredData = terceirizadosData.filter(
+        e => e.COMPETENCIA === `${currentYear}-${currentMonth}`
     );
 
-    console.log(`Mês mais recente encontrado: ${currentMonth}/${currentYear}`);
+    console.log(`Mês mais recente encontrado: ${mes}/${ano}`);
 }
+
 
         // ==================== FUNÇÕES DE FILTRO ====================
         function updateFilterOptions() {
