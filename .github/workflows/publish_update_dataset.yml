@@ -44,7 +44,7 @@ jobs:
         run: |
           python scripts/publish_ckan.py
 
-- name: Publicar datapackage.json como recurso no CKAN
+      - name: Publicar datapackage.json como recurso no CKAN
         env:
           CKAN_HOST: https://www.dados.mg.gov.br
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
@@ -80,6 +80,7 @@ jobs:
             ACTION="resource_update"
           else
             ACTION="resource_create"
+            ID=""
           fi
 
           PAYLOAD=$(jq -n \
@@ -90,7 +91,6 @@ jobs:
             --arg url "$URL" \
             --arg desc "$DESC" \
             '{
-              id: ($id // empty),
               package_id: $pkg,
               name: $name,
               title: $title,
@@ -98,7 +98,7 @@ jobs:
               url_type: "link",
               format: "JSON",
               description: $desc
-            }')
+            } + if $id != "" then {id: $id} else {} end')
 
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$CKAN_HOST/api/3/action/$ACTION" \
             -H "Authorization: $CKAN_KEY" \
