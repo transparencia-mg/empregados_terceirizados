@@ -2,8 +2,7 @@ name: Publicar e atualizar CKAN (dados.mg.gov.br)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
     paths:
       - 'data/**'
       - 'datapackage/**'
@@ -14,19 +13,19 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar dependências do sistema
+      - name: Instalar dependências
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl jq
+          sudo apt-get install -y jq curl
 
       - name: Verificar datapackage.json
         run: |
           test -f datapackage/datapackage.json || (echo "❌ datapackage.json não encontrado" && exit 1)
 
-      - name: Publicar recursos no CKAN (N anos automaticamente)
+      - name: Publicar recursos no CKAN
         env:
           CKAN_HOST: https://www.dados.mg.gov.br
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
@@ -38,11 +37,15 @@ jobs:
 
           echo "📦 Lendo recursos do datapackage.json"
 
-          for row in $(jq -c '.resources[]' datapackage/datapackage.json); do
-            NAME=$(echo "$row" | jq -r '.name')
-            TITLE=$(echo "$row" | jq -r '.title')
-            PATH_FILE=$(echo "$row" | jq -r '.path')
-            DESC=$(echo "$row" | jq -r '.description')
+          jq -c '.resources[] | @base64' datapackage/datapackage.json | while read -r res; do
+            _jq() {
+              echo "$res" | base64 --decode | jq -r "$1"
+            }
+
+            NAME=$(_jq '.name')
+            TITLE=$(_jq '.title')
+            PATH_FILE=$(_jq '.path')
+            DESC=$(_jq '.description')
 
             URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/$PATH_FILE"
 
@@ -51,12 +54,60 @@ jobs:
             SEARCH=$(curl -s -X POST "$CKAN_HOST/api/3/action/resource_search" \
               -H "Authorization: $CKAN_KEY" \
               -H "Content-Type: application/json" \
-              -d "$(jq -n --arg n "$NAME" --arg p "$DATASET" '{query: ("name:" + $n), package_id: $p}')")
+              -d "{\"query\":\"name:$NAME\",\"package_id\":\"$DATASET\"}")
 
             COUNT=$(echo "$SEARCH" | jq '.result.count')
 
             if [ "$COUNT" -gt 0 ]; then
               ID=$(echo "$SEARCH" | jq -r '.result.results[0].id')
               ACTION="resource_update"
+
               PAYLOAD=$(jq -n \
-                --arg id "$
+                --arg id "$ID" \
+                --arg pkg "$DATASET" \
+                --arg name "$NAME" \
+                --arg title "$TITLE" \
+                --arg url "$URL" \
+                --arg desc "$DESC" \
+                '{
+                  id: $id,
+                  package_id: $pkg,
+                  name: $name,
+                  title: $title,
+                  url: $url,
+                  url_type: "link",
+                  format: "CSV",
+                  description: $desc
+                }')
+
+              echo "🔄 Atualizando recurso existente"
+
+            else
+              ACTION="resource_create"
+
+              PAYLOAD=$(jq -n \
+                --arg pkg "$DATASET" \
+                --arg name "$NAME" \
+                --arg title "$TITLE" \
+                --arg url "$URL" \
+                --arg desc "$DESC" \
+                '{
+                  package_id: $pkg,
+                  name: $name,
+                  title: $title,
+                  url: $url,
+                  url_type: "link",
+                  format: "CSV",
+                  description: $desc
+                }')
+
+              echo "🆕 Criando novo recurso"
+            fi
+
+            curl -s -X POST "$CKAN_HOST/api/3/action/$ACTION" \
+              -H "Authorization: $CKAN_KEY" \
+              -H "Content-Type: application/json" \
+              -d "$PAYLOAD" | jq '.success'
+          done
+
+          echo "✅ Publicação CKAN finalizada com sucesso"
