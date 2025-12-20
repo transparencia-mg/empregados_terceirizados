@@ -1,0 +1,80 @@
+name: CKAN – Publicar dataset
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/**'
+      - 'datapackage/**'
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  publish_update:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install dpckan frictionless requests
+
+      - name: Gerar datapackage.json
+        run: |
+          python scripts/gerar_datapackage.py
+
+      - name: Commit datapackage.json
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Atualiza datapackage.json automaticamente
+          file_pattern: datapackage/datapackage.json
+
+      - id: string
+        name: Normalizar nome do ator
+        uses: ASzc/change-string-case-action@v1
+        with:
+          string: ${{ github.actor }}
+
+      # ===============================
+      # CREATE DATASET (SE NÃO EXISTIR)
+      # ===============================
+      - name: Create dataset in CKAN (if not exists)
+        continue-on-error: true
+        env:
+          CKAN_HOST: https://www.dados.mg.gov.br
+          CKAN_KEY: ${{ secrets.CKAN_KEY }}
+        run: |
+          dpckan \
+            --datastore \
+            --datapackage datapackage/datapackage.json \
+            --ckan-host "$CKAN_HOST" \
+            --ckan-key "$CKAN_KEY" \
+            dataset create
+
+      # ===============================
+      # UPDATE DATASET (SE EXISTIR)
+      # ===============================
+      - name: Update dataset in CKAN (if exists)
+        if: ${{ !cancelled() }}
+        env:
+          CKAN_HOST: https://www.dados.mg.gov.br
+          CKAN_KEY: ${{ secrets.CKAN_KEY }}
+        run: |
+          dpckan \
+            --datastore \
+            --datapackage datapackage/datapackage.json \
+            --ckan-host "$CKAN_HOST" \
+            --ckan-key "$CKAN_KEY" \
+            dataset update
+
