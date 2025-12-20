@@ -1,4 +1,4 @@
-name: Publicar e atualizar dataset no CKAN (dados.mg.gov.br)
+name: Publicar dataset no CKAN (dados.mg.gov.br)
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - "data/**"
       - "datapackage/**"
+      - "README.md"
       - "scripts/**"
   workflow_dispatch:
 
@@ -14,104 +15,22 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Configurar Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
-      - name: Instalar dependências do sistema
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
-
-      - name: Instalar dependências Python
+      - name: Instalar dependências
         run: |
           python -m pip install --upgrade pip
           pip install ckanapi
 
-      - name: Verificar datapackage.json
-        run: |
-          test -f datapackage/datapackage.json || (echo "❌ datapackage.json não encontrado" && exit 1)
-
-      - name: Publicar dataset e recursos CSV no CKAN
+      - name: Publicar dataset e recursos no CKAN
         env:
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
         run: |
           python scripts/publish_ckan.py
 
-      - name: Publicar datapackage.json como recurso no CKAN
-        env:
-          CKAN_HOST: https://www.dados.mg.gov.br
-          CKAN_KEY: ${{ secrets.CKAN_KEY }}
-          DATASET: empregados-terceirizados-mg
-          GITHUB_REPO: transparencia-mg/empregados_terceirizados_mg
-          GITHUB_BRANCH: main
-        run: |
-          set -e
-
-          NAME="datapackage-json"
-          TITLE="Datapackage do conjunto de dados"
-          URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/datapackage/datapackage.json"
-          DESC="Arquivo datapackage.json com metadados, schema e definição dos recursos do dataset."
-
-          SEARCH=$(curl -s -w "\n%{http_code}" -X POST "$CKAN_HOST/api/3/action/resource_search" \
-            -H "Authorization: $CKAN_KEY" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\":\"name:$NAME\",\"package_id\":\"$DATASET\"}")
-
-          BODY=$(echo "$SEARCH" | head -n -1)
-          STATUS=$(echo "$SEARCH" | tail -n 1)
-
-          if [ "$STATUS" != "200" ]; then
-            echo "❌ CKAN retornou HTTP $STATUS"
-            echo "$BODY"
-            exit 1
-          fi
-
-          COUNT=$(echo "$BODY" | jq '.result.count')
-
-          if [ "$COUNT" -gt 0 ]; then
-            ID=$(echo "$BODY" | jq -r '.result.results[0].id')
-            ACTION="resource_update"
-          else
-            ACTION="resource_create"
-            ID=""
-          fi
-
-          PAYLOAD=$(jq -n \
-            --arg id "$ID" \
-            --arg pkg "$DATASET" \
-            --arg name "$NAME" \
-            --arg title "$TITLE" \
-            --arg url "$URL" \
-            --arg desc "$DESC" \
-            '{
-              package_id: $pkg,
-              name: $name,
-              title: $title,
-              url: $url,
-              url_type: "link",
-              format: "JSON",
-              description: $desc
-            } + if $id != "" then {id: $id} else {} end')
-
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$CKAN_HOST/api/3/action/$ACTION" \
-            -H "Authorization: $CKAN_KEY" \
-            -H "Content-Type: application/json" \
-            -d "$PAYLOAD")
-
-          BODY=$(echo "$RESPONSE" | head -n -1)
-          STATUS=$(echo "$RESPONSE" | tail -n 1)
-
-          if [ "$STATUS" != "200" ]; then
-            echo "❌ Falha ao publicar datapackage.json (HTTP $STATUS)"
-            echo "$BODY"
-            exit 1
-          fi
-
-          echo "✅ datapackage.json publicado com sucesso"
