@@ -1,66 +1,53 @@
-name: Publicar e atualizar CKAN
+name: Atualizar recursos no CKAN (dados.mg.gov.br)
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'data/**'
-      - 'scripts/**'
+      - 'datapackage/datapackage.json'
   workflow_dispatch:
 
 jobs:
   publish_ckan:
     runs-on: ubuntu-22.04
 
+    env:
+      CKAN_HOST: https://www.dados.mg.gov.br
+      DATASET: empregados-terceirizados-mg
+      GITHUB_REPO: transparencia-mg/empregados_terceirizados_mg
+      GITHUB_BRANCH: main
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar dependências do sistema
+      - name: Instalar dependências
         run: |
           sudo apt-get update
           sudo apt-get install -y jq curl
 
-      - name: Configurar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Gerar datapackage.json
-        run: |
-          python scripts/gerar_datapackage.py
-
       - name: Verificar datapackage.json
         run: |
-          test -f datapackage/datapackage.json || (echo "❌ datapackage.json não criado" && exit 1)
+          test -f datapackage/datapackage.json || (echo "❌ datapackage.json não encontrado" && exit 1)
 
-      - name: Commit datapackage.json
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Atualiza datapackage.json automaticamente
-          file_pattern: datapackage/datapackage.json
-
-      - name: Publicar / Atualizar recursos no CKAN
+      - name: Publicar/atualizar recursos no CKAN
         env:
-          CKAN_HOST: https://www.dados.mg.gov.br
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
-          DATASET: empregados-terceirizados-mg
-          GITHUB_REPO: transparencia-mg/empregados_terceirizados_mg
-          GITHUB_BRANCH: main
         run: |
           set -e
 
-          jq -c '.resources[] | @base64' datapackage/datapackage.json | while read -r res; do
-            _jq() {
-              echo "$res" | base64 --decode | jq -r "$1"
-            }
+          echo "📦 Lendo recursos do datapackage.json"
 
-            NAME=$(_jq '.name')
-            TITLE=$(_jq '.title')
-            PATH_FILE=$(_jq '.path')
-            DESC=$(_jq '.description')
+          jq -c '.resources[]' datapackage/datapackage.json | while read -r res; do
+            NAME=$(echo "$res" | jq -r '.name')
+            TITLE=$(echo "$res" | jq -r '.title')
+            PATH_FILE=$(echo "$res" | jq -r '.path')
+            DESC=$(echo "$res" | jq -r '.description')
 
             URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/$PATH_FILE"
+
+            echo "➡️ Recurso: $NAME"
 
             SEARCH=$(curl -s -X POST "$CKAN_HOST/api/3/action/resource_search" \
               -H "Authorization: $CKAN_KEY" \
@@ -89,6 +76,7 @@ jobs:
                   format: "CSV",
                   description: $desc
                 }')
+              echo "🔄 Atualizando recurso existente"
             else
               ACTION="resource_create"
               PAYLOAD=$(jq -n \
@@ -106,6 +94,7 @@ jobs:
                   format: "CSV",
                   description: $desc
                 }')
+              echo "🆕 Criando novo recurso"
             fi
 
             curl -s -X POST "$CKAN_HOST/api/3/action/$ACTION" \
@@ -113,3 +102,5 @@ jobs:
               -H "Content-Type: application/json" \
               -d "$PAYLOAD" | jq '.success'
           done
+
+          echo "✅ Atualização no CKAN concluída"
