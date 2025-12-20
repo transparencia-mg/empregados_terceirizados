@@ -73,7 +73,6 @@ datapackage = {
     "name": "empregados-terceirizados-mg",
     "title": "Empregados Terceirizados do Governo de Minas Gerais",
     "description": "Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
-    "private": false
 
     # 👇 OBRIGATÓRIO PARA dpckan
     "owner_org": "controladoria-geral-do-estado-cge",
