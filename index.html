@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terceirizados - Governo de Minas Gerais</title>
+    <title>Estagiários - Governo de Minas Gerais</title>
     
     <!-- ==================== ESTILOS E BIBLIOTECAS ==================== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -18,17 +18,17 @@
     <style>
         /* ==================== VARIÁVEIS DE CORES ==================== */
         :root {
-            --primary-dark: #29435A;
-            --primary-darker: #132837;
-            --accent-red: #B93C42;
-            --accent-bright: #DB233F;
-            --background-light: #EEEFF5;
-            --success-green: #28a745;
-            --warning-yellow: #ffc107;
-            --info-blue: #17a2b8;
-            --secondary-blue: #3F704D;
-            --secondary-brown: #8B7355;
-            --secondary-teal: #20B2AA;
+            --primary-dark: #1A5276;
+            --primary-darker: #0E2F44;
+            --accent-blue: #3498DB;
+            --accent-bright: #2980B9;
+            --background-light: #F2F4F7;
+            --success-green: #27AE60;
+            --warning-yellow: #F39C12;
+            --info-blue: #17A589;
+            --secondary-purple: #8E44AD;
+            --secondary-orange: #E67E22;
+            --secondary-teal: #16A085;
         }
         
         /* ==================== ESTILOS GERAIS ==================== */
@@ -45,7 +45,7 @@
             padding: 20px 0;
             margin-bottom: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-bottom: 4px solid var(--accent-red);
+            border-bottom: 4px solid var(--accent-blue);
         }
         
         .logo-container {
@@ -57,7 +57,7 @@
         .logo {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-bright) 100%);
+            background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-bright) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -65,7 +65,7 @@
             color: white;
             font-weight: bold;
             font-size: 20px;
-            box-shadow: 0 3px 8px rgba(219, 35, 63, 0.25);
+            box-shadow: 0 3px 8px rgba(52, 152, 219, 0.25);
         }
         
         .header-title {
@@ -118,7 +118,7 @@
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
             padding: 20px;
             margin-bottom: 20px;
-            border-left: 5px solid var(--accent-red);
+            border-left: 5px solid var(--accent-blue);
         }
         
         .filter-label {
@@ -140,8 +140,8 @@
         }
         
         .form-control:focus, .form-select:focus {
-            border-color: var(--accent-red);
-            box-shadow: 0 0 0 2px rgba(185, 60, 66, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
         }
         
         /* ==================== CARDS DE MÉTRICAS ==================== */
@@ -151,7 +151,7 @@
             padding: 20px 15px;
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
             margin-bottom: 20px;
-            border-top: 4px solid var(--accent-red);
+            border-top: 4px solid var(--accent-blue);
             transition: all 0.3s ease;
             height: 100%;
             position: relative;
@@ -177,6 +177,14 @@
         
         .metric-card.info {
             border-top-color: var(--info-blue);
+        }
+        
+        .metric-card.purple {
+            border-top-color: var(--secondary-purple);
+        }
+        
+        .metric-card.orange {
+            border-top-color: var(--secondary-orange);
         }
         
         .metric-value {
@@ -205,8 +213,13 @@
         }
         
         .metric-change.positive {
-            background-color: rgba(40, 167, 69, 0.1);
+            background-color: rgba(39, 174, 96, 0.1);
             color: var(--success-green);
+        }
+        
+        .metric-change.warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-yellow);
         }
         
         /* ==================== CONTAINER DE GRÁFICOS ==================== */
@@ -269,7 +282,7 @@
         }
         
         .table-badge {
-            background: var(--accent-red);
+            background: var(--accent-blue);
             color: white;
             padding: 4px 12px;
             border-radius: 15px;
@@ -365,7 +378,7 @@
         }
         
         .table tbody tr:hover {
-            background-color: rgba(41, 67, 90, 0.04);
+            background-color: rgba(26, 82, 118, 0.04);
         }
         
         .table tbody td {
@@ -410,7 +423,7 @@
         
         /* ==================== BOTÕES ==================== */
         .btn-primary-custom {
-            background: linear-gradient(to right, var(--accent-red), var(--accent-bright));
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-bright));
             border: none;
             padding: 10px 20px;
             font-weight: 600;
@@ -421,9 +434,9 @@
         }
         
         .btn-primary-custom:hover {
-            background: linear-gradient(to right, var(--accent-bright), var(--accent-red));
+            background: linear-gradient(to right, var(--accent-bright), var(--accent-blue));
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(219, 35, 63, 0.2);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
             color: white;
         }
         
@@ -442,7 +455,7 @@
             background-color: var(--primary-dark);
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(41, 67, 90, 0.15);
+            box-shadow: 0 4px 12px rgba(26, 82, 118, 0.15);
         }
         
         .btn-export {
@@ -494,8 +507,8 @@
         }
         
         .nav-tabs .nav-link:hover {
-            background-color: rgba(41, 67, 90, 0.05);
-            color: var(--accent-red);
+            background-color: rgba(26, 82, 118, 0.05);
+            color: var(--accent-blue);
         }
         
         .nav-tabs .nav-link.active {
@@ -541,9 +554,9 @@
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid rgba(41, 67, 90, 0.1);
+            border: 4px solid rgba(26, 82, 118, 0.1);
             border-radius: 50%;
-            border-top-color: var(--accent-red);
+            border-top-color: var(--accent-blue);
             animation: spin 1s linear infinite;
         }
         
@@ -573,11 +586,24 @@
             padding: 2px 4px;
             border-radius: 4px;
             font-size: 13px;
+            border-bottom: 1px dashed rgba(26, 82, 118, 0.3);
         }
-        
+
         .orgao-link:hover {
-            color: var(--accent-red);
-            background-color: rgba(185, 60, 66, 0.05);
+            color: var(--accent-blue);
+            background-color: rgba(52, 152, 219, 0.05);
+            border-bottom: 1px solid var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .orgao-link:active {
+            transform: translateY(0);
+        }
+
+        /* Para a tabela específica da visão geral */
+        #visaoGeralTable .orgao-link {
+            padding: 4px 8px;
+            margin: -4px -8px;
         }
         
         /* ==================== PAGINAÇÃO ==================== */
@@ -656,7 +682,7 @@
         .card-stats .value {
             font-size: 24px;
             font-weight: 700;
-            color: var(--accent-red);
+            color: var(--accent-blue);
             margin: 8px 0;
         }
 
@@ -709,8 +735,8 @@
         }
         
         .search-box-container input:focus {
-            border-color: var(--accent-red) !important;
-            box-shadow: 0 0 0 2px rgba(185, 60, 66, 0.15) !important;
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15) !important;
             outline: none !important;
         }
         
@@ -722,7 +748,7 @@
         .modal-historic .modal-header {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
             color: white;
-            border-bottom: 4px solid var(--accent-red);
+            border-bottom: 4px solid var(--accent-blue);
         }
         
         .modal-historic .modal-body {
@@ -731,7 +757,7 @@
         }
         
         .employee-info {
-            background-color: rgba(41, 67, 90, 0.05);
+            background-color: rgba(26, 82, 118, 0.05);
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
@@ -783,12 +809,39 @@
         }
         
         .historic-table tbody tr:hover {
-            background-color: rgba(41, 67, 90, 0.04);
+            background-color: rgba(26, 82, 118, 0.04);
         }
         
         .historic-table tbody td {
             padding: 8px 10px;
             vertical-align: middle;
+        }
+        
+        /* ==================== BADGES DE SITUAÇÃO ==================== */
+        .badge-situacao {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-ativo {
+            background-color: rgba(39, 174, 96, 0.15);
+            color: var(--success-green);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+        
+        .badge-inativo {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: #E74C3C;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        .badge-concluido {
+            background-color: rgba(52, 152, 219, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(52, 152, 219, 0.3);
         }
         
         /* ==================== RESPONSIVIDADE ==================== */
@@ -911,41 +964,9 @@
                 display: none;
             }
         }
-
-        /* ==================== LINK CLICÁVEL ==================== */
-    .orgao-link {
-    color: var(--primary-dark);
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: inline-block;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-size: 13px;
-    border-bottom: 1px dashed rgba(41, 67, 90, 0.3);
-    }
-
-    .orgao-link:hover {
-    color: var(--accent-red);
-    background-color: rgba(185, 60, 66, 0.05);
-    border-bottom: 1px solid var(--accent-red);
-    transform: translateY(-1px);
-    }
-
-    .orgao-link:active {
-    transform: translateY(0);
-    }
-
-    /* Para a tabela específica da visão geral */
-    #visaoGeralTable .orgao-link {
-    padding: 4px 8px;
-    margin: -4px -8px;
-    }
     </style>
 </head>
 <body>
-
 
     <!-- ==================== HEADER PRINCIPAL ==================== -->
     <header class="main-header">
@@ -953,16 +974,16 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo-container">
                     <div class="logo">
-                        <i class="fas fa-users"></i>
+                        <i class="fas fa-graduation-cap"></i>
                     </div>
                     <div>
-                        <h1 class="header-title">Empregados Terceirizados</h1>
-                        <p class="header-subtitle">Governo do Estado de Minas Gerais - Dados de Empregados Terceirizados</p>
+                        <h1 class="header-title">Estagiários do Governo de MG</h1>
+                        <p class="header-subtitle">Governo do Estado de Minas Gerais - Dados de Estagiários</p>
                         <div class="header-info">
                             <a href="https://dados.mg.gov.br/" target="_blank" class="link-legislacao">
                                 <i class="fas fa-external-link-alt"></i> Portal de Dados Abertos MG
                             </a>
-                            <a href="https://github.com/transparencia-mg/empregados_terceirizados" target="_blank" class="link-legislacao">
+                            <a href="https://github.com/transparencia-mg/estagiarios" target="_blank" class="link-legislacao">
                                 <i class="fab fa-github"></i> Repositório GitHub
                             </a>
                             <span class="badge-atualizacao-header">
@@ -995,7 +1016,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="dashboard2-tab" data-bs-toggle="tab" data-bs-target="#dashboard2" type="button" role="tab">
-                        <i class="fas fa-user-tie me-2"></i>Consulta Individual
+                        <i class="fas fa-user-graduate me-2"></i>Consulta Individual
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -1025,13 +1046,24 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="mb-3">
-                                <label for="mesDashboard1" class="form-label filter-label">Mês</label>
+                                <label for="mesDashboard1" class="form-label filter-label">Mês Referência</label>
                                 <select class="form-select" id="mesDashboard1">
                                     <!-- Opções serão carregadas dinamicamente -->
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6 col-12">
+                        <div class="col-md-3 col-6">
+                            <div class="mb-3">
+                                <label for="situacaoDashboard1" class="form-label filter-label">Situação</label>
+                                <select class="form-select" id="situacaoDashboard1">
+                                    <option value="all">Todas as Situações</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                    <option value="concluido">Concluído</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
                             <div class="mb-3">
                                 <label for="orgaoDashboard1" class="form-label filter-label">Órgão</label>
                                 <input type="text" class="form-control" list="orgaosListDashboard1" id="orgaoDashboard1" placeholder="Digite ou selecione...">
@@ -1065,7 +1097,7 @@
                     <div class="col-md-4 col-12">
                         <div class="chart-container">
                             <div class="chart-header">
-                                <h4 class="chart-title">Empregados por Órgão</h4>
+                                <h4 class="chart-title">Estagiários por Órgão</h4>
                             </div>
                             <div class="chart-wrapper">
                                 <canvas id="chartOrgao"></canvas>
@@ -1075,20 +1107,20 @@
                     <div class="col-md-4 col-12">
                         <div class="chart-container">
                             <div class="chart-header">
-                                <h4 class="chart-title">Empregados por Cargo</h4>
+                                <h4 class="chart-title">Distribuição por Situação</h4>
                             </div>
                             <div class="chart-wrapper">
-                                <canvas id="chartCargo"></canvas>
+                                <canvas id="chartSituacao"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 col-12">
                         <div class="chart-container">
                             <div class="chart-header">
-                                <h4 class="chart-title">Empregados por Empresa</h4>
+                                <h4 class="chart-title">Valor Médio de Remuneração</h4>
                             </div>
                             <div class="chart-wrapper">
-                                <canvas id="chartEmpresa"></canvas>
+                                <canvas id="chartRemuneracao"></canvas>
                             </div>
                         </div>
                     </div>
@@ -1106,10 +1138,10 @@
                     </div>
                 </div>
 
-                <!-- Tabela Dashboard 1 - AGORA APENAS POR ÓRGÃO -->
+                <!-- Tabela Dashboard 1 - VISÃO GERAL POR ÓRGÃO -->
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Visão Geral</h3>
+                        <h3 class="table-title">Visão Geral por Órgão</h3>
                         <div class="d-flex align-items-center gap-3 ms-auto">
                             <div class="items-per-page">
                                 <span>Itens por página:</span>
@@ -1127,14 +1159,17 @@
                         <table class="table table-hover" id="visaoGeralTable">
                             <thead>
                                 <tr>
-                                    <th data-sort="orgao_nome" data-order="asc" onclick="sortTable('visaoGeral', 'orgao_nome')">
+                                    <th data-sort="orgao" data-order="asc" onclick="sortTable('visaoGeral', 'orgao')">
                                         Órgão <span class="sort-icon">▼</span>
                                     </th>
-                                    <th data-sort="orgao_sigla" data-order="asc" onclick="sortTable('visaoGeral', 'orgao_sigla')">
+                                    <th data-sort="sigla" data-order="asc" onclick="sortTable('visaoGeral', 'sigla')">
                                         Sigla <span class="sort-icon">▼</span>
                                     </th>
-                                    <th data-sort="quantidade" data-order="desc" onclick="sortTable('visaoGeral', 'quantidade')">
-                                        Quantidade de Empregados <span class="sort-icon">▼</span>
+                                    <th data-sort="total_estagiarios" data-order="desc" onclick="sortTable('visaoGeral', 'total_estagiarios')">
+                                        Total de Estagiários <span class="sort-icon">▼</span>
+                                    </th>
+                                    <th data-sort="ativos" data-order="desc" onclick="sortTable('visaoGeral', 'ativos')">
+                                        Ativos <span class="sort-icon">▼</span>
                                     </th>
                                 </tr>
                             </thead>
@@ -1185,31 +1220,24 @@
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="mb-3">
-                                <label for="nomeEmpregado" class="form-label filter-label">Nome do Empregado</label>
-                                <input type="text" class="form-control" id="nomeEmpregado" placeholder="Digite o nome...">
+                                <label for="nomeEstagiario" class="form-label filter-label">Nome do Estagiário</label>
+                                <input type="text" class="form-control" id="nomeEstagiario" placeholder="Digite o nome...">
                             </div>
                         </div>
                         <div class="col-md-3 col-6">
                             <div class="mb-3">
-                                <label for="cargoDashboard2" class="form-label filter-label">Cargo</label>
-                                <input type="text" class="form-control" list="cargosListDashboard2" id="cargoDashboard2" placeholder="Digite ou selecione...">
-                                <datalist id="cargosListDashboard2">
-                                    <option value="all">Todos os Cargos</option>
-                                </datalist>
+                                <label for="situacaoDashboard2" class="form-label filter-label">Situação</label>
+                                <select class="form-select" id="situacaoDashboard2">
+                                    <option value="all">Todas as Situações</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                    <option value="concluido">Concluído</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 col-12">
-                            <div class="mb-3">
-                                <label for="empresaDashboard2" class="form-label filter-label">Empresa</label>
-                                <input type="text" class="form-control" list="empresasListDashboard2" id="empresaDashboard2" placeholder="Digite ou selecione...">
-                                <datalist id="empresasListDashboard2">
-                                    <option value="all">Todas as Empresas</option>
-                                </datalist>
-                            </div>
-                        </div>
                         <div class="col-md-4 col-12">
                             <div class="mb-3">
                                 <label for="orgaoDashboard2" class="form-label filter-label">Órgão</label>
@@ -1221,8 +1249,14 @@
                         </div>
                         <div class="col-md-4 col-12">
                             <div class="mb-3">
-                                <label for="matriculaDashboard2" class="form-label filter-label">Matrícula</label>
-                                <input type="text" class="form-control" id="matriculaDashboard2" placeholder="Digite a matrícula...">
+                                <label for="maspDashboard2" class="form-label filter-label">MASP</label>
+                                <input type="text" class="form-control" id="maspDashboard2" placeholder="Digite o MASP...">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <div class="mb-3">
+                                <label for="valorRemuneracao" class="form-label filter-label">Valor Remuneração (mín)</label>
+                                <input type="number" class="form-control" id="valorRemuneracao" placeholder="R$ 0,00" step="0.01" min="0">
                             </div>
                         </div>
                     </div>
@@ -1230,7 +1264,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex gap-3 flex-wrap">
-                                <button class="btn-primary-custom" id="pesquisarEmpregados">
+                                <button class="btn-primary-custom" id="pesquisarEstagiarios">
                                     <i class="fas fa-search me-2"></i>Pesquisar
                                 </button>
                                 <button class="btn-secondary-custom" id="limparFiltrosDashboard2">
@@ -1253,15 +1287,15 @@
                     </div>
 
                     <div class="search-box-container">
-                        <label for="searchEmpregados">Buscar registros:</label>
-                        <input type="text" id="searchEmpregados" placeholder="Buscar por nome, cargo, empresa ou órgão...">
+                        <label for="searchEstagiarios">Buscar registros:</label>
+                        <input type="text" id="searchEstagiarios" placeholder="Buscar por nome, MASP, órgão ou situação...">
                     </div>
                 </div>
 
-                <!-- Tabela de Empregados Dashboard 2 -->
+                <!-- Tabela de Estagiários Dashboard 2 -->
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Consulta Individual de Empregados</h3>
+                        <h3 class="table-title">Consulta Individual de Estagiários</h3>
                         <div class="d-flex align-items-center gap-3 ms-auto">
                             <div class="items-per-page">
                                 <span>Itens por página:</span>
@@ -1272,26 +1306,26 @@
                                     <option value="100">100</option>
                                 </select>
                             </div>
-                            <span class="table-badge" id="resumoCountDashboard2">0 empregados</span>
+                            <span class="table-badge" id="resumoCountDashboard2">0 estagiários</span>
                         </div>
                     </div>
                     <div class="table-fixed-header-container">
-                        <table class="table table-hover" id="empregadosTable">
+                        <table class="table table-hover" id="estagiariosTable">
                             <thead>
                                 <tr>
-                                    <th data-sort="matricula" data-order="asc" onclick="sortTable('empregados', 'matricula')">Matrícula <span class="sort-icon">▼</span></th>
-                                    <th data-sort="nome" data-order="asc" onclick="sortTable('empregados', 'nome')">Nome <span class="sort-icon">▼</span></th>
-                                    <th data-sort="orgao" data-order="asc" onclick="sortTable('empregados', 'orgao')">Órgão <span class="sort-icon">▼</span></th>
-                                    <th data-sort="cargo" data-order="asc" onclick="sortTable('empregados', 'cargo')">Cargo <span class="sort-icon">▼</span></th>
-                                    <th data-sort="empresa" data-order="asc" onclick="sortTable('empregados', 'empresa')">Empresa <span class="sort-icon">▼</span></th>
-                                    <th data-sort="cnpj_empresa" data-order="asc" onclick="sortTable('empregados', 'cnpj_empresa')">CNPJ Empresa <span class="sort-icon">▼</span></th>
+                                    <th data-sort="nome_estagiario" data-order="asc" onclick="sortTable('estagiarios', 'nome_estagiario')">Nome <span class="sort-icon">▼</span></th>
+                                    <th data-sort="masp" data-order="asc" onclick="sortTable('estagiarios', 'masp')">MASP <span class="sort-icon">▼</span></th>
+                                    <th data-sort="sigla_orgao" data-order="asc" onclick="sortTable('estagiarios', 'sigla_orgao')">Sigla <span class="sort-icon">▼</span></th>
+                                    <th data-sort="data_inicio" data-order="desc" onclick="sortTable('estagiarios', 'data_inicio')">Data Início <span class="sort-icon">▼</span></th>
+                                    <th data-sort="data_fim" data-order="desc" onclick="sortTable('estagiarios', 'data_fim')">Data Fim <span class="sort-icon">▼</span></th>
+                                    <th data-sort="valor_remuneracao" data-order="desc" onclick="sortTable('estagiarios', 'valor_remuneracao')">Valor (R$) <span class="sort-icon">▼</span></th>
                                     <th class="actions-column">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="empregadosTableBody">
+                            <tbody id="estagiariosTableBody">
                                 <!-- Dados serão carregados aqui -->
                             </tbody>
-                            <tfoot id="empregadosTableFooter">
+                            <tfoot id="estagiariosTableFooter">
                                 <!-- Total geral será carregado aqui -->
                             </tfoot>
                         </table>
@@ -1323,7 +1357,6 @@
                                 <label for="anoDownload" class="form-label filter-label">Selecione o Ano para Download</label>
                                 <select class="form-select" id="anoDownload">
                                     <option value="">Selecione um ano...</option>
-                                    <option value="2021">2021</option>
                                     <option value="2022">2022</option>
                                     <option value="2023">2023</option>
                                     <option value="2024">2024</option>
@@ -1352,7 +1385,7 @@
                                     <h4>Fonte dos Dados</h4>
                                     <p class="text-muted" style="font-size: 13px;">Dados atualizados automaticamente do GitHub</p>
                                     <div class="mt-3">
-                                        <a href="https://github.com/transparencia-mg/empregados_terceirizados" 
+                                        <a href="https://github.com/transparencia-mg/estagiarios" 
                                            target="_blank" 
                                            class="btn-export w-100 d-block text-decoration-none">
                                             <i class="fab fa-github me-2"></i>Acessar Repositório
@@ -1389,39 +1422,59 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>matricula</td>
-                                            <td>Matrícula do empregado terceirizado</td>
+                                            <td>ano_mesreferencia</td>
+                                            <td>Ano e mês de referência do registro (YYYY-MM)</td>
+                                            <td>Texto/Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td>nome_estagiario</td>
+                                            <td>Nome completo do estagiário</td>
+                                            <td>Texto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>masp</td>
+                                            <td>Número da Matrícula do Servidor Público (MASP)</td>
                                             <td>Texto/Número</td>
                                         </tr>
                                         <tr>
-                                            <td>nome</td>
-                                            <td>Nome completo do empregado terceirizado</td>
+                                            <td>codigo_situacao_funcional</td>
+                                            <td>Código da situação funcional do estagiário</td>
+                                            <td>Número</td>
+                                        </tr>
+                                        <tr>
+                                            <td>situacao_funcional</td>
+                                            <td>Descrição da situação funcional (Ativo, Inativo, etc.)</td>
                                             <td>Texto</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data_inicio</td>
+                                            <td>Data de início do estágio</td>
+                                            <td>Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data_fim</td>
+                                            <td>Data de término do estágio (se aplicável)</td>
+                                            <td>Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td>codigo_orgao</td>
+                                            <td>Código do órgão onde o estagiário atua</td>
+                                            <td>Número</td>
                                         </tr>
                                         <tr>
                                             <td>orgao</td>
-                                            <td>Órgão de trabalho do empregado</td>
+                                            <td>Nome completo do órgão</td>
                                             <td>Texto</td>
                                         </tr>
                                         <tr>
-                                            <td>cargo</td>
-                                            <td>Cargo exercido pelo empregado</td>
+                                            <td>sigla_orgao</td>
+                                            <td>Sigla do órgão</td>
                                             <td>Texto</td>
                                         </tr>
                                         <tr>
-                                            <td>empresa</td>
-                                            <td>Nome da empresa terceirizada</td>
-                                            <td>Texto</td>
-                                        </tr>
-                                        <tr>
-                                            <td>cnpj_empresa</td>
-                                            <td>CNPJ da empresa terceirizada</td>
-                                            <td>Texto (14 dígitos)</td>
-                                        </tr>
-                                        <tr>
-                                            <td>mes_referencia</td>
-                                            <td>Mês do contrato de trabalho (formato abreviado)</td>
-                                            <td>Texto</td>
+                                            <td>valor_remuneracao</td>
+                                            <td>Valor da remuneração do estagiário (em R$)</td>
+                                            <td>Número Decimal</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1430,7 +1483,7 @@
                             <div class="alert alert-info mt-3">
                                 <i class="fas fa-info-circle me-2"></i>
                                 <strong>Fonte dos Dados:</strong> Os dados são carregados automaticamente do repositório GitHub 
-                                <a href="https://github.com/transparencia-mg/empregados_terceirizados" target="_blank">transparencia-mg/empregados_terceirizados</a>
+                                <a href="https://github.com/transparencia-mg/estagiarios" target="_blank">transparencia-mg/estagiarios</a>
                             </div>
                             
                             <div class="alert alert-success mt-2">
@@ -1454,14 +1507,14 @@
                 <span id="footer-atualizacao">Carregando...</span>
             </p>
             <p class="mb-0" style="font-size: 0.85rem;">
-                © 2025 Empregados Terceirizados - Governo do Estado de Minas Gerais
+                © 2025 Estagiários - Governo do Estado de Minas Gerais
             </p>
             <p class="mt-2 mb-0 small">
                 <a href="https://dados.mg.gov.br" style="color: var(--primary-dark); text-decoration: none; font-weight: 600;">
                     <i class="fas fa-external-link-alt"></i> dados.mg.gov.br
                 </a>
                 | 
-                <a href="https://github.com/transparencia-mg/empregados_terceirizados" 
+                <a href="https://github.com/transparencia-mg/estagiarios" 
                    style="color: var(--primary-dark); text-decoration: none; font-weight: 600;">
                     <i class="fab fa-github"></i> GitHub
                 </a>
@@ -1475,13 +1528,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="historicModalLabel">
-                        <i class="fas fa-history me-2"></i>Histórico do Empregado
+                        <i class="fas fa-history me-2"></i>Histórico do Estagiário
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="employee-info" id="employeeInfo">
-                        <!-- Informações do empregado serão carregadas aqui -->
+                        <!-- Informações do estagiário serão carregadas aqui -->
                     </div>
                     
                     <div class="historic-table-container">
@@ -1492,9 +1545,10 @@
                                     <tr>
                                         <th>Mês Referência</th>
                                         <th>Órgão</th>
-                                        <th>Cargo</th>
-                                        <th>Empresa</th>
-                                        <th>CNPJ Empresa</th>
+                                        <th>Situação</th>
+                                        <th>Data Início</th>
+                                        <th>Data Fim</th>
+                                        <th>Valor (R$)</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historicTableBody">
@@ -1535,7 +1589,7 @@
         // ============================================
         // VARIÁVEIS GLOBAIS
         // ============================================
-        let terceirizadosData = [];
+        let estagiariosData = [];
         let filteredData = [];
         let allData = {}; // Para armazenar dados por ano
         let currentPageDashboard1 = 1;
@@ -1545,39 +1599,35 @@
         let charts = {};
         let currentYear = '';
         let currentMonth = '';
-        let currentSortDashboard1 = { column: 'orgao_nome', order: 'asc' };
-        let currentSortDashboard2 = { column: 'nome', order: 'asc' };
+        let currentSortDashboard1 = { column: 'orgao', order: 'asc' };
+        let currentSortDashboard2 = { column: 'nome_estagiario', order: 'asc' };
         let currentSearchTerm = '';
         let lastGitHubCheck = null;
         let lastDataHash = null;
         
         const chartColors = {
-            primary: '#29435A',
-            accent: '#B93C42',
-            bright: '#DB233F',
-            dark: '#132837',
-            secondaryBlue: '#3F704D',
-            secondaryBrown: '#8B7355',
-            secondaryTeal: '#20B2AA'
+            primary: '#1A5276',
+            accent: '#3498DB',
+            bright: '#2980B9',
+            dark: '#0E2F44',
+            success: '#27AE60',
+            warning: '#F39C12',
+            info: '#17A589',
+            purple: '#8E44AD',
+            orange: '#E67E22',
+            teal: '#16A085'
         };
 
         // URLs dos CSVs no GitHub
-        const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados/main/data/';
-        const GITHUB_API_URL = 'https://api.github.com/repos/transparencia-mg/empregados_terceirizados/commits?path=data&per_page=1';
+        const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/transparencia-mg/estagiarios/main/data/';
+        const GITHUB_API_URL = 'https://api.github.com/repos/transparencia-mg/estagiarios/commits?path=data&per_page=1';
 
-        // LISTA CSV - AGORA CARREGADOS SOB DEMANDA
+        // LISTA CSV - CORRIGIDA: REMOVIDO 2021
         const CSV_FILES_BY_YEAR = {
-            '2021': 'terceirizados_2021.csv',
-            '2022': 'terceirizados_2022.csv',
-            '2023': 'terceirizados_2023.csv',
-            '2024': 'terceirizados_2024.csv',
-            '2025': 'terceirizados_2025.csv'
-        };
-
-        // Mapeamento de meses abreviados para números
-        const mesesAbreviados = {
-            'jan': '01', 'fev': '02', 'mar': '03', 'abr': '04', 'mai': '05', 'jun': '06',
-            'jul': '07', 'ago': '08', 'set': '09', 'out': '10', 'nov': '11', 'dez': '12'
+            '2022': 'estagiarios_2022.csv',
+            '2023': 'estagiarios_2023.csv',
+            '2024': 'estagiarios_2024.csv',
+            '2025': 'estagiarios_2025.csv'
         };
 
         const monthNames = {
@@ -1587,50 +1637,26 @@
             '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'
         };
 
-        // Mapeamento de siglas para nomes completos de órgãos
+        // MAPEAMENTO COMPLETO DE SIGLAS PARA NOMES DE ÓRGÃOS
         const orgaosExtenso = {
             'AGE': 'Assembleia Geral do Estado',
-            'ARMVA': 'Administração Regional do Médio Vale do Aço',
             'ARSAE': 'Agência Reguladora de Serviços de Abastecimento de Água e de Esgotamento Sanitário do Estado de Minas Gerais',
-            'ARTEMIG': 'Agência Reguladora de Transportes do Estado de Minas Gerais',
-            'CBMMG': 'Corpo de Bombeiros Militar de Minas Gerais',
             'CGE': 'Controladoria-Geral do Estado',
             'CODEMGE': 'Companhia de Desenvolvimento de Minas Gerais',
-            'COHAB': 'Companhia de Habitação do Estado de Minas Gerais',
             'DEER': 'Departamento de Edificações e Estradas de Rodagem',
             'DPMG': 'Defensoria Pública do Estado de Minas Gerais',
-            'EPAMIG': 'Empresa de Pesquisa Agropecuária de Minas Gerais',
-            'ESP': 'Escola de Saúde Pública do Estado de Minas Gerais',
-            'FAOP': 'Fundação de Arte de Ouro Preto',
             'FAPEMIG': 'Fundação de Amparo à Pesquisa do Estado de Minas Gerais',
-            'FCS': 'Fundação Clóvis Salgado',
-            'FEAM': 'Fundação Estadual do Meio Ambiente',
             'FHEMIG': 'Fundação Hospitalar do Estado de Minas Gerais',
             'FJP': 'Fundação João Pinheiro',
-            'FUCAM': 'Fundação Caio Martins',
-            'FUND. HELENA ANTIPOFF': 'Fundação Helena Antipoff',
-            'FUNED': 'Fundação Ezequiel Dias',
             'GMG': 'Gabinete Militar do Governador',
-            'HEMOMINAS': 'Fundação Centro de Hematologia e Hemoterapia de Minas Gerais',
-            'HPM': 'Hospital da Polícia Militar',
-            'IDENE': 'Instituto de Desenvolvimento do Norte e Nordeste de Minas Gerais',
             'IEF': 'Instituto Estadual de Florestas',
-            'IEPHA': 'Instituto Estadual do Patrimônio Histórico e Artístico de Minas Gerais',
-            'IGAM': 'Instituto Mineiro de Gestão das Águas',
             'IMA': 'Instituto Mineiro de Agropecuária',
-            'INVESTE MINAS': 'Agência de Promoção de Investimentos e Comércio Exterior de Minas Gerais',
-            'IPEM': 'Instituto de Pesos e Medidas',
             'IPSEMG': 'Instituto de Previdência dos Servidores',
-            'IPSM': 'Instituto de Previdência dos Servidores Militares',
-            'JUCEMG/UBERLÂNDIA': 'Junta Comercial do Estado de Minas Gerais',
-            'LEMG': 'Loteria Mineira',
-            'OGE': 'Ouvidoria-Geral do Estado',
             'PCMG': 'Polícia Civil',
             'PRODEMGE': 'Empresa de Tecnologia da Informação do Estado de Minas Gerais S.A.',
             'SCC': 'Secretaria de Estado da Casa Civil',
             'SEAPA': 'Secretaria de Estado de Agricultura, Pecuária e Abastecimento',
             'SEC': 'Secretaria de Estado de Cultura',
-            'SECOM': 'Secretaria de Estado de Comunicação Social',
             'SEDE': 'Secretaria de Estado de Desenvolvimento Econômico',
             'SEDESE': 'Secretaria de Estado de Desenvolvimento Social',
             'SEE': 'Secretaria de Estado de Educação',
@@ -1640,60 +1666,85 @@
             'SEJUSP': 'Secretaria de Estado de Justiça e Segurança Pública',
             'SEMAD': 'Secretaria de Estado de Meio Ambiente e Desenvolvimento Sustentável',
             'SEPLAG': 'Secretaria de Estado de Planejamento e Gestão',
-            'SEPLAG UAI': 'Secretaria de Estado de Planejamento e Gestão',
             'SES': 'Secretaria de Estado de Saúde',
-            'SG': 'Secretaria Geral do Estado',
-            'TJMG': 'Tribunal de Justiça de Minas Gerais',
-            'TV MINAS': 'Empresa Mineira de Comunicação',
             'UEMG': 'Universidade do Estado de Minas Gerais',
-            'UNIMONTES': 'Universidade Estadual de Montes Claros',
-            'UTRAMIG': 'Fundação de Educação para o Trabalho de Minas Gerais'
+            'PM': 'Polícia Militar',
+            'CBMMG': 'Corpo de Bombeiros Militar',
+            'TCE': 'Tribunal de Contas do Estado',
+            'MPMG': 'Ministério Público do Estado de Minas Gerais',
+            'TJMG': 'Tribunal de Justiça do Estado de Minas Gerais',
+            'CBM': 'Corpo de Bombeiros',
+            'EP': 'Escola do Poder Legislativo',
+            'MGI': 'Minas Gerais Industrial',
+            'AGE': 'Assembleia Geral do Estado',
+            'CBM': 'Corpo de Bombeiros Militar',
+            'DETRAN': 'Departamento de Trânsito',
+            'EMATER': 'Empresa de Assistência Técnica e Extensão Rural',
+            'FUNDEP': 'Fundação de Desenvolvimento da Pesquisa',
+            'IGAM': 'Instituto Mineiro de Gestão das Águas',
+            'IEPHA': 'Instituto Estadual do Patrimônio Histórico e Artístico',
+            'MDC': 'Museu de Ciências',
+            'PMMG': 'Polícia Militar de Minas Gerais',
+            'SAAE': 'Serviço Autônomo de Água e Esgoto',
+            'SEBRAE': 'Serviço Brasileiro de Apoio às Micro e Pequenas Empresas',
+            'SEMEIA': 'Secretaria de Estado de Meio Ambiente',
+            'SINE': 'Sistema Nacional de Emprego',
+            'SSP': 'Secretaria de Segurança Pública',
+            'UFMG': 'Universidade Federal de Minas Gerais',
+            'UFSJ': 'Universidade Federal de São João del-Rei',
+            'UFV': 'Universidade Federal de Viçosa',
+            'UFU': 'Universidade Federal de Uberlândia',
+            'UNIMONTES': 'Universidade Estadual de Montes Claros'
         };
+
+        // ==================== FUNÇÃO PARA OBTER NOME COMPLETO DO ÓRGÃO ====================
+        function getOrgaoExtenso(siglaOuNome) {
+            if (!siglaOuNome || typeof siglaOuNome !== 'string') {
+                return siglaOuNome || '';
+            }
+            
+            const siglaUpper = siglaOuNome.toUpperCase().trim();
+            
+            // Primeiro, verificar se a sigla está diretamente no mapeamento
+            if (orgaosExtenso[siglaUpper]) {
+                return orgaosExtenso[siglaUpper];
+            }
+            
+            // Verificar se o nome contém alguma sigla conhecida
+            for (const [sigla, nomeExtenso] of Object.entries(orgaosExtenso)) {
+                if (siglaUpper.includes(sigla) || siglaUpper === sigla) {
+                    return nomeExtenso;
+                }
+            }
+            
+            // Se não encontrar, retornar o próprio valor (pode ser que já seja o nome completo)
+            return siglaOuNome;
+        }
 
         // ==================== FUNÇÕES DE INICIALIZAÇÃO ====================
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('=== INICIANDO DASHBOARD TERCEIRIZADOS ===');
-            console.log('Verificando atualizações no GitHub...');
+            console.log('=== INICIANDO DASHBOARD ESTAGIÁRIOS ===');
+            console.log('Carregando dados...');
 
             showLoading(true);
             
             try {
-                // Verificar se há atualizações no GitHub
-                const hasUpdates = await checkGitHubUpdates();
+                // Carregar dados do ano mais recente (2025)
+                await loadYearData('2025');
                 
-                if (hasUpdates || !lastDataHash) {
-                    console.log('Carregando dados mais recentes...');
-                    await loadYearData('2025');
-                    
-                    // Determinar o mês mais recente de 2025
-                    await determineLatestMonth();
-                    
-                    // Salvar hash dos dados
-                    lastDataHash = await calculateDataHash(allData['2025']);
-                    
-                    // Atualizar interface
-                    updateDataAtualizacao();
-                    updateFilterOptions();
-                    updateDashboard1();
-                    initializeDashboard2();
-                    updateDashboard3();
-                    setupEventListeners();
-                    
-                    console.log('Dashboard atualizado com sucesso!');
-                } else {
-                    console.log('Usando dados em cache - sem atualizações no GitHub');
-                    
-                    // Usar dados já carregados
-                    terceirizadosData = allData['2025'] || [];
-                    await determineLatestMonth();
-                    
-                    updateDataAtualizacao();
-                    updateFilterOptions();
-                    updateDashboard1();
-                    initializeDashboard2();
-                    updateDashboard3();
-                    setupEventListeners();
-                }
+                // Determinar o mês mais recente
+                await determineLatestMonth();
+                
+                // Atualizar interface
+                updateDataAtualizacao();
+                updateFilterOptions();
+                updateDashboard1();
+                initializeDashboard2();
+                updateDashboard3();
+                setupEventListeners();
+                
+                console.log('Dashboard inicializado com sucesso!');
+                console.log(`Dados carregados: ${filteredData.length} registros do mês ${currentMonth}/${currentYear}`);
                 
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
@@ -1703,50 +1754,11 @@
             }
         });
 
-        // ==================== VERIFICAR ATUALIZAÇÕES NO GITHUB ====================
-        async function checkGitHubUpdates() {
-            try {
-                const response = await fetch(GITHUB_API_URL);
-                if (!response.ok) throw new Error('Erro ao verificar GitHub');
-                
-                const commits = await response.json();
-                if (commits && commits.length > 0) {
-                    const latestCommit = commits[0];
-                    const commitDate = new Date(latestCommit.commit.author.date);
-                    
-                    // Verificar se é a primeira vez ou se houve atualização
-                    if (!lastGitHubCheck || commitDate > lastGitHubCheck) {
-                        lastGitHubCheck = commitDate;
-                        return true; // Há atualizações
-                    }
-                }
-                return false; // Sem atualizações
-            } catch (error) {
-                console.error('Erro ao verificar atualizações:', error);
-                return true; // Em caso de erro, carregar dados
-            }
-        }
-
-        // ==================== CALCULAR HASH DOS DADOS ====================
-    async function calculateDataHash(data) {
-    if (!data || data.length === 0) return null;
-
-    const dataString = data.slice(0, 100).map(item =>
-        `${item.matricula}|${item.nome}|${item.orgao}|${item.empresa}`
-    ).join('|');
-
-    // 🔑 Conversão UTF-8 → Latin1 antes do btoa
-    return btoa(unescape(encodeURIComponent(
-        dataString.length + dataString.substring(0, 50)
-    )));
-    }
-
-
         // ==================== CARREGAR DADOS DO GITHUB ====================
         async function loadYearData(year) {
-            if (allData[year] && lastDataHash) {
+            if (allData[year]) {
                 console.log(`Dados de ${year} já carregados.`);
-                terceirizadosData = allData[year];
+                estagiariosData = allData[year];
                 return;
             }
 
@@ -1759,10 +1771,12 @@
             const url = `${GITHUB_BASE_URL}${filename}`;
             console.log(`Carregando dados de ${year}: ${url}`);
 
-            const MESES = {
-                jan: '01', fev: '02', mar: '03', abr: '04',
-                mai: '05', jun: '06', jul: '07', ago: '08',
-                set: '09', out: '10', nov: '11', dez: '12'
+            const normalizarMes = v => {
+                if (!v || typeof v !== 'string') return '';
+                if (v.includes('/')) return v.replace('/', '-').substring(0, 7);
+                if (v.includes('-')) return v.substring(0, 7);
+                if (v.length === 6) return `${v.substring(0,4)}-${v.substring(4,6)}`;
+                return v;
             };
 
             return new Promise((resolve, reject) => {
@@ -1772,61 +1786,63 @@
                     skipEmptyLines: true,
                     encoding: 'UTF-8',
                     complete: function (results) {
-                        const data = results.data.map(row => {
-                            // Normalizar nomes de colunas
-                            const matricula = row.matricula || row['MAT.'] || row['MAT'] || '';
-                            const nome = row.nome || row['NOME'] || '';
-                            const orgao = row.orgao || row['ÓRGÃO'] || '';
-                            const cargo = row.cargo || row['CARGO'] || '';
-                            let empresa = row.empresa || row['EMPRESA'] || '';
-                            const cnpj_empresa = row.cnpj_empresa || row['CNPJ EMPRESA'] || '';
-                            const mes_referencia = row.mes_referencia || row['MÊS REFERÊNCIA'] || '';
+                        const data = results.data
+                            .map(row => {
+                                const ano_mesreferencia_raw =
+                                    row.ano_mesreferencia ||
+                                    row['ANO_MESREFERENCIA'] ||
+                                    '';
 
-                            // CORREÇÃO DA EMPRESA "MINAS GERAIS ADMINISTRA��O E SERVI�OS S.A"
-                            if (empresa.includes('MINAS GERAIS ADMINISTRA')) {
-                                empresa = 'MINAS GERAIS ADMINISTRACAO E SERVICOS S.A';
-                            }
+                                const ano_mesreferencia = normalizarMes(ano_mesreferencia_raw);
 
-                            const empregado = {
-                                matricula: matricula,
-                                nome: nome,
-                                orgao: orgao,
-                                cargo: cargo,
-                                empresa: empresa,
-                                cnpj_empresa: cnpj_empresa,
-                                mes_referencia: mes_referencia
-                            };
+                                if (!ano_mesreferencia) return null;
 
-                            // === NORMALIZAÇÃO DO MÊS ===
-                            const ref = mes_referencia
-                                .toLowerCase()
-                                .replace(/\u00a0/g, '')
-                                .replace(/\s+/g, '')
-                                .trim();
+                                const [ano, mes] = ano_mesreferencia.split('-');
 
-                            // aceita: jan/25 | jan-25 | jan/2025 | jan-2025
-                            const m = ref.match(/^([a-z]{3})[\/\-](\d{2}|\d{4})$/);
+                                // Obter sigla e nome do órgão
+                                const sigla_orgao = row.sigla_orgao || row['SIGLA_ORGAO'] || '';
+                                const orgao_nome = row.orgao || row['ORGAO'] || '';
+                                
+                                // Se o nome do órgão parece ser uma sigla, obter o nome completo
+                                const orgao_completo = getOrgaoExtenso(orgao_nome || sigla_orgao);
 
-                            if (m && MESES[m[1]]) {
-                                const mes = MESES[m[1]];
-                                const ano = m[2].length === 2 ? `20${m[2]}` : m[2];
+                                // Converter valor_remuneracao para número
+                                let valorRemuneracao = 0;
+                                const valorRaw = row.valor_remuneracao || row['VALOR_REMUNERACAO'] || '0';
+                                if (valorRaw) {
+                                    // Remover R$, pontos e substituir vírgula por ponto
+                                    const valorStr = valorRaw.toString()
+                                        .replace('R$', '')
+                                        .replace(/\./g, '')
+                                        .replace(',', '.')
+                                        .trim();
+                                    valorRemuneracao = parseFloat(valorStr) || 0;
+                                }
 
-                                empregado.COMPETENCIA = `${ano}-${mes}`;
-                                empregado.ANO = ano;
-                                empregado.MES_NUM = mes;
-                            } else {
-                                empregado.COMPETENCIA = null;
-                                empregado.ANO = '';
-                                empregado.MES_NUM = '';
-                            }
-
-                            return empregado;
-                        }).filter(e => e.COMPETENCIA); // só registros válidos
+                                return {
+                                    ano_mesreferencia,
+                                    nome_estagiario: row.nome_estagiario || row['NOME_ESTAGIARIO'] || row['NOME'] || '',
+                                    masp: (row.masp || row['MASP'] || '').toString(),
+                                    codigo_situacao_funcional: row.codigo_situacao_funcional || row['CODIGO_SITUACAO_FUNCIONAL'] || '',
+                                    situacao_funcional: row.situacao_funcional || row['SITUACAO_FUNCIONAL'] || '',
+                                    data_inicio: row.data_inicio || row['DATA_INICIO'] || '',
+                                    data_fim: row.data_fim || row['DATA_FIM'] || '',
+                                    codigo_orgao: row.codigo_orgao || row['CODIGO_ORGAO'] || '',
+                                    orgao: orgao_completo, // Nome completo do órgão
+                                    orgao_sigla: sigla_orgao || orgao_nome, // Sigla ou nome curto
+                                    sigla_orgao: sigla_orgao || orgao_nome, // Para compatibilidade
+                                    valor_remuneracao: valorRemuneracao,
+                                    ANO: ano || '',
+                                    MES: mes || ''
+                                };
+                            })
+                            .filter(Boolean);
 
                         allData[year] = data;
-                        terceirizadosData = data;
+                        estagiariosData = data;
 
                         console.log(`Dados de ${year} carregados: ${data.length} registros`);
+                        console.log(`Órgãos processados: ${[...new Set(data.map(d => d.orgao))].length} nomes completos`);
                         resolve();
                     },
                     error: function (err) {
@@ -1839,36 +1855,49 @@
 
         // ==================== DETERMINAR MÊS MAIS RECENTE ====================
         async function determineLatestMonth() {
-            if (!terceirizadosData || terceirizadosData.length === 0) {
+            if (!estagiariosData || estagiariosData.length === 0) {
                 console.warn('Dados ainda não carregados.');
                 filteredData = [];
                 return;
             }
 
-            // Encontrar competências únicas
-            const competencias = [...new Set(
-                terceirizadosData
-                    .map(e => e.COMPETENCIA)
-                    .filter(Boolean)
-            )].sort().reverse();
+            // Obter todos os meses disponíveis
+            const mesesComData = [];
+            estagiariosData.forEach(e => {
+                if (e.ano_mesreferencia) {
+                    const [ano, mes] = e.ano_mesreferencia.split('-');
+                    if (ano && mes) {
+                        mesesComData.push({ ano, mes });
+                    }
+                }
+            });
 
-            if (competencias.length === 0) {
-                console.warn('Nenhuma competência encontrada.');
-                filteredData = terceirizadosData;
+            if (mesesComData.length === 0) {
+                console.warn('Nenhum mês encontrado.');
+                filteredData = estagiariosData;
                 return;
             }
 
-            const [ano, mes] = competencias[0].split('-');
+            // Encontrar o mês mais recente
+            let ultimoMes = mesesComData[0];
+            mesesComData.forEach(mesData => {
+                if (mesData.ano > ultimoMes.ano || 
+                    (mesData.ano === ultimoMes.ano && mesData.mes > ultimoMes.mes)) {
+                    ultimoMes = mesData;
+                }
+            });
 
-            currentYear = ano;
-            currentMonth = mes;
+            currentYear = ultimoMes.ano;
+            currentMonth = ultimoMes.mes;
 
             // Filtrar dados do mês mais recente
-            filteredData = terceirizadosData.filter(
-                e => e.COMPETENCIA === `${currentYear}-${currentMonth}`
+            filteredData = estagiariosData.filter(
+                e => e.ANO === currentYear && e.MES === currentMonth
             );
 
-            console.log(`Mês mais recente encontrado: ${mes}/${ano} - ${filteredData.length} registros`);
+            console.log(
+                `Mês mais recente encontrado: ${currentMonth}/${currentYear} - ${filteredData.length} registros`
+            );
         }
 
         // ==================== CONFIGURAR EVENT LISTENERS ====================
@@ -1882,7 +1911,7 @@
             });
             
             // Dashboard 2
-            document.getElementById('pesquisarEmpregados').addEventListener('click', function() {
+            document.getElementById('pesquisarEstagiarios').addEventListener('click', function() {
                 applyFilters('dashboard2');
             });
             document.getElementById('limparFiltrosDashboard2').addEventListener('click', function() {
@@ -1900,9 +1929,9 @@
             document.getElementById('downloadAnoCSV').addEventListener('click', downloadYearCSV);
             
             // Campo de busca na Consulta Individual
-            document.getElementById('searchEmpregados').addEventListener('input', function(e) {
+            document.getElementById('searchEstagiarios').addEventListener('input', function(e) {
                 currentSearchTerm = e.target.value.toLowerCase();
-                filterEmpregadosTable(currentSearchTerm);
+                filterEstagiariosTable(currentSearchTerm);
             });
             
             // Troca de abas
@@ -1923,22 +1952,18 @@
             document.getElementById('itemsPerPageDashboard2').addEventListener('change', function() {
                 itemsPerPageDashboard2 = parseInt(this.value);
                 currentPageDashboard2 = 1;
-                updateEmpregadosTable();
+                updateEstagiariosTable();
             });
             
             // Mudança de ano nos selects
             document.getElementById('anoDashboard1').addEventListener('change', async function() {
                 const selectedYear = this.value;
-                if (selectedYear !== currentYear) {
-                    await switchYearData(selectedYear);
-                }
+                await switchYearData(selectedYear);
             });
             
             document.getElementById('anoDashboard2').addEventListener('change', async function() {
                 const selectedYear = this.value;
-                if (selectedYear !== currentYear) {
-                    await switchYearData(selectedYear);
-                }
+                await switchYearData(selectedYear);
             });
         }
 
@@ -1967,19 +1992,21 @@
             document.getElementById('footer-atualizacao').textContent = dataFormatada;
         }
 
-        // Função para converter sigla em nome completo do órgão
-        function getOrgaoExtenso(orgaoSigla) {
-            if (!orgaoSigla) return '';
-            
-            // Verificar se é uma sigla conhecida
-            for (const [sigla, nome] of Object.entries(orgaosExtenso)) {
-                if (orgaoSigla.toUpperCase().includes(sigla)) {
-                    return nome;
-                }
-            }
-            
-            // Se não encontrar, retorna o próprio nome
-            return orgaoSigla;
+        // Função para formatar valor monetário
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 2
+            }).format(value);
+        }
+
+        // Função para formatar data
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('pt-BR');
         }
 
         // ==================== FUNÇÕES DE ANO E MES ====================
@@ -2018,14 +2045,23 @@
             // Dashboard 1 - Mês
             const mesSelect1 = document.getElementById('mesDashboard1');
             if (mesSelect1 && currentYear) {
-                const mesesDoAno = [...new Set(
-                    (allData[currentYear] || [])
-                        .map(e => e.MES_NUM)
-                        .filter(Boolean)
-                )].sort((a, b) => parseInt(b) - parseInt(a));
+                // Obter meses disponíveis para o ano atual
+                const mesesDisponiveis = [];
+                if (allData[currentYear]) {
+                    allData[currentYear].forEach(e => {
+                        if (e.ano_mesreferencia && e.ANO === currentYear) {
+                            if (!mesesDisponiveis.includes(e.MES)) {
+                                mesesDisponiveis.push(e.MES);
+                            }
+                        }
+                    });
+                }
+                
+                // Ordenar meses do mais recente para o mais antigo
+                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
                 
                 mesSelect1.innerHTML = '';
-                mesesDoAno.forEach(mesNum => {
+                mesesDisponiveis.forEach(mesNum => {
                     const option = document.createElement('option');
                     option.value = mesNum;
                     option.textContent = monthNames[mesNum] || mesNum;
@@ -2050,14 +2086,23 @@
             // Dashboard 2 - Mês
             const mesSelect2 = document.getElementById('mesDashboard2');
             if (mesSelect2 && currentYear) {
-                const mesesDoAno = [...new Set(
-                    (allData[currentYear] || [])
-                        .map(e => e.MES_NUM)
-                        .filter(Boolean)
-                )].sort((a, b) => parseInt(b) - parseInt(a));
+                // Obter meses disponíveis para o ano atual
+                const mesesDisponiveis = [];
+                if (allData[currentYear]) {
+                    allData[currentYear].forEach(e => {
+                        if (e.ano_mesreferencia && e.ANO === currentYear) {
+                            if (!mesesDisponiveis.includes(e.MES)) {
+                                mesesDisponiveis.push(e.MES);
+                            }
+                        }
+                    });
+                }
+                
+                // Ordenar meses do mais recente para o mais antigo
+                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
                 
                 mesSelect2.innerHTML = '';
-                mesesDoAno.forEach(mesNum => {
+                mesesDisponiveis.forEach(mesNum => {
                     const option = document.createElement('option');
                     option.value = mesNum;
                     option.textContent = monthNames[mesNum] || mesNum;
@@ -2094,38 +2139,6 @@
                     }
                 });
             }
-            
-            // Obter todos os cargos únicos do período atual
-            const cargosUnicos = [...new Set(filteredData.map(e => e.cargo))].sort();
-            
-            // Dashboard 2 - datalist de cargos
-            const cargoDatalist2 = document.getElementById('cargosListDashboard2');
-            if (cargoDatalist2) {
-                cargoDatalist2.innerHTML = '<option value="all">Todos os Cargos</option>';
-                cargosUnicos.forEach(cargo => {
-                    if (cargo) {
-                        const option = document.createElement('option');
-                        option.value = cargo;
-                        cargoDatalist2.appendChild(option);
-                    }
-                });
-            }
-            
-            // Obter todas as empresas únicas do período atual
-            const empresasUnicas = [...new Set(filteredData.map(e => e.empresa))].sort();
-            
-            // Dashboard 2 - datalist de empresas
-            const empresaDatalist2 = document.getElementById('empresasListDashboard2');
-            if (empresaDatalist2) {
-                empresaDatalist2.innerHTML = '<option value="all">Todas as Empresas</option>';
-                empresasUnicas.forEach(empresa => {
-                    if (empresa) {
-                        const option = document.createElement('option');
-                        option.value = empresa;
-                        empresaDatalist2.appendChild(option);
-                    }
-                });
-            }
         }
 
         function applyFilters(dashboard) {
@@ -2134,6 +2147,7 @@
             if (dashboard === 'dashboard1') {
                 const ano = document.getElementById('anoDashboard1').value;
                 const mes = document.getElementById('mesDashboard1').value;
+                const situacao = document.getElementById('situacaoDashboard1').value;
                 const orgaoInput = document.getElementById('orgaoDashboard1').value;
                 
                 const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
@@ -2142,21 +2156,36 @@
                 if (ano !== currentYear) {
                     switchYearData(ano).then(() => {
                         // Após carregar o ano, aplicar os filtros
-                        applyFiltersAfterYearLoad(dashboard, mes, orgao);
+                        applyFiltersAfterYearLoad(dashboard, mes, situacao, orgao);
                     });
                     return;
                 }
                 
                 currentMonth = mes;
                 
-                filteredData = (allData[currentYear] || []).filter(empregado => {
+                // Obter dados do ano atual
+                const dadosAnoAtual = allData[currentYear] || [];
+                
+                filteredData = dadosAnoAtual.filter(estagiario => {
                     // Filtrar por ano e mês selecionados
-                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
+                    const anoMes = estagiario.ano_mesreferencia;
+                    if (!anoMes) return false;
+                    
+                    const [estAno, estMes] = anoMes.split('-');
+                    if (estAno !== currentYear || estMes !== currentMonth) {
                         return false;
                     }
                     
+                    // Filtro por situação
+                    if (situacao !== 'all') {
+                        const situacaoLower = estagiario.situacao_funcional.toLowerCase();
+                        if (situacao === 'ativo' && !situacaoLower.includes('ativo')) return false;
+                        if (situacao === 'inativo' && !situacaoLower.includes('inativo')) return false;
+                        if (situacao === 'concluido' && !situacaoLower.includes('concluído') && !situacaoLower.includes('concluido')) return false;
+                    }
+                    
                     // Filtro por órgão
-                    if (orgao !== 'all' && empregado.orgao !== orgao) {
+                    if (orgao !== 'all' && estagiario.orgao !== orgao) {
                         return false;
                     }
                     
@@ -2168,55 +2197,63 @@
             } else if (dashboard === 'dashboard2') {
                 const ano = document.getElementById('anoDashboard2').value;
                 const mes = document.getElementById('mesDashboard2').value;
-                const nome = document.getElementById('nomeEmpregado').value.toLowerCase();
-                const cargoInput = document.getElementById('cargoDashboard2').value;
-                const empresaInput = document.getElementById('empresaDashboard2').value;
+                const nome = document.getElementById('nomeEstagiario').value.toLowerCase();
+                const situacao = document.getElementById('situacaoDashboard2').value;
                 const orgaoInput = document.getElementById('orgaoDashboard2').value;
-                const matricula = document.getElementById('matriculaDashboard2').value;
+                const masp = document.getElementById('maspDashboard2').value;
+                const valorRemuneracao = parseFloat(document.getElementById('valorRemuneracao').value) || 0;
                 
-                const cargo = cargoInput === 'all' || cargoInput === '' ? 'all' : cargoInput;
-                const empresa = empresaInput === 'all' || empresaInput === '' ? 'all' : empresaInput;
                 const orgao = orgaoInput === 'all' || orgaoInput === '' ? 'all' : orgaoInput;
                 
                 // Se o ano mudou, carregar os dados do ano
                 if (ano !== currentYear) {
                     switchYearData(ano).then(() => {
                         // Após carregar o ano, aplicar os filtros
-                        applyFiltersAfterYearLoad(dashboard, mes, nome, cargo, empresa, orgao, matricula);
+                        applyFiltersAfterYearLoad(dashboard, mes, nome, situacao, orgao, masp, valorRemuneracao);
                     });
                     return;
                 }
                 
                 currentMonth = mes;
                 
-                filteredData = (allData[currentYear] || []).filter(empregado => {
+                // Obter dados do ano atual
+                const dadosAnoAtual = allData[currentYear] || [];
+                
+                filteredData = dadosAnoAtual.filter(estagiario => {
                     // Filtrar por ano e mês selecionados
-                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
+                    const anoMes = estagiario.ano_mesreferencia;
+                    if (!anoMes) return false;
+                    
+                    const [estAno, estMes] = anoMes.split('-');
+                    if (estAno !== currentYear || estMes !== currentMonth) {
                         return false;
                     }
                     
                     // Filtro por nome
-                    if (nome && !empregado.nome.toLowerCase().includes(nome)) {
+                    if (nome && !estagiario.nome_estagiario.toLowerCase().includes(nome)) {
                         return false;
                     }
                     
-                    // Filtro por cargo
-                    if (cargo !== 'all' && empregado.cargo !== cargo) {
-                        return false;
-                    }
-                    
-                    // Filtro por empresa
-                    if (empresa !== 'all' && empregado.empresa !== empresa) {
-                        return false;
+                    // Filtro por situação
+                    if (situacao !== 'all') {
+                        const situacaoLower = estagiario.situacao_funcional.toLowerCase();
+                        if (situacao === 'ativo' && !situacaoLower.includes('ativo')) return false;
+                        if (situacao === 'inativo' && !situacaoLower.includes('inativo')) return false;
+                        if (situacao === 'concluido' && !situacaoLower.includes('concluído') && !situacaoLower.includes('concluido')) return false;
                     }
                     
                     // Filtro por órgão
-                    if (orgao !== 'all' && empregado.orgao !== orgao) {
+                    if (orgao !== 'all' && estagiario.orgao !== orgao) {
                         return false;
                     }
                     
-                    // Filtro por matrícula
-                    if (matricula && !empregado.matricula.toString().includes(matricula)) {
+                    // Filtro por MASP
+                    if (masp && !estagiario.masp.toString().includes(masp)) {
+                        return false;
+                    }
+                    
+                    // Filtro por valor de remuneração
+                    if (valorRemuneracao > 0 && estagiario.valor_remuneracao < valorRemuneracao) {
                         return false;
                     }
                     
@@ -2233,14 +2270,27 @@
             currentMonth = mes;
             
             if (dashboard === 'dashboard1') {
-                const [orgao] = otherFilters;
+                const [situacao, orgao] = otherFilters;
                 
-                filteredData = (allData[currentYear] || []).filter(empregado => {
-                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
+                filteredData = (allData[currentYear] || []).filter(estagiario => {
+                    const anoMes = estagiario.ano_mesreferencia;
+                    if (!anoMes) return false;
+                    
+                    const [estAno, estMes] = anoMes.split('-');
+                    if (estAno !== currentYear || estMes !== currentMonth) {
                         return false;
                     }
                     
-                    if (orgao !== 'all' && empregado.orgao !== orgao) {
+                    // Filtro por situação
+                    if (situacao !== 'all') {
+                        const situacaoLower = estagiario.situacao_funcional.toLowerCase();
+                        if (situacao === 'ativo' && !situacaoLower.includes('ativo')) return false;
+                        if (situacao === 'inativo' && !situacaoLower.includes('inativo')) return false;
+                        if (situacao === 'concluido' && !situacaoLower.includes('concluído') && !situacaoLower.includes('concluido')) return false;
+                    }
+                    
+                    // Filtro por órgão
+                    if (orgao !== 'all' && estagiario.orgao !== orgao) {
                         return false;
                     }
                     
@@ -2249,30 +2299,37 @@
                 
                 updateDashboard1();
             } else if (dashboard === 'dashboard2') {
-                const [nome, cargo, empresa, orgao, matricula] = otherFilters;
+                const [nome, situacao, orgao, masp, valorRemuneracao] = otherFilters;
                 
-                filteredData = (allData[currentYear] || []).filter(empregado => {
-                    if (empregado.ANO !== currentYear || empregado.MES_NUM !== currentMonth) {
+                filteredData = (allData[currentYear] || []).filter(estagiario => {
+                    const anoMes = estagiario.ano_mesreferencia;
+                    if (!anoMes) return false;
+                    
+                    const [estAno, estMes] = anoMes.split('-');
+                    if (estAno !== currentYear || estMes !== currentMonth) {
                         return false;
                     }
                     
-                    if (nome && !empregado.nome.toLowerCase().includes(nome)) {
+                    if (nome && !estagiario.nome_estagiario.toLowerCase().includes(nome)) {
                         return false;
                     }
                     
-                    if (cargo !== 'all' && empregado.cargo !== cargo) {
+                    if (situacao !== 'all') {
+                        const situacaoLower = estagiario.situacao_funcional.toLowerCase();
+                        if (situacao === 'ativo' && !situacaoLower.includes('ativo')) return false;
+                        if (situacao === 'inativo' && !situacaoLower.includes('inativo')) return false;
+                        if (situacao === 'concluido' && !situacaoLower.includes('concluído') && !situacaoLower.includes('concluido')) return false;
+                    }
+                    
+                    if (orgao !== 'all' && estagiario.orgao !== orgao) {
                         return false;
                     }
                     
-                    if (empresa !== 'all' && empregado.empresa !== empresa) {
+                    if (masp && !estagiario.masp.toString().includes(masp)) {
                         return false;
                     }
                     
-                    if (orgao !== 'all' && empregado.orgao !== orgao) {
-                        return false;
-                    }
-                    
-                    if (matricula && !empregado.matricula.toString().includes(matricula)) {
+                    if (valorRemuneracao > 0 && estagiario.valor_remuneracao < valorRemuneracao) {
                         return false;
                     }
                     
@@ -2285,78 +2342,44 @@
             showLoading(false);
         }
 
-        function filterEmpregadosTable(searchTerm) {
-            const searchLower = searchTerm.toLowerCase();
-            
-            // Se não há termo de busca, mostrar todos os registros
+        function filterEstagiariosTable(searchTerm) {
             if (!searchTerm.trim()) {
-                updateEmpregadosTable();
+                updateEstagiariosTable();
                 return;
             }
             
-            // Filtrar os dados
-            const filtered = filteredData.filter(empregado => {
-                return (
-                    empregado.nome.toLowerCase().includes(searchLower) ||
-                    empregado.cargo.toLowerCase().includes(searchLower) ||
-                    empregado.empresa.toLowerCase().includes(searchLower) ||
-                    empregado.orgao.toLowerCase().includes(searchLower) ||
-                    empregado.matricula.toString().toLowerCase().includes(searchLower)
-                );
-            });
-            
-            // Se encontrou resultados, ir para a página 1 e mostrar
-            if (filtered.length > 0) {
-                // Encontrar o índice do primeiro resultado na lista completa
-                const firstMatchIndex = filteredData.findIndex(empregado => 
-                    empregado.nome.toLowerCase().includes(searchLower)
-                );
-                
-                if (firstMatchIndex >= 0) {
-                    // Calcular em qual página está o primeiro resultado
-                    const pageForFirstResult = Math.floor(firstMatchIndex / itemsPerPageDashboard2) + 1;
-                    currentPageDashboard2 = pageForFirstResult;
-                }
-                
-                // Mostrar apenas os resultados filtrados
-                const tempFilteredData = filteredData;
-                filteredData = filtered;
-                updateEmpregadosTable();
-                filteredData = tempFilteredData; // Restaurar dados originais
-            } else {
-                // Se não encontrou resultados, mostrar mensagem
-                const tbody = document.getElementById('empregadosTableBody');
-                const tfoot = document.getElementById('empregadosTableFooter');
-                const countElement = document.getElementById('resumoCountDashboard2');
-                const paginationInfo = document.getElementById('paginationInfoDashboard2');
-                
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum empregado encontrado com o termo de busca.</td></tr>';
-                if (tfoot) tfoot.innerHTML = '';
-                if (countElement) countElement.textContent = '0 empregados';
-                if (paginationInfo) paginationInfo.textContent = 'Mostrando 0-0 de 0 registros';
-                
-                updatePaginationDashboard2(1, 1);
-            }
+            // Mostrar todos os dados filtrados e usar DataTables para busca
+            updateEstagiariosTable();
         }
 
         function clearAllFilters() {
             // Resetar filtros do Dashboard 1
+            document.getElementById('situacaoDashboard1').value = 'all';
             document.getElementById('orgaoDashboard1').value = '';
             
             // Voltar para o mês mais recente do ano atual
-            const mesesDoAno = [...new Set(
-                (allData[currentYear] || [])
-                    .map(e => e.MES_NUM)
-                    .filter(Boolean)
-            )].sort((a, b) => parseInt(b) - parseInt(a));
-            
-            if (mesesDoAno.length > 0) {
-                currentMonth = mesesDoAno[0];
+            const mesesDisponiveis = [];
+            if (allData[currentYear]) {
+                allData[currentYear].forEach(e => {
+                    if (e.ano_mesreferencia && e.ANO === currentYear) {
+                        if (!mesesDisponiveis.includes(e.MES)) {
+                            mesesDisponiveis.push(e.MES);
+                        }
+                    }
+                });
             }
             
-            filteredData = (allData[currentYear] || []).filter(empregado => {
-                return empregado.ANO === currentYear && 
-                       empregado.MES_NUM === currentMonth;
+            if (mesesDisponiveis.length > 0) {
+                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
+                currentMonth = mesesDisponiveis[0];
+            }
+            
+            filteredData = (allData[currentYear] || []).filter(estagiario => {
+                const anoMes = estagiario.ano_mesreferencia;
+                if (!anoMes) return false;
+                
+                const [estAno, estMes] = anoMes.split('-');
+                return estAno === currentYear && estMes === currentMonth;
             });
             
             updateFilterOptions();
@@ -2364,35 +2387,44 @@
         }
 
         function clearDashboard2Filters() {
-            document.getElementById('nomeEmpregado').value = '';
-            document.getElementById('cargoDashboard2').value = '';
-            document.getElementById('empresaDashboard2').value = '';
+            document.getElementById('nomeEstagiario').value = '';
+            document.getElementById('situacaoDashboard2').value = 'all';
             document.getElementById('orgaoDashboard2').value = '';
-            document.getElementById('matriculaDashboard2').value = '';
-            document.getElementById('searchEmpregados').value = '';
+            document.getElementById('maspDashboard2').value = '';
+            document.getElementById('valorRemuneracao').value = '';
+            document.getElementById('searchEstagiarios').value = '';
             currentSearchTerm = '';
             
             // Voltar para o mês mais recente do ano atual
-            const mesesDoAno = [...new Set(
-                (allData[currentYear] || [])
-                    .map(e => e.MES_NUM)
-                    .filter(Boolean)
-            )].sort((a, b) => parseInt(b) - parseInt(a));
-            
-            if (mesesDoAno.length > 0) {
-                currentMonth = mesesDoAno[0];
+            const mesesDisponiveis = [];
+            if (allData[currentYear]) {
+                allData[currentYear].forEach(e => {
+                    if (e.ano_mesreferencia && e.ANO === currentYear) {
+                        if (!mesesDisponiveis.includes(e.MES)) {
+                            mesesDisponiveis.push(e.MES);
+                        }
+                    }
+                });
             }
             
-            filteredData = (allData[currentYear] || []).filter(empregado => {
-                return empregado.ANO === currentYear && 
-                       empregado.MES_NUM === currentMonth;
+            if (mesesDisponiveis.length > 0) {
+                mesesDisponiveis.sort((a, b) => parseInt(b) - parseInt(a));
+                currentMonth = mesesDisponiveis[0];
+            }
+            
+            filteredData = (allData[currentYear] || []).filter(estagiario => {
+                const anoMes = estagiario.ano_mesreferencia;
+                if (!anoMes) return false;
+                
+                const [estAno, estMes] = anoMes.split('-');
+                return estAno === currentYear && estMes === currentMonth;
             });
             
             updateFilterOptions();
             updateDashboard2();
         }
 
-       // ==================== DASHBOARD 1: VISÃO GERAL ====================
+        // ==================== DASHBOARD 1: VISÃO GERAL ====================
         function updateDashboard1() {
             updateSummaryCards();
             updateResumoTable();
@@ -2408,16 +2440,33 @@
             }
             
             // Calcular métricas
-            const totalEmpregados = filteredData.length;
+            const totalEstagiarios = filteredData.length;
+            
+            // Contar por situação
+            const ativos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('ativo')
+            ).length;
+            
+            const inativos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('inativo')
+            ).length;
+            
+            const concluidos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('concluído') || 
+                e.situacao_funcional.toLowerCase().includes('concluido')
+            ).length;
+            
+            // Calcular valor médio de remuneração
+            const valorTotal = filteredData.reduce((sum, e) => sum + e.valor_remuneracao, 0);
+            const valorMedio = totalEstagiarios > 0 ? valorTotal / totalEstagiarios : 0;
+            
             const orgaosUnicos = [...new Set(filteredData.map(e => e.orgao))].length;
-            const empresasUnicas = [...new Set(filteredData.map(e => e.empresa))].length;
-            const cargosUnicos = [...new Set(filteredData.map(e => e.cargo))].length;
             
             const cardsHTML = `
                 <div class="col-md-3 col-6">
                     <div class="metric-card">
-                        <div class="metric-label">Total de Empregados</div>
-                        <div class="metric-value">${totalEmpregados.toLocaleString('pt-BR')}</div>
+                        <div class="metric-label">Total de Estagiários</div>
+                        <div class="metric-value">${totalEstagiarios.toLocaleString('pt-BR')}</div>
                         <div class="update-info">
                             <i class="fas fa-calendar-alt"></i> ${monthNames[currentMonth] || currentMonth}/${currentYear}
                         </div>
@@ -2425,28 +2474,28 @@
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="metric-card success">
-                        <div class="metric-label">Órgãos</div>
-                        <div class="metric-value">${orgaosUnicos}</div>
+                        <div class="metric-label">Estagiários Ativos</div>
+                        <div class="metric-value">${ativos}</div>
                         <div class="metric-change positive">
-                            <i class="fas fa-building me-1"></i> Com empregados
+                            ${((ativos/totalEstagiarios)*100).toFixed(1)}% do total
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
-                    <div class="metric-card primary">
-                        <div class="metric-label">Empresas Terceirizadas</div>
-                        <div class="metric-value">${empresasUnicas}</div>
+                    <div class="metric-card purple">
+                        <div class="metric-label">Valor Médio</div>
+                        <div class="metric-value">R$ ${valorMedio.toFixed(2)}</div>
                         <div class="update-info">
-                            <i class="fas fa-industry"></i> Contratantes
+                            <i class="fas fa-dollar-sign"></i> Remuneração média
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3 col-6">
                     <div class="metric-card info">
-                        <div class="metric-label">Cargos Diferentes</div>
-                        <div class="metric-value">${cargosUnicos}</div>
-                        <div class="d-flex justify-content-center mt-2">
-                            <span class="badge bg-secondary" style="font-size: 10px;">${((cargosUnicos/totalEmpregados)*100).toFixed(1)}% variedade</span>
+                        <div class="metric-label">Órgãos com Estagiários</div>
+                        <div class="metric-value">${orgaosUnicos}</div>
+                        <div class="metric-change warning">
+                            <i class="fas fa-building me-1"></i> Com estagiários
                         </div>
                     </div>
                 </div>
@@ -2462,7 +2511,7 @@
             const paginationInfo = document.getElementById('paginationInfoDashboard1');
             
             if (filteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Nenhum dado encontrado para o período atual.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Nenhum dado encontrado para o período atual.</td></tr>';
                 tfoot.innerHTML = '';
                 if (countElement) countElement.textContent = '0 registros';
                 if (paginationInfo) paginationInfo.textContent = 'Mostrando 0-0 de 0 registros';
@@ -2472,16 +2521,24 @@
             
             // Agrupar por órgão
             const grupos = {};
-            filteredData.forEach(empregado => {
-                const orgao = empregado.orgao;
+            filteredData.forEach(estagiario => {
+                const orgao = estagiario.orgao;
+                const sigla = estagiario.orgao_sigla || estagiario.sigla_orgao || orgao;
+                
                 if (!grupos[orgao]) {
                     grupos[orgao] = {
-                        orgao_nome: getOrgaoExtenso(orgao),
-                        orgao_sigla: orgao,
-                        count: 0
+                        orgao: orgao,
+                        sigla: sigla,
+                        total_estagiarios: 0,
+                        ativos: 0
                     };
                 }
-                grupos[orgao].count++;
+                
+                grupos[orgao].total_estagiarios++;
+                
+                if (estagiario.situacao_funcional.toLowerCase().includes('ativo')) {
+                    grupos[orgao].ativos++;
+                }
             });
             
             // Converter para array
@@ -2491,19 +2548,22 @@
             resumoArray.sort((a, b) => {
                 const order = currentSortDashboard1.order === 'asc' ? 1 : -1;
                 
-                if (currentSortDashboard1.column === 'orgao_nome') {
-                    return order * a.orgao_nome.localeCompare(b.orgao_nome);
-                } else if (currentSortDashboard1.column === 'orgao_sigla') {
-                    return order * a.orgao_sigla.localeCompare(b.orgao_sigla);
-                } else if (currentSortDashboard1.column === 'quantidade') {
-                    return order * (a.count - b.count);
+                if (currentSortDashboard1.column === 'orgao') {
+                    return order * a.orgao.localeCompare(b.orgao);
+                } else if (currentSortDashboard1.column === 'sigla') {
+                    return order * (a.sigla || '').localeCompare(b.sigla || '');
+                } else if (currentSortDashboard1.column === 'total_estagiarios') {
+                    return order * (a.total_estagiarios - b.total_estagiarios);
+                } else if (currentSortDashboard1.column === 'ativos') {
+                    return order * (a.ativos - b.ativos);
                 }
                 return 0;
             });
             
             // Calcular totais
             const totalOrgaos = resumoArray.length;
-            const totalEmpregados = resumoArray.reduce((sum, item) => sum + item.count, 0);
+            const totalEstagiarios = resumoArray.reduce((sum, item) => sum + item.total_estagiarios, 0);
+            const totalAtivos = resumoArray.reduce((sum, item) => sum + item.ativos, 0);
             
             // Paginação
             const itemsPerPage = itemsPerPageDashboard1;
@@ -2517,16 +2577,13 @@
                 return `
                 <tr>
                     <td>
-                        <a href="#" onclick="filtrarPorOrgao('${item.orgao_sigla}')" class="orgao-link" title="Clique para filtrar por este órgão">
-                            ${item.orgao_nome}
+                        <a href="#" onclick="filtrarPorOrgao('${item.orgao.replace(/'/g, "\\'")}')" class="orgao-link" title="Clique para filtrar por este órgão">
+                            ${item.orgao}
                         </a>
                     </td>
-                    <td>
-                        <a href="#" onclick="filtrarPorOrgao('${item.orgao_sigla}')" class="orgao-link" title="Clique para filtrar por este órgão">
-                            ${item.orgao_sigla}
-                        </a>
-                    </td>
-                    <td>${item.count.toLocaleString('pt-BR')}</td>
+                    <td>${item.sigla}</td>
+                    <td>${item.total_estagiarios.toLocaleString('pt-BR')}</td>
+                    <td>${item.ativos.toLocaleString('pt-BR')}</td>
                 </tr>
             `}).join('');
             
@@ -2535,7 +2592,8 @@
                 <tr class="table-total-row">
                     <td><strong>TOTAL GERAL (${totalOrgaos} órgãos)</strong></td>
                     <td><strong>-</strong></td>
-                    <td><strong>${totalEmpregados.toLocaleString('pt-BR')}</strong></td>
+                    <td><strong>${totalEstagiarios.toLocaleString('pt-BR')}</strong></td>
+                    <td><strong>${totalAtivos.toLocaleString('pt-BR')}</strong></td>
                 </tr>
             `;
             
@@ -2617,12 +2675,12 @@
 
         window.changePageDashboard1 = function(page) {
             const grupos = {};
-            filteredData.forEach(empregado => {
-                const orgao = empregado.orgao;
+            filteredData.forEach(estagiario => {
+                const orgao = estagiario.orgao;
                 if (!grupos[orgao]) {
-                    grupos[orgao] = { empregados: [] };
+                    grupos[orgao] = { estagiarios: [] };
                 }
-                grupos[orgao].empregados.push(empregado);
+                grupos[orgao].estagiarios.push(estagiario);
             });
             
             const totalItems = Object.keys(grupos).length;
@@ -2643,8 +2701,8 @@
             if (filteredData.length === 0) return;
             
             updateOrgaoChart();
-            updateCargoChart();
-            updateEmpresaChart();
+            updateSituacaoChart();
+            updateRemuneracaoChart();
         }
 
         function updateOrgaoChart() {
@@ -2653,11 +2711,12 @@
             
             // Agrupar por órgão e pegar top 8
             const grupos = {};
-            filteredData.forEach(empregado => {
-                if (!grupos[empregado.orgao]) {
-                    grupos[empregado.orgao] = 0;
+            filteredData.forEach(estagiario => {
+                const orgao = estagiario.orgao_sigla || estagiario.sigla_orgao || estagiario.orgao;
+                if (!grupos[orgao]) {
+                    grupos[orgao] = 0;
                 }
-                grupos[empregado.orgao]++;
+                grupos[orgao]++;
             });
             
             const orgaosArray = Object.entries(grupos)
@@ -2667,9 +2726,9 @@
             
             // Cores para o gráfico
             const pieColors = [
-                chartColors.primary, chartColors.secondaryBlue, chartColors.accent,
-                chartColors.secondaryBrown, chartColors.secondaryTeal, chartColors.bright,
-                '#4ECDC4', '#FF6B6B'
+                chartColors.primary, chartColors.accent, chartColors.success,
+                chartColors.warning, chartColors.purple, chartColors.orange,
+                chartColors.info, chartColors.teal
             ];
             
             if (charts.orgao) {
@@ -2680,8 +2739,7 @@
                 type: 'pie',
                 data: {
                     labels: orgaosArray.map(item => {
-                        const orgaoNome = getOrgaoExtenso(item.orgao);
-                        return orgaoNome.length > 15 ? orgaoNome.substring(0, 15) + '...' : orgaoNome;
+                        return item.orgao.length > 15 ? item.orgao.substring(0, 15) + '...' : item.orgao;
                     }),
                     datasets: [{
                         data: orgaosArray.map(item => item.count),
@@ -2711,7 +2769,7 @@
                                     const value = context.raw || 0;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
                                     const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${value} empregados (${percentage}%)`;
+                                    return `${label}: ${value} estagiários (${percentage}%)`;
                                 }
                             }
                         }
@@ -2720,37 +2778,115 @@
             });
         }
 
-        function updateCargoChart() {
-            const ctx = document.getElementById('chartCargo')?.getContext('2d');
+        function updateSituacaoChart() {
+            const ctx = document.getElementById('chartSituacao')?.getContext('2d');
             if (!ctx) return;
             
-            // Agrupar por cargo e pegar top 8
-            const grupos = {};
-            filteredData.forEach(empregado => {
-                if (!grupos[empregado.cargo]) {
-                    grupos[empregado.cargo] = 0;
-                }
-                grupos[empregado.cargo]++;
-            });
+            // Contar por situação
+            const ativos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('ativo')
+            ).length;
             
-            const cargosArray = Object.entries(grupos)
-                .map(([cargo, count]) => ({ cargo, count }))
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 8);
+            const inativos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('inativo')
+            ).length;
             
-            if (charts.cargo) {
-                charts.cargo.destroy();
+            const concluidos = filteredData.filter(e => 
+                e.situacao_funcional.toLowerCase().includes('concluído') || 
+                e.situacao_funcional.toLowerCase().includes('concluido')
+            ).length;
+            
+            const outros = filteredData.length - ativos - inativos - concluidos;
+            
+            if (charts.situacao) {
+                charts.situacao.destroy();
             }
             
-            charts.cargo = new Chart(ctx, {
+            charts.situacao = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ativos', 'Inativos', 'Concluídos', 'Outros'],
+                    datasets: [{
+                        data: [ativos, inativos, concluidos, outros],
+                        backgroundColor: [
+                            chartColors.success,
+                            '#E74C3C',
+                            chartColors.accent,
+                            '#95A5A6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} estagiários (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRemuneracaoChart() {
+            const ctx = document.getElementById('chartRemuneracao')?.getContext('2d');
+            if (!ctx) return;
+            
+            // Agrupar por faixa de remuneração
+            const faixas = {
+                'Até R$ 500': 0,
+                'R$ 500-1000': 0,
+                'R$ 1000-1500': 0,
+                'R$ 1500-2000': 0,
+                'Acima de R$ 2000': 0
+            };
+            
+            filteredData.forEach(estagiario => {
+                const valor = estagiario.valor_remuneracao;
+                if (valor <= 500) {
+                    faixas['Até R$ 500']++;
+                } else if (valor <= 1000) {
+                    faixas['R$ 500-1000']++;
+                } else if (valor <= 1500) {
+                    faixas['R$ 1000-1500']++;
+                } else if (valor <= 2000) {
+                    faixas['R$ 1500-2000']++;
+                } else {
+                    faixas['Acima de R$ 2000']++;
+                }
+            });
+            
+            if (charts.remuneracao) {
+                charts.remuneracao.destroy();
+            }
+            
+            charts.remuneracao = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: cargosArray.map(item => {
-                        return item.cargo.length > 20 ? item.cargo.substring(0, 20) + '...' : item.cargo;
-                    }),
+                    labels: Object.keys(faixas),
                     datasets: [{
-                        label: 'Quantidade de Empregados',
-                        data: cargosArray.map(item => item.count),
+                        label: 'Quantidade de Estagiários',
+                        data: Object.values(faixas),
                         backgroundColor: chartColors.accent,
                         borderColor: chartColors.primary,
                         borderWidth: 1
@@ -2785,145 +2921,78 @@
             });
         }
 
-        function updateEmpresaChart() {
-            const ctx = document.getElementById('chartEmpresa')?.getContext('2d');
-            if (!ctx) return;
-            
-            // Agrupar por empresa e pegar top 8
-            const grupos = {};
-            filteredData.forEach(empregado => {
-                if (!grupos[empregado.empresa]) {
-                    grupos[empregado.empresa] = 0;
-                }
-                grupos[empregado.empresa]++;
-            });
-            
-            const empresasArray = Object.entries(grupos)
-                .map(([empresa, count]) => ({ empresa, count }))
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 8);
-            
-            if (charts.empresa) {
-                charts.empresa.destroy();
-            }
-            
-            charts.empresa = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: empresasArray.map(item => {
-                        return item.empresa.length > 20 ? item.empresa.substring(0, 20) + '...' : item.empresa;
-                    }),
-                    datasets: [{
-                        data: empresasArray.map(item => item.count),
-                        backgroundColor: [
-                            '#29435A', '#B93C42', '#DB233F', '#3F704D',
-                            '#8B7355', '#20B2AA', '#4ECDC4', '#FF6B6B'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15,
-                                usePointStyle: true,
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = Math.round((value / total) * 100);
-                                    return `${label}: ${value} empregados (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
         // ==================== DASHBOARD 2: CONSULTA INDIVIDUAL ====================
         function initializeDashboard2() {
             updateDashboard2();
         }
 
         function updateDashboard2() {
-            updateEmpregadosTable();
+            updateEstagiariosTable();
         }
 
-        function updateEmpregadosTable() {
-            const tbody = document.getElementById('empregadosTableBody');
-            const tfoot = document.getElementById('empregadosTableFooter');
+        function updateEstagiariosTable() {
+            const tbody = document.getElementById('estagiariosTableBody');
+            const tfoot = document.getElementById('estagiariosTableFooter');
             const countElement = document.getElementById('resumoCountDashboard2');
             const paginationInfo = document.getElementById('paginationInfoDashboard2');
             
             if (!tbody) return;
             
             if (filteredData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum empregado encontrado para o período atual.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Nenhum estagiário encontrado para o período atual.</td></tr>';
                 if (tfoot) tfoot.innerHTML = '';
-                if (countElement) countElement.textContent = '0 empregados';
+                if (countElement) countElement.textContent = '0 estagiários';
                 if (paginationInfo) paginationInfo.textContent = 'Mostrando 0-0 de 0 registros';
                 updatePaginationDashboard2(1, 1);
                 return;
             }
             
             // Ordenar de acordo com a coluna selecionada
-            let empregadosArray = [...filteredData];
-            empregadosArray.sort((a, b) => {
+            let estagiariosArray = [...filteredData];
+            estagiariosArray.sort((a, b) => {
                 const order = currentSortDashboard2.order === 'asc' ? 1 : -1;
                 
-                if (currentSortDashboard2.column === 'matricula') {
-                    return order * a.matricula.localeCompare(b.matricula);
-                } else if (currentSortDashboard2.column === 'nome') {
-                    return order * a.nome.localeCompare(b.nome);
-                } else if (currentSortDashboard2.column === 'orgao') {
-                    return order * a.orgao.localeCompare(b.orgao);
-                } else if (currentSortDashboard2.column === 'cargo') {
-                    return order * a.cargo.localeCompare(b.cargo);
-                } else if (currentSortDashboard2.column === 'empresa') {
-                    return order * a.empresa.localeCompare(b.empresa);
-                } else if (currentSortDashboard2.column === 'cnpj_empresa') {
-                    return order * a.cnpj_empresa.localeCompare(b.cnpj_empresa);
+                if (currentSortDashboard2.column === 'nome_estagiario') {
+                    return order * a.nome_estagiario.localeCompare(b.nome_estagiario);
+                } else if (currentSortDashboard2.column === 'masp') {
+                    return order * a.masp.localeCompare(b.masp);
+                } else if (currentSortDashboard2.column === 'sigla_orgao') {
+                    return order * (a.sigla_orgao || '').localeCompare(b.sigla_orgao || '');
+                } else if (currentSortDashboard2.column === 'data_inicio') {
+                    return order * new Date(a.data_inicio) - new Date(b.data_inicio);
+                } else if (currentSortDashboard2.column === 'data_fim') {
+                    return order * new Date(a.data_fim || 0) - new Date(b.data_fim || 0);
+                } else if (currentSortDashboard2.column === 'valor_remuneracao') {
+                    return order * (a.valor_remuneracao - b.valor_remuneracao);
                 }
                 return 0;
             });
             
             // Calcular totais
-            const totalEmpregados = empregadosArray.length;
-            const orgaosUnicos = [...new Set(empregadosArray.map(e => e.orgao))].length;
-            const empresasUnicas = [...new Set(empregadosArray.map(e => e.empresa))].length;
+            const totalEstagiarios = estagiariosArray.length;
+            const valorTotal = estagiariosArray.reduce((sum, e) => sum + e.valor_remuneracao, 0);
+            const valorMedio = totalEstagiarios > 0 ? valorTotal / totalEstagiarios : 0;
+            const orgaosUnicos = [...new Set(estagiariosArray.map(e => e.orgao))].length;
             
             // Paginação
             const itemsPerPage = itemsPerPageDashboard2;
-            const totalPages = Math.ceil(empregadosArray.length / itemsPerPage);
+            const totalPages = Math.ceil(estagiariosArray.length / itemsPerPage);
             const startIndex = (currentPageDashboard2 - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, empregadosArray.length);
-            const currentData = empregadosArray.slice(startIndex, endIndex);
+            const endIndex = Math.min(startIndex + itemsPerPage, estagiariosArray.length);
+            const currentData = estagiariosArray.slice(startIndex, endIndex);
             
             // Gerar HTML da tabela
-            const rowsHTML = currentData.map(empregado => `
+            const rowsHTML = currentData.map(estagiario => `
                 <tr>
-                    <td>${empregado.matricula}</td>
-                    <td><strong>${empregado.nome}</strong></td>
-                    <td>${getOrgaoExtenso(empregado.orgao)}<br><small class="text-muted">${empregado.orgao}</small></td>
-                    <td>${empregado.cargo}</td>
-                    <td>${empregado.empresa}</td>
-                    <td>${empregado.cnpj_empresa}</td>
+                    <td><strong>${estagiario.nome_estagiario}</strong></td>
+                    <td>${estagiario.masp}</td>
+                    <td>${estagiario.sigla_orgao || estagiario.orgao_sigla || estagiario.orgao}</td>
+                    <td>${formatDate(estagiario.data_inicio)}</td>
+                    <td>${formatDate(estagiario.data_fim)}</td>
+                    <td><strong>R$ ${estagiario.valor_remuneracao.toFixed(2)}</strong></td>
                     <td class="actions-column">
                         <div class="action-buttons">
-                            <button class="btn-action btn-history" onclick="showEmployeeHistory('${empregado.matricula}', '${empregado.nome.replace(/'/g, "\\'")}')" title="Ver Histórico">
+                            <button class="btn-action btn-history" onclick="showEstagiarioHistory('${estagiario.masp}', '${estagiario.nome_estagiario.replace(/'/g, "\\'")}')" title="Ver Histórico">
                                 <i class="fas fa-history"></i><span>Histórico</span>
                             </button>
                         </div>
@@ -2934,17 +3003,18 @@
             // Gerar rodapé
             const footerHTML = `
                 <tr class="table-total-row">
-                    <td colspan="2"><strong>TOTAL GERAL: ${totalEmpregados.toLocaleString('pt-BR')} empregados</strong></td>
+                    <td colspan="2"><strong>TOTAL GERAL: ${totalEstagiarios.toLocaleString('pt-BR')} estagiários</strong></td>
                     <td><strong>${orgaosUnicos} órgãos</strong></td>
-                    <td colspan="2"><strong>${empresasUnicas} empresas</strong></td>
-                    <td colspan="2"></td>
+                    <td colspan="2"><strong>Valor Total: R$ ${valorTotal.toFixed(2)}</strong></td>
+                    <td><strong>Média: R$ ${valorMedio.toFixed(2)}</strong></td>
+                    <td></td>
                 </tr>
             `;
             
             tbody.innerHTML = rowsHTML;
             if (tfoot) tfoot.innerHTML = footerHTML;
-            if (countElement) countElement.textContent = `${totalEmpregados.toLocaleString('pt-BR')} empregados`;
-            if (paginationInfo) paginationInfo.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${empregadosArray.length.toLocaleString('pt-BR')} registros`;
+            if (countElement) countElement.textContent = `${totalEstagiarios.toLocaleString('pt-BR')} estagiários`;
+            if (paginationInfo) paginationInfo.textContent = `Mostrando ${startIndex + 1}-${endIndex} de ${estagiariosArray.length.toLocaleString('pt-BR')} registros`;
             
             updatePaginationDashboard2(totalPages, currentPageDashboard2);
             
@@ -2953,7 +3023,7 @@
         }
 
         function updateSortIconsDashboard2() {
-            const headers = document.querySelectorAll('#empregadosTable thead th');
+            const headers = document.querySelectorAll('#estagiariosTable thead th');
             headers.forEach(header => {
                 const sortIcon = header.querySelector('.sort-icon');
                 const column = header.getAttribute('data-sort');
@@ -3022,7 +3092,7 @@
             if (page < 1 || page > totalPages) return;
             
             currentPageDashboard2 = page;
-            updateEmpregadosTable();
+            updateEstagiariosTable();
             
             const tableContainer = document.querySelector('#dashboard2 .table-container');
             if (tableContainer) {
@@ -3031,129 +3101,103 @@
         };
 
         // ==================== FUNÇÃO PARA MOSTRAR HISTÓRICO ====================
-        window.showEmployeeHistory = function(matricula, nome) {
+        window.showEstagiarioHistory = function(masp, nome) {
             showLoading(true);
             
             try {
-                // Encontrar todos os registros do empregado em todos os anos
+                // Encontrar todos os registros do estagiário em todos os anos
                 const historico = [];
-                let ultimoRegistro = null;
                 
-                // Primeiro, garantir que todos os anos estão carregados
-                const loadAllYears = async () => {
-                    const years = Object.keys(CSV_FILES_BY_YEAR);
-                    for (const year of years) {
-                        if (!allData[year]) {
-                            await loadYearData(year);
-                        }
-                    }
-                };
-                
-                // Carregar todos os anos se necessário
-                loadAllYears().then(() => {
-                    // Procurar em todos os anos carregados
-                    Object.keys(allData).forEach(ano => {
-                        const dadosAno = allData[ano];
-                        const registrosAno = dadosAno.filter(e => 
-                            e.matricula === matricula || e.nome === nome
-                        );
-                        
-                        registrosAno.forEach(registro => {
-                            historico.push(registro);
-                            if (!ultimoRegistro || 
-                                (registro.ANO > ultimoRegistro.ANO) ||
-                                (registro.ANO === ultimoRegistro.ANO && 
-                                 registro.MES_NUM > ultimoRegistro.MES_NUM)) {
-                                ultimoRegistro = registro;
-                            }
-                        });
-                    });
+                // Procurar em todos os anos carregados
+                Object.keys(allData).forEach(ano => {
+                    const dadosAno = allData[ano];
+                    const registrosAno = dadosAno.filter(e => 
+                        e.masp === masp || e.nome_estagiario === nome
+                    );
                     
-                    // Ordenar histórico por data (mais recente primeiro)
-                    historico.sort((a, b) => {
-                        if (a.ANO !== b.ANO) return parseInt(b.ANO) - parseInt(a.ANO);
-                        return parseInt(b.MES_NUM) - parseInt(a.MES_NUM);
-                    });
-                    
-                    // Preparar informações do empregado
-                    const empregado = ultimoRegistro || historico[0];
-                    
-                    // Atualizar modal
-                    const modal = new bootstrap.Modal(document.getElementById('historicModal'));
-                    
-                    // Informações do empregado
-                    const infoHTML = `
-                        <div class="employee-info-grid">
-                            <div class="info-item">
-                                <span class="info-label">Matrícula</span>
-                                <span class="info-value">${empregado.matricula}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Nome</span>
-                                <span class="info-value">${empregado.nome}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Órgão Atual</span>
-                                <span class="info-value">${getOrgaoExtenso(empregado.orgao)}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Cargo Atual</span>
-                                <span class="info-value">${empregado.cargo}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Empresa Atual</span>
-                                <span class="info-value">${empregado.empresa}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">CNPJ Empresa</span>
-                                <span class="info-value">${empregado.cnpj_empresa}</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Total de Registros</span>
-                                <span class="info-value">${historico.length} meses</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Período</span>
-                                <span class="info-value">${historico.length > 0 ? 
-                                    `${historico[historico.length-1].mes_referencia} a ${historico[0].mes_referencia}` : 
-                                    'N/A'}</span>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('employeeInfo').innerHTML = infoHTML;
-                    
-                    // Atualizar título do modal
-                    document.getElementById('historicModalLabel').innerHTML = `
-                        <i class="fas fa-history me-2"></i>Histórico de ${empregado.nome}
-                    `;
-                    
-                    // Tabela de histórico
-                    const historicHTML = historico.map(registro => `
-                        <tr>
-                            <td>${registro.mes_referencia}</td>
-                            <td>${getOrgaoExtenso(registro.orgao)}<br><small>${registro.orgao}</small></td>
-                            <td>${registro.cargo}</td>
-                            <td>${registro.empresa}</td>
-                            <td>${registro.cnpj_empresa}</td>
-                        </tr>
-                    `).join('');
-                    
-                    document.getElementById('historicTableBody').innerHTML = historicHTML || 
-                        '<tr><td colspan="5" class="text-center text-muted">Nenhum histórico encontrado</td></tr>';
-                    
-                    // Mostrar modal
-                    modal.show();
-                    showLoading(false);
-                }).catch(error => {
-                    console.error('Erro ao carregar histórico:', error);
-                    showError('Erro ao carregar histórico do empregado.');
-                    showLoading(false);
+                    historico.push(...registrosAno);
                 });
+                
+                // Ordenar histórico por data (mais recente primeiro)
+                historico.sort((a, b) => {
+                    const aDate = a.ano_mesreferencia || '';
+                    const bDate = b.ano_mesreferencia || '';
+                    return bDate.localeCompare(aDate);
+                });
+                
+                // Preparar informações do estagiário
+                const estagiario = historico[0] || {};
+                
+                // Atualizar modal
+                const modal = new bootstrap.Modal(document.getElementById('historicModal'));
+                
+                // Informações do estagiário
+                const infoHTML = `
+                    <div class="employee-info-grid">
+                        <div class="info-item">
+                            <span class="info-label">MASP</span>
+                            <span class="info-value">${estagiario.masp || masp}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Nome</span>
+                            <span class="info-value">${estagiario.nome_estagiario || nome}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Órgão Atual</span>
+                            <span class="info-value">${estagiario.orgao || '-'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Situação Atual</span>
+                            <span class="info-value">${estagiario.situacao_funcional || '-'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Data Início</span>
+                            <span class="info-value">${formatDate(estagiario.data_inicio)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Data Fim</span>
+                            <span class="info-value">${formatDate(estagiario.data_fim) || '-'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Remuneração Atual</span>
+                            <span class="info-value">R$ ${(estagiario.valor_remuneracao || 0).toFixed(2)}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Total de Registros</span>
+                            <span class="info-value">${historico.length} meses</span>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('employeeInfo').innerHTML = infoHTML;
+                
+                // Atualizar título do modal
+                document.getElementById('historicModalLabel').innerHTML = `
+                    <i class="fas fa-history me-2"></i>Histórico de ${estagiario.nome_estagiario || nome}
+                `;
+                
+                // Tabela de histórico
+                const historicHTML = historico.map(registro => `
+                    <tr>
+                        <td>${registro.ano_mesreferencia}</td>
+                        <td>${registro.orgao}<br><small>${registro.sigla_orgao || ''}</small></td>
+                        <td>${registro.situacao_funcional}</td>
+                        <td>${formatDate(registro.data_inicio)}</td>
+                        <td>${formatDate(registro.data_fim) || '-'}</td>
+                        <td>R$ ${registro.valor_remuneracao.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('historicTableBody').innerHTML = historicHTML || 
+                    '<tr><td colspan="6" class="text-center text-muted">Nenhum histórico encontrado</td></tr>';
+                
+                // Mostrar modal
+                modal.show();
+                showLoading(false);
                 
             } catch (error) {
                 console.error('Erro ao carregar histórico:', error);
-                showError('Erro ao carregar histórico do empregado.');
+                showError('Erro ao carregar histórico do estagiário.');
                 showLoading(false);
             }
         };
@@ -3186,17 +3230,23 @@
                 }
                 
                 // Preparar CSV
-                const headers = ['matricula', 'nome', 'orgao', 'cargo', 'empresa', 'cnpj_empresa', 'mes_referencia'];
+                const headers = ['ano_mesreferencia', 'nome_estagiario', 'masp', 'codigo_situacao_funcional', 
+                               'situacao_funcional', 'data_inicio', 'data_fim', 'codigo_orgao', 
+                               'orgao', 'sigla_orgao', 'valor_remuneracao'];
                 const csvContent = [
                     headers.join(';'),
-                    ...data.map(empregado => [
-                        empregado.matricula,
-                        empregado.nome,
-                        empregado.orgao,
-                        empregado.cargo,
-                        empregado.empresa,
-                        empregado.cnpj_empresa,
-                        empregado.mes_referencia
+                    ...data.map(estagiario => [
+                        estagiario.ano_mesreferencia,
+                        estagiario.nome_estagiario,
+                        estagiario.masp,
+                        estagiario.codigo_situacao_funcional,
+                        estagiario.situacao_funcional,
+                        estagiario.data_inicio,
+                        estagiario.data_fim,
+                        estagiario.codigo_orgao,
+                        estagiario.orgao,
+                        estagiario.sigla_orgao,
+                        estagiario.valor_remuneracao.toFixed(2).replace('.', ',')
                     ].map(cell => `"${cell}"`).join(';'))
                 ].join('\n');
                 
@@ -3206,7 +3256,7 @@
                 const url = URL.createObjectURL(blob);
                 
                 link.setAttribute('href', url);
-                link.setAttribute('download', `empregados_terceirizados_${year}.csv`);
+                link.setAttribute('download', `estagiarios_${year}.csv`);
                 link.style.visibility = 'hidden';
                 document.body.appendChild(link);
                 link.click();
@@ -3224,53 +3274,50 @@
 
         // ==================== FUNÇÕES GLOBAIS E UTILITÁRIOS ====================
 
-window.filtrarPorOrgao = function(orgao) {
-    console.log('Filtrando por órgão:', orgao);
-    
-    try {
-        // Mudar para a aba de Consulta Individual
-        const tabElement = document.getElementById('dashboard2-tab');
-        if (tabElement) {
-            // Usar Bootstrap Tab para mudar de aba
-            const tab = new bootstrap.Tab(tabElement);
-            tab.show();
+        window.filtrarPorOrgao = function(orgao) {
+            console.log('Filtrando por órgão:', orgao);
             
-            // Aguardar a transição da aba
-            setTimeout(() => {
-                // Preencher o campo do órgão no Dashboard 2
-                const orgaoElement = document.getElementById('orgaoDashboard2');
-                if (orgaoElement) {
-                    orgaoElement.value = orgao;
+            try {
+                // Mudar para a aba de Consulta Individual
+                const tabElement = document.getElementById('dashboard2-tab');
+                if (tabElement) {
+                    // Usar Bootstrap Tab para mudar de aba
+                    const tab = new bootstrap.Tab(tabElement);
+                    tab.show();
+                    
+                    // Aguardar a transição da aba
+                    setTimeout(() => {
+                        // Preencher o campo do órgão no Dashboard 2
+                        const orgaoElement = document.getElementById('orgaoDashboard2');
+                        if (orgaoElement) {
+                            orgaoElement.value = orgao;
+                        }
+                        
+                        // Limpar outros filtros
+                        document.getElementById('nomeEstagiario').value = '';
+                        document.getElementById('situacaoDashboard2').value = 'all';
+                        document.getElementById('maspDashboard2').value = '';
+                        document.getElementById('valorRemuneracao').value = '';
+                        document.getElementById('searchEstagiarios').value = '';
+                        
+                        // Aplicar o filtro
+                        applyFilters('dashboard2');
+                        
+                        // Rolar para a tabela
+                        const tableContainer = document.querySelector('#dashboard2 .table-container');
+                        if (tableContainer) {
+                            tableContainer.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 350);
+                } else {
+                    console.error('Elemento da aba não encontrado');
                 }
-                
-                // Limpar outros filtros
-                document.getElementById('nomeEmpregado').value = '';
-                document.getElementById('cargoDashboard2').value = '';
-                document.getElementById('empresaDashboard2').value = '';
-                document.getElementById('matriculaDashboard2').value = '';
-                document.getElementById('searchEmpregados').value = '';
-                
-                // Configurar o ano e mês atuais
-                document.getElementById('anoDashboard2').value = currentYear;
-                document.getElementById('mesDashboard2').value = currentMonth;
-                
-                // Aplicar o filtro
-                applyFilters('dashboard2');
-                
-                // Rolar para a tabela
-                const tableContainer = document.querySelector('#dashboard2 .table-container');
-                if (tableContainer) {
-                    tableContainer.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, 350); // Tempo maior para garantir que a aba mudou
-        } else {
-            console.error('Elemento da aba não encontrado');
-        }
-    } catch (error) {
-        console.error('Erro ao filtrar por órgão:', error);
-        showError('Erro ao filtrar por órgão. Por favor, tente novamente.');
-    }
-};
+            } catch (error) {
+                console.error('Erro ao filtrar por órgão:', error);
+                showError('Erro ao filtrar por órgão. Por favor, tente novamente.');
+            }
+        };
+
         // ==================== FUNÇÕES DE ORDENAÇÃO ====================
         window.sortTable = function(tableType, column) {
             if (tableType === 'visaoGeral') {
@@ -3285,7 +3332,7 @@ window.filtrarPorOrgao = function(orgao) {
                 }
                 currentPageDashboard1 = 1;
                 updateResumoTable();
-            } else if (tableType === 'empregados') {
+            } else if (tableType === 'estagiarios') {
                 // Verificar se está ordenando a mesma coluna
                 if (currentSortDashboard2.column === column) {
                     // Inverter a ordem
@@ -3296,7 +3343,7 @@ window.filtrarPorOrgao = function(orgao) {
                     currentSortDashboard2.order = 'asc';
                 }
                 currentPageDashboard2 = 1;
-                updateEmpregadosTable();
+                updateEstagiariosTable();
             }
         };
 
@@ -3305,7 +3352,7 @@ window.filtrarPorOrgao = function(orgao) {
             if (source === 'dashboard1') {
                 exportResumoCSV();
             } else if (source === 'dashboard2') {
-                exportEmpregadosCSV();
+                exportEstagiariosCSV();
             }
         }
 
@@ -3318,23 +3365,35 @@ window.filtrarPorOrgao = function(orgao) {
             
             // Agrupar por órgão
             const grupos = {};
-            filteredData.forEach(empregado => {
-                const orgao = empregado.orgao;
+            filteredData.forEach(estagiario => {
+                const orgao = estagiario.orgao;
+                const sigla = estagiario.orgao_sigla || estagiario.sigla_orgao || orgao;
+                
                 if (!grupos[orgao]) {
                     grupos[orgao] = {
                         orgao: orgao,
-                        orgao_extenso: getOrgaoExtenso(orgao),
-                        count: 0
+                        sigla: sigla,
+                        total_estagiarios: 0,
+                        ativos: 0
                     };
                 }
-                grupos[orgao].count++;
+                
+                grupos[orgao].total_estagiarios++;
+                
+                if (estagiario.situacao_funcional.toLowerCase().includes('ativo')) {
+                    grupos[orgao].ativos++;
+                }
             });
             
-            const headers = ['Órgão (Sigla)', 'Órgão (Nome Completo)', 'Quantidade de Empregados'];
-            const data = Object.values(grupos).map(info => [
+            // Converter para array
+            const resumoArray = Object.values(grupos);
+            
+            const headers = ['Órgão', 'Sigla', 'Total de Estagiários', 'Ativos'];
+            const data = resumoArray.map(info => [
                 info.orgao,
-                info.orgao_extenso,
-                info.count
+                info.sigla,
+                info.total_estagiarios,
+                info.ativos
             ]);
             
             const csvContent = [
@@ -3347,27 +3406,31 @@ window.filtrarPorOrgao = function(orgao) {
             const url = URL.createObjectURL(blob);
             
             link.setAttribute('href', url);
-            link.setAttribute('download', `visao_geral_orgaos_terceirizados_${currentYear}_${currentMonth}.csv`);
+            link.setAttribute('download', `visao_geral_estagiarios_${currentYear}_${currentMonth}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        function exportEmpregadosCSV() {
+        function exportEstagiariosCSV() {
             if (filteredData.length === 0) return;
             
-            const headers = ['matricula', 'nome', 'orgao_sigla', 'orgao_nome_completo', 'cargo', 'empresa', 'cnpj_empresa', 'mes_referencia', 'ANO'];
-            const data = filteredData.map(empregado => [
-                empregado.matricula,
-                empregado.nome,
-                empregado.orgao,
-                getOrgaoExtenso(empregado.orgao),
-                empregado.cargo,
-                empregado.empresa,
-                empregado.cnpj_empresa,
-                empregado.mes_referencia,
-                empregado.ANO || ''
+            const headers = ['ano_mesreferencia', 'nome_estagiario', 'masp', 'codigo_situacao_funcional', 
+                           'situacao_funcional', 'data_inicio', 'data_fim', 'codigo_orgao', 
+                           'orgao', 'sigla_orgao', 'valor_remuneracao'];
+            const data = filteredData.map(estagiario => [
+                estagiario.ano_mesreferencia,
+                estagiario.nome_estagiario,
+                estagiario.masp,
+                estagiario.codigo_situacao_funcional,
+                estagiario.situacao_funcional,
+                estagiario.data_inicio,
+                estagiario.data_fim,
+                estagiario.codigo_orgao,
+                estagiario.orgao,
+                estagiario.sigla_orgao,
+                estagiario.valor_remuneracao.toFixed(2)
             ]);
             
             const csvContent = [
@@ -3380,7 +3443,7 @@ window.filtrarPorOrgao = function(orgao) {
             const url = URL.createObjectURL(blob);
             
             link.setAttribute('href', url);
-            link.setAttribute('download', `empregados_terceirizados_${currentYear}_${currentMonth}.csv`);
+            link.setAttribute('download', `estagiarios_${currentYear}_${currentMonth}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -3389,5 +3452,3 @@ window.filtrarPorOrgao = function(orgao) {
     </script>
 </body>
 </html>
-
-
