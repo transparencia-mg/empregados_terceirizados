@@ -1,75 +1,68 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 import os
+from pathlib import Path
 from ckanapi import RemoteCKAN
 
 CKAN_HOST = "https://www.dados.mg.gov.br"
-CKAN_KEY = os.environ["CKAN_KEY"]
+CKAN_KEY = os.environ.get("CKAN_KEY")
 DATASET = "empregados-terceirizados-mg"
-GITHUB_REPO = "transparencia-mg/empregados_terceirizados_mg"
-GITHUB_BRANCH = "main"
+
+if not CKAN_KEY:
+    raise RuntimeError("CKAN_KEY não definida")
 
 ckan = RemoteCKAN(CKAN_HOST, apikey=CKAN_KEY)
 
-# =========================
-# 1. ATUALIZAR O DATASET
-# =========================
-with open("datapackage/datapackage.json", encoding="utf-8") as f:
-    dp = json.load(f)
-
 print("📦 Atualizando dataset (package_update)")
+ckan.action.package_update(
+    name=DATASET,
+    title="Empregados Terceirizados do Governo de Minas Gerais",
+    notes="Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
+    state="active"
+)
 
-dataset_payload = {
-    "name": DATASET,
-    "title": dp.get("title"),
-    "notes": dp.get("description"),
-    "owner_org": dp.get("owner_org"),
-    "private": False,
-    "state": "active",
-    "extras": [
-        {"key": "profile", "value": dp.get("profile", "data-package")},
-        {"key": "license", "value": json.dumps(dp.get("license", {}), ensure_ascii=False)},
-        {"key": "datapackage", "value": json.dumps(dp, ensure_ascii=False)}
-    ]
-}
-
-ckan.action.package_update(**dataset_payload)
-
-print("✅ Dataset atualizado com datapackage.json")
-
-# =========================
-# 2. CRIAR / ATUALIZAR RECURSOS
-# =========================
-for res in dp["resources"]:
-    name = res["name"]
-    path = res["path"]
-    url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}/{path}"
-
-    print(f"\n➡️ Processando recurso: {name}")
-
+def upsert_resource(name, title, url, description, fmt):
     search = ckan.action.resource_search(
-        query=f'name:{name}',
+        query=f'name:"{name}"',
         package_id=DATASET
     )
 
     payload = {
         "package_id": DATASET,
         "name": name,
-        "title": res.get("title", name),
+        "title": title,
         "url": url,
         "url_type": "link",
-        "format": "CSV",
-        "description": res.get("description", "")
+        "format": fmt,
+        "description": description
     }
 
     if search["count"] > 0:
         payload["id"] = search["results"][0]["id"]
         ckan.action.resource_update(**payload)
-        print("🔄 Recurso atualizado")
+        print(f"🔄 Atualizado: {name}")
     else:
         ckan.action.resource_create(**payload)
-        print("🆕 Recurso criado")
+        print(f"🆕 Criado: {name}")
 
-print("\n🏁 Publicação CKAN finalizada com sucesso")
+# 📄 Publicar datapackage.json
+upsert_resource(
+    name="datapackage-json",
+    title="Datapackage do conjunto de dados",
+    url="https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados_mg/main/datapackage/datapackage.json",
+    description="Arquivo datapackage.json com metadados e schema dos recursos.",
+    fmt="JSON"
+)
+
+# 📘 Publicar README.md
+upsert_resource(
+    name="readme",
+    title="Descrição e metodologia do dataset",
+    url="https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados_mg/main/README.md",
+    description="Documento com contextualização, metodologia e orientações de uso dos dados.",
+    fmt="MD"
+)
+
+print("✅ Publicação CKAN finalizada com sucesso")
+
