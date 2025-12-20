@@ -17,13 +17,31 @@ if not CKAN_KEY:
 
 ckan = RemoteCKAN(CKAN_HOST, apikey=CKAN_KEY)
 
-print("📦 Atualizando dataset")
+# ======================================================
+# 1️⃣ LER README.md PARA USAR COMO DESCRIÇÃO DO DATASET
+# ======================================================
+
+readme_path = Path("README.md")
+if not readme_path.exists():
+    raise RuntimeError("README.md não encontrado")
+
+readme_text = readme_path.read_text(encoding="utf-8")
+
+# ======================================================
+# 2️⃣ ATUALIZAR DATASET (DESCRIÇÃO = README)
+# ======================================================
+
+print("📦 Atualizando dataset (descrição a partir do README.md)")
 ckan.action.package_update(
     name=DATASET,
     title="Empregados Terceirizados do Governo de Minas Gerais",
-    notes="Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
+    notes=readme_text,
     state="active"
 )
+
+# ======================================================
+# FUNÇÃO AUXILIAR
+# ======================================================
 
 def upsert_resource(name, title, url, description, fmt):
     search = ckan.action.resource_search(
@@ -50,7 +68,7 @@ def upsert_resource(name, title, url, description, fmt):
         print(f"🆕 Criado: {name}")
 
 # ======================================================
-# 1️⃣ PUBLICAR / ATUALIZAR CSVs (a partir do datapackage)
+# 3️⃣ PUBLICAR / ATUALIZAR CSVs (via datapackage)
 # ======================================================
 
 dp_path = Path("datapackage/datapackage.json")
@@ -74,7 +92,7 @@ for res in datapackage["resources"]:
     )
 
 # ======================================================
-# 2️⃣ PUBLICAR datapackage.json
+# 4️⃣ PUBLICAR datapackage.json (COMO RECURSO)
 # ======================================================
 
 upsert_resource(
@@ -85,17 +103,6 @@ upsert_resource(
     fmt="JSON"
 )
 
-# ======================================================
-# 3️⃣ PUBLICAR README.md (EXATAMENTE O SEU)
-# ======================================================
+print("✅ Dataset atualizado com descrição (README), CSVs e datapackage")
 
-upsert_resource(
-    name="readme",
-    title="Descrição e metodologia do dataset",
-    url=f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}/README.md",
-    description="Documento com contextualização, metodologia e orientações de uso dos dados.",
-    fmt="MD"
-)
-
-print("✅ Dataset, CSVs, datapackage e README publicados com sucesso")
 
