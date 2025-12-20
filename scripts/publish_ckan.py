@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import json
+import os
+from ckanapi import RemoteCKAN
+
+CKAN_HOST = "https://www.dados.mg.gov.br"
+CKAN_KEY = os.environ["CKAN_KEY"]
+DATASET = "empregados-terceirizados-mg"
+GITHUB_REPO = "transparencia-mg/empregados_terceirizados_mg"
+GITHUB_BRANCH = "main"
+
+ckan = RemoteCKAN(CKAN_HOST, apikey=CKAN_KEY)
+
+# =========================
+# 1. ATUALIZAR O DATASET
+# =========================
+with open("datapackage/datapackage.json", encoding="utf-8") as f:
+    dp = json.load(f)
+
+print("📦 Atualizando dataset (package_update)")
+
+dataset_payload = {
+    "name": DATASET,
+    "title": dp.get("title"),
+    "notes": dp.get("description"),
+    "owner_org": dp.get("owner_org"),
+    "private": False,
+    "state": "active",
+    "extras": [
+        {"key": "profile", "value": dp.get("profile", "data-package")},
+        {"key": "license", "value": json.dumps(dp.get("license", {}), ensure_ascii=False)},
+        {"key": "datapackage", "value": json.dumps(dp, ensure_ascii=False)}
+    ]
+}
+
+ckan.action.package_update(**dataset_payload)
+
+print("✅ Dataset atualizado com datapackage.json")
+
+# =========================
+# 2. CRIAR / ATUALIZAR RECURSOS
+# =========================
+for res in dp["resources"]:
+    name = res["name"]
+    path = res["path"]
+    url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/{GITHUB_BRANCH}/{path}"
+
+    print(f"\n➡️ Processando recurso: {name}")
+
+    search = ckan.action.resource_search(
+        query=f'name:{name}',
+        package_id=DATASET
+    )
+
+    payload = {
+        "package_id": DATASET,
+        "name": name,
+        "title": res.get("title", name),
+        "url": url,
+        "url_type": "link",
+        "format": "CSV",
+        "description": res.get("description", "")
+    }
+
+    if search["count"] > 0:
+        payload["id"] = search["results"][0]["id"]
+        ckan.action.resource_update(**payload)
+        print("🔄 Recurso atualizado")
+    else:
+        ckan.action.resource_create(**payload)
+        print("🆕 Recurso criado")
+
+print("\n🏁 Publicação CKAN finalizada com sucesso")
