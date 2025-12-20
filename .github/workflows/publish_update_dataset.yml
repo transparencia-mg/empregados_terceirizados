@@ -44,7 +44,7 @@ jobs:
         run: |
           python scripts/publish_ckan.py
 
-      - name: Publicar datapackage.json como recurso no CKAN
+- name: Publicar datapackage.json como recurso no CKAN
         env:
           CKAN_HOST: https://www.dados.mg.gov.br
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
@@ -59,55 +59,59 @@ jobs:
           URL="https://raw.githubusercontent.com/$GITHUB_REPO/$GITHUB_BRANCH/datapackage/datapackage.json"
           DESC="Arquivo datapackage.json com metadados, schema e definição dos recursos do dataset."
 
-          SEARCH=$(curl -s -X POST "$CKAN_HOST/api/3/action/resource_search" \
+          SEARCH=$(curl -s -w "\n%{http_code}" -X POST "$CKAN_HOST/api/3/action/resource_search" \
             -H "Authorization: $CKAN_KEY" \
             -H "Content-Type: application/json" \
             -d "{\"query\":\"name:$NAME\",\"package_id\":\"$DATASET\"}")
 
-          COUNT=$(echo "$SEARCH" | jq '.result.count')
+          BODY=$(echo "$SEARCH" | head -n -1)
+          STATUS=$(echo "$SEARCH" | tail -n 1)
 
-          if [ "$COUNT" -gt 0 ]; then
-            ID=$(echo "$SEARCH" | jq -r '.result.results[0].id')
-            ACTION="resource_update"
-            PAYLOAD=$(jq -n \
-              --arg id "$ID" \
-              --arg pkg "$DATASET" \
-              --arg name "$NAME" \
-              --arg title "$TITLE" \
-              --arg url "$URL" \
-              --arg desc "$DESC" \
-              '{
-                id: $id,
-                package_id: $pkg,
-                name: $name,
-                title: $title,
-                url: $url,
-                url_type: "link",
-                format: "JSON",
-                description: $desc
-              }')
-            echo "🔄 Atualizando datapackage.json"
-          else
-            ACTION="resource_create"
-            PAYLOAD=$(jq -n \
-              --arg pkg "$DATASET" \
-              --arg name "$NAME" \
-              --arg title "$TITLE" \
-              --arg url "$URL" \
-              --arg desc "$DESC" \
-              '{
-                package_id: $pkg,
-                name: $name,
-                title: $title,
-                url: $url,
-                url_type: "link",
-                format: "JSON",
-                description: $desc
-              }')
-            echo "🆕 Criando datapackage.json"
+          if [ "$STATUS" != "200" ]; then
+            echo "❌ CKAN retornou HTTP $STATUS"
+            echo "$BODY"
+            exit 1
           fi
 
-          curl -s -X POST "$CKAN_HOST/api/3/action/$ACTION" \
+          COUNT=$(echo "$BODY" | jq '.result.count')
+
+          if [ "$COUNT" -gt 0 ]; then
+            ID=$(echo "$BODY" | jq -r '.result.results[0].id')
+            ACTION="resource_update"
+          else
+            ACTION="resource_create"
+          fi
+
+          PAYLOAD=$(jq -n \
+            --arg id "$ID" \
+            --arg pkg "$DATASET" \
+            --arg name "$NAME" \
+            --arg title "$TITLE" \
+            --arg url "$URL" \
+            --arg desc "$DESC" \
+            '{
+              id: ($id // empty),
+              package_id: $pkg,
+              name: $name,
+              title: $title,
+              url: $url,
+              url_type: "link",
+              format: "JSON",
+              description: $desc
+            }')
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$CKAN_HOST/api/3/action/$ACTION" \
             -H "Authorization: $CKAN_KEY" \
             -H "Content-Type: application/json" \
-            -d "$PAYLOAD" | jq '.success'
+            -d "$PAYLOAD")
+
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          STATUS=$(echo "$RESPONSE" | tail -n 1)
+
+          if [ "$STATUS" != "200" ]; then
+            echo "❌ Falha ao publicar datapackage.json (HTTP $STATUS)"
+            echo "$BODY"
+            exit 1
+          fi
+
+          echo "✅ datapackage.json publicado com sucesso"
