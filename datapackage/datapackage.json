@@ -1,0 +1,294 @@
+{
+  "profile": "data-package",
+  "name": "empregados-terceirizados-mg",
+  "title": "Empregados Terceirizados do Governo de Minas Gerais",
+  "description": "Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
+  "owner_org": "controladoria-geral-do-estado-cge",
+  "ckan": {
+    "owner_org": "controladoria-geral-do-estado-cge",
+    "private": false,
+    "state": "active"
+  },
+  "license": {
+    "type": "CC-BY-4.0",
+    "title": "Creative Commons Attribution 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "resources": [
+    {
+      "name": "terceirizados-2021",
+      "title": "Empregados Terceirizados – 2021",
+      "path": "data/terceirizados_2021.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Dados de empregados terceirizados do ano de 2021",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "title": "Matrícula do empregado terceirizado",
+            "type": "string",
+            "description": "Identificador do empregado terceirizado"
+          },
+          {
+            "name": "nome",
+            "title": "Nome completo do empregado terceirizado",
+            "type": "string"
+          },
+          {
+            "name": "orgao",
+            "title": "Órgão de trabalho do empregado",
+            "type": "string"
+          },
+          {
+            "name": "cargo",
+            "title": "Cargo exercido pelo empregado",
+            "type": "string"
+          },
+          {
+            "name": "empresa",
+            "title": "Nome da empresa terceirizada",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_empresa",
+            "title": "CNPJ da empresa terceirizada",
+            "type": "string",
+            "description": "CNPJ com 14 dígitos, sem formatação"
+          },
+          {
+            "name": "mes_referencia",
+            "title": "Mês de referência do contrato",
+            "type": "string",
+            "description": "Mês do contrato no formato abreviado (ex: jan-25)"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2022",
+      "title": "Empregados Terceirizados – 2022",
+      "path": "data/terceirizados_2022.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Dados de empregados terceirizados do ano de 2022",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "title": "Matrícula do empregado terceirizado",
+            "type": "string",
+            "description": "Identificador do empregado terceirizado"
+          },
+          {
+            "name": "nome",
+            "title": "Nome completo do empregado terceirizado",
+            "type": "string"
+          },
+          {
+            "name": "orgao",
+            "title": "Órgão de trabalho do empregado",
+            "type": "string"
+          },
+          {
+            "name": "cargo",
+            "title": "Cargo exercido pelo empregado",
+            "type": "string"
+          },
+          {
+            "name": "empresa",
+            "title": "Nome da empresa terceirizada",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_empresa",
+            "title": "CNPJ da empresa terceirizada",
+            "type": "string",
+            "description": "CNPJ com 14 dígitos, sem formatação"
+          },
+          {
+            "name": "mes_referencia",
+            "title": "Mês de referência do contrato",
+            "type": "string",
+            "description": "Mês do contrato no formato abreviado (ex: jan-25)"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2023",
+      "title": "Empregados Terceirizados – 2023",
+      "path": "data/terceirizados_2023.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Dados de empregados terceirizados do ano de 2023",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "title": "Matrícula do empregado terceirizado",
+            "type": "string",
+            "description": "Identificador do empregado terceirizado"
+          },
+          {
+            "name": "nome",
+            "title": "Nome completo do empregado terceirizado",
+            "type": "string"
+          },
+          {
+            "name": "orgao",
+            "title": "Órgão de trabalho do empregado",
+            "type": "string"
+          },
+          {
+            "name": "cargo",
+            "title": "Cargo exercido pelo empregado",
+            "type": "string"
+          },
+          {
+            "name": "empresa",
+            "title": "Nome da empresa terceirizada",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_empresa",
+            "title": "CNPJ da empresa terceirizada",
+            "type": "string",
+            "description": "CNPJ com 14 dígitos, sem formatação"
+          },
+          {
+            "name": "mes_referencia",
+            "title": "Mês de referência do contrato",
+            "type": "string",
+            "description": "Mês do contrato no formato abreviado (ex: jan-25)"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2024",
+      "title": "Empregados Terceirizados – 2024",
+      "path": "data/terceirizados_2024.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Dados de empregados terceirizados do ano de 2024",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "title": "Matrícula do empregado terceirizado",
+            "type": "string",
+            "description": "Identificador do empregado terceirizado"
+          },
+          {
+            "name": "nome",
+            "title": "Nome completo do empregado terceirizado",
+            "type": "string"
+          },
+          {
+            "name": "orgao",
+            "title": "Órgão de trabalho do empregado",
+            "type": "string"
+          },
+          {
+            "name": "cargo",
+            "title": "Cargo exercido pelo empregado",
+            "type": "string"
+          },
+          {
+            "name": "empresa",
+            "title": "Nome da empresa terceirizada",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_empresa",
+            "title": "CNPJ da empresa terceirizada",
+            "type": "string",
+            "description": "CNPJ com 14 dígitos, sem formatação"
+          },
+          {
+            "name": "mes_referencia",
+            "title": "Mês de referência do contrato",
+            "type": "string",
+            "description": "Mês do contrato no formato abreviado (ex: jan-25)"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2025",
+      "title": "Empregados Terceirizados – 2025",
+      "path": "data/terceirizados_2025.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Dados de empregados terceirizados do ano de 2025",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "title": "Matrícula do empregado terceirizado",
+            "type": "string",
+            "description": "Identificador do empregado terceirizado"
+          },
+          {
+            "name": "nome",
+            "title": "Nome completo do empregado terceirizado",
+            "type": "string"
+          },
+          {
+            "name": "orgao",
+            "title": "Órgão de trabalho do empregado",
+            "type": "string"
+          },
+          {
+            "name": "cargo",
+            "title": "Cargo exercido pelo empregado",
+            "type": "string"
+          },
+          {
+            "name": "empresa",
+            "title": "Nome da empresa terceirizada",
+            "type": "string"
+          },
+          {
+            "name": "cnpj_empresa",
+            "title": "CNPJ da empresa terceirizada",
+            "type": "string",
+            "description": "CNPJ com 14 dígitos, sem formatação"
+          },
+          {
+            "name": "mes_referencia",
+            "title": "Mês de referência do contrato",
+            "type": "string",
+            "description": "Mês do contrato no formato abreviado (ex: jan-25)"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    }
+  ]
+}
