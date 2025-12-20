@@ -7,7 +7,6 @@ on:
     paths:
       - 'data/**'
       - 'datapackage/**'
-      - 'scripts/**'
   workflow_dispatch:
 
 jobs:
@@ -15,10 +14,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,49 +25,25 @@ jobs:
       - name: Install packages
         run: |
           python -m pip install --upgrade pip
-          pip install dpckan frictionless requests
+          pip install dpckan requests
 
-      # 🔹 Gera o datapackage.json (SEU PADRÃO)
       - name: Create datapackage.json
-        run: |
-          python scripts/gerar_datapackage.py
+        run: python scripts/gerar_datapackage.py
 
-      - name: Commit datapackage.json
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Atualiza datapackage.json automaticamente
-          file_pattern: datapackage/datapackage.json
-
-      # 🔹 Normaliza o nome do ator (IGUAL AO OUTRO REPO)
-      - id: string
-        uses: ASzc/change-string-case-action@v1
-        with:
-          string: ${{ github.actor }}
-
-      # 🔹 Cria dataset no CKAN (se NÃO existir)
-      - name: Create dataset in CKAN (if not exists)
-        continue-on-error: true
+      - name: Publish dataset to CKAN (NO DATASTORE)
         env:
-          CKAN_HOST: ${{ secrets.CKAN_HOST }}
-          CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
+          CKAN_HOST: https://www.dados.mg.gov.br
+          CKAN_KEY: ${{ secrets.CKAN_KEY }}
         run: |
           dpckan \
-            --datastore \
             --datapackage datapackage/datapackage.json \
             --ckan-host "$CKAN_HOST" \
             --ckan-key "$CKAN_KEY" \
-            dataset create
-
-      # 🔹 Atualiza dataset no CKAN (se existir)
-      - name: Update dataset in CKAN (if exists)
-        if: ${{ !cancelled() }}
-        env:
-          CKAN_HOST: ${{ secrets.CKAN_HOST }}
-          CKAN_KEY: ${{ secrets[format('CKAN_KEY_{0}', steps.string.outputs.uppercase)] }}
-        run: |
+            dataset create || \
           dpckan \
-            --datastore \
             --datapackage datapackage/datapackage.json \
             --ckan-host "$CKAN_HOST" \
             --ckan-key "$CKAN_KEY" \
             dataset update
+
+
