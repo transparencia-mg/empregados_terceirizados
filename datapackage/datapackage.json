@@ -1,0 +1,279 @@
+{
+  "profile": "data-package",
+  "name": "empregados-terceirizados-mg",
+  "title": "Empregados Terceirizados do Governo de Minas Gerais",
+  "description": "Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
+  "owner_org": "controladoria-geral-do-estado-cge",
+  "resources": [
+    {
+      "name": "terceirizados-2021",
+      "title": "Empregados Terceirizados – 2021",
+      "path": "data/terceirizados_2021.csv",
+      "profile": "tabular-data-resource",
+      "scheme": "file",
+      "format": "csv",
+      "encoding": "utf-8",
+      "mediatype": "text/csv",
+      "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2021",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "type": "string",
+            "title": "Matrícula"
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "title": "Nome"
+          },
+          {
+            "name": "orgao",
+            "type": "string",
+            "title": "Órgão"
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "title": "Cargo"
+          },
+          {
+            "name": "empresa",
+            "type": "string",
+            "title": "Empresa"
+          },
+          {
+            "name": "cnpj_empresa",
+            "type": "string",
+            "title": "CNPJ da Empresa"
+          },
+          {
+            "name": "mes_referencia",
+            "type": "string",
+            "title": "Mês de referência"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2022",
+      "title": "Empregados Terceirizados – 2022",
+      "path": "data/terceirizados_2022.csv",
+      "profile": "tabular-data-resource",
+      "scheme": "file",
+      "format": "csv",
+      "encoding": "utf-8",
+      "mediatype": "text/csv",
+      "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2022",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "type": "string",
+            "title": "Matrícula"
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "title": "Nome"
+          },
+          {
+            "name": "orgao",
+            "type": "string",
+            "title": "Órgão"
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "title": "Cargo"
+          },
+          {
+            "name": "empresa",
+            "type": "string",
+            "title": "Empresa"
+          },
+          {
+            "name": "cnpj_empresa",
+            "type": "string",
+            "title": "CNPJ da Empresa"
+          },
+          {
+            "name": "mes_referencia",
+            "type": "string",
+            "title": "Mês de referência"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2023",
+      "title": "Empregados Terceirizados – 2023",
+      "path": "data/terceirizados_2023.csv",
+      "profile": "tabular-data-resource",
+      "scheme": "file",
+      "format": "csv",
+      "encoding": "utf-8",
+      "mediatype": "text/csv",
+      "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2023",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "type": "string",
+            "title": "Matrícula"
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "title": "Nome"
+          },
+          {
+            "name": "orgao",
+            "type": "string",
+            "title": "Órgão"
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "title": "Cargo"
+          },
+          {
+            "name": "empresa",
+            "type": "string",
+            "title": "Empresa"
+          },
+          {
+            "name": "cnpj_empresa",
+            "type": "string",
+            "title": "CNPJ da Empresa"
+          },
+          {
+            "name": "mes_referencia",
+            "type": "string",
+            "title": "Mês de referência"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2024",
+      "title": "Empregados Terceirizados – 2024",
+      "path": "data/terceirizados_2024.csv",
+      "profile": "tabular-data-resource",
+      "scheme": "file",
+      "format": "csv",
+      "encoding": "utf-8",
+      "mediatype": "text/csv",
+      "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2024",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "type": "string",
+            "title": "Matrícula"
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "title": "Nome"
+          },
+          {
+            "name": "orgao",
+            "type": "string",
+            "title": "Órgão"
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "title": "Cargo"
+          },
+          {
+            "name": "empresa",
+            "type": "string",
+            "title": "Empresa"
+          },
+          {
+            "name": "cnpj_empresa",
+            "type": "string",
+            "title": "CNPJ da Empresa"
+          },
+          {
+            "name": "mes_referencia",
+            "type": "string",
+            "title": "Mês de referência"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    },
+    {
+      "name": "terceirizados-2025",
+      "title": "Empregados Terceirizados – 2025",
+      "path": "data/terceirizados_2025.csv",
+      "profile": "tabular-data-resource",
+      "scheme": "file",
+      "format": "csv",
+      "encoding": "utf-8",
+      "mediatype": "text/csv",
+      "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2025",
+      "schema": {
+        "fields": [
+          {
+            "name": "matricula",
+            "type": "string",
+            "title": "Matrícula"
+          },
+          {
+            "name": "nome",
+            "type": "string",
+            "title": "Nome"
+          },
+          {
+            "name": "orgao",
+            "type": "string",
+            "title": "Órgão"
+          },
+          {
+            "name": "cargo",
+            "type": "string",
+            "title": "Cargo"
+          },
+          {
+            "name": "empresa",
+            "type": "string",
+            "title": "Empresa"
+          },
+          {
+            "name": "cnpj_empresa",
+            "type": "string",
+            "title": "CNPJ da Empresa"
+          },
+          {
+            "name": "mes_referencia",
+            "type": "string",
+            "title": "Mês de referência"
+          }
+        ],
+        "primaryKey": [
+          "matricula",
+          "mes_referencia"
+        ]
+      }
+    }
+  ]
+}
