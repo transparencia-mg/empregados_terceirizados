@@ -1,12 +1,12 @@
-name: Atualizar CKAN - Empregados Terceirizados
+name: Publicar dados no CKAN (dados.mg.gov.br)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
     paths:
       - 'data/**'
       - 'datapackage/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
@@ -14,67 +14,73 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout repositório
         uses: actions/checkout@v4
 
-      # =========================
-      # 1. Atualizar metadados do dataset
-      # =========================
-      - name: Atualizar dataset no CKAN (package_update)
-        env:
-          CKAN_KEY: ${{ secrets.CKAN_KEY }}
-        run: |
-          curl -X POST "https://www.dados.mg.gov.br/api/3/action/package_update" \
-            -H "Authorization: $CKAN_KEY" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -H "User-Agent: github-actions" \
-            -d '{
-              "name": "empregados-terceirizados-mg",
-              "title": "Empregados Terceirizados do Governo de Minas Gerais",
-              "notes": "Base anual de empregados terceirizados do Governo do Estado de Minas Gerais.",
-              "owner_org": "controladoria-geral-do-estado-cge",
-              "private": false,
-              "state": "active"
-            }'
+      - name: Instalar jq
+        run: sudo apt-get install -y jq
 
-      # =========================
-      # 2. Criar / atualizar recursos (2021 e 2022)
-      # =========================
-      - name: Publicar recurso 2021
-        env:
-          CKAN_KEY: ${{ secrets.CKAN_KEY }}
-        run: |
-          curl -X POST "https://www.dados.mg.gov.br/api/3/action/resource_create" \
-            -H "Authorization: $CKAN_KEY" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -H "User-Agent: github-actions" \
-            -d '{
-              "package_id": "empregados-terceirizados-mg",
-              "name": "terceirizados-2021",
-              "title": "Empregados Terceirizados – 2021",
-              "format": "CSV",
-              "url_type": "link",
-              "url": "https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados_mg/main/data/terceirizados_2021.csv",
-              "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2021"
-            }'
+      - name: Gerar datapackage.json
+        run: python scripts/gerar_datapackage.py
 
-      - name: Publicar recurso 2022
+      - name: Commit datapackage.json
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Atualiza datapackage.json automaticamente
+          file_pattern: datapackage/datapackage.json
+
+      - name: Publicar recursos no CKAN (N anos automático)
         env:
           CKAN_KEY: ${{ secrets.CKAN_KEY }}
+          CKAN_HOST: https://www.dados.mg.gov.br
+          DATASET: empregados-terceirizados-mg
         run: |
-          curl -X POST "https://www.dados.mg.gov.br/api/3/action/resource_create" \
-            -H "Authorization: $CKAN_KEY" \
-            -H "Content-Type: application/json" \
-            -H "Accept: application/json" \
-            -H "User-Agent: github-actions" \
-            -d '{
-              "package_id": "empregados-terceirizados-mg",
-              "name": "terceirizados-2022",
-              "title": "Empregados Terceirizados – 2022",
-              "format": "CSV",
-              "url_type": "link",
-              "url": "https://raw.githubusercontent.com/transparencia-mg/empregados_terceirizados_mg/main/data/terceirizados_2022.csv",
-              "description": "Dados de empregados terceirizados do Governo de Minas Gerais – ano de 2022"
-            }'
+          set -e
+
+          echo "Lendo datapackage.json"
+          RESOURCES=$(jq -c '.resources[]' datapackage/datapackage.json)
+
+          for res in $RESOURCES; do
+            NAME=$(echo "$res" | jq -r '.name')
+            TITLE=$(echo "$res" | jq -r '.title')
+            PATH=$(echo "$res" | jq -r '.path')
+            DESC=$(echo "$res" | jq -r '.description')
+
+            URL="https://raw.githubusercontent.com/${{ github.repository }}/main/${PATH}"
+
+            echo "➡️ Processando recurso: $NAME"
+
+            SEARCH=$(curl -s -X POST "$CKAN_HOST/api/3/action/resource_search" \
+              -H "Authorization: $CKAN_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"query\":\"name:$NAME\",\"package_id\":\"$DATASET\"}")
+
+            COUNT=$(echo "$SEARCH" | jq '.result.count')
+
+            if [ "$COUNT" -gt 0 ]; then
+              ID=$(echo "$SEARCH" | jq -r '.result.results[0].id')
+              ACTION="resource_update"
+              EXTRA=", \"id\": \"$ID\""
+              echo "🔄 Atualizando recurso existente"
+            else
+              ACTION="resource_create"
+              EXTRA=""
+              echo "🆕 Criando novo recurso"
+            fi
+
+            curl -s -X POST "$CKAN_HOST/api/3/action/$ACTION" \
+              -H "Authorization: $CKAN_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{
+                \"package_id\": \"$DATASET\",
+                \"name\": \"$NAME\",
+                \"title\": \"$TITLE\",
+                \"url\": \"$URL\",
+                \"url_type\": \"link\",
+                \"format\": \"CSV\",
+                \"description\": \"$DESC\"
+                $EXTRA
+              }"
+          done
+
+          echo "✅ Publicação CKAN finalizada"
