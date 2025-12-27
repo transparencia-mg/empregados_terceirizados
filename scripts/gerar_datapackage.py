@@ -15,8 +15,7 @@ for csv in sorted(DATA_DIR.glob("terceirizados_*.csv")):
     resources.append({
         "name": f"terceirizados-{ano}",
         "title": f"Empregados Terceirizados – {ano}",
-        "description": f"Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. 
-        Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
+        "description": f"Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
         "path": f"data/{csv.name}",
         "format": "csv",
         "mediatype": "text/csv",
