@@ -19,7 +19,7 @@ for csv in sorted(DATA_DIR.glob("terceirizados_*.csv")):
 
     resources.append({
         # 🔑 ID lógico do recurso (não muda)
-        "name": f"terceirizados-{ano}",
+        "name": f"terceirizados_{ano}",
         "title": f"Empregados Terceirizados – {ano}",
         "description": (
             "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. "
