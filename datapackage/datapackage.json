@@ -7,6 +7,7 @@
     {
       "name": "terceirizados-2021",
       "title": "Empregados Terceirizados – 2021",
+      "description": "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
       "path": "data/terceirizados_2021.csv",
       "format": "csv",
       "mediatype": "text/csv",
@@ -48,6 +49,7 @@
     {
       "name": "terceirizados-2022",
       "title": "Empregados Terceirizados – 2022",
+      "description": "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
       "path": "data/terceirizados_2022.csv",
       "format": "csv",
       "mediatype": "text/csv",
@@ -89,6 +91,7 @@
     {
       "name": "terceirizados-2023",
       "title": "Empregados Terceirizados – 2023",
+      "description": "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
       "path": "data/terceirizados_2023.csv",
       "format": "csv",
       "mediatype": "text/csv",
@@ -130,6 +133,7 @@
     {
       "name": "terceirizados-2024",
       "title": "Empregados Terceirizados – 2024",
+      "description": "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
       "path": "data/terceirizados_2024.csv",
       "format": "csv",
       "mediatype": "text/csv",
@@ -171,6 +175,7 @@
     {
       "name": "terceirizados-2025",
       "title": "Empregados Terceirizados – 2025",
+      "description": "Conjunto de dados de empregados terceirizados do Estado de Minas Gerais. Dados disponíveis a partir de 2021. Os dados são atualizados mensalmente",
       "path": "data/terceirizados_2025.csv",
       "format": "csv",
       "mediatype": "text/csv",
