@@ -1358,7 +1358,7 @@
     let itensPorPaginaCI  = 100;
     let dadosOrgaoGlobal  = [];
     let empregadosFiltradosCI = [];
-    let filtrosAtivosCI = { nome: '', matricula: '', cargo: '', buscaTabela: '' };
+    let filtrosAtivosCI = { nome: '', matricula: '', cargo: '', buscaTabela: '', ano: '', mes: '', situacao: '', orgao: '' };
     let paginaAtualVG     = 1;
     let itensPorPaginaVG  = 100;
 
@@ -1640,6 +1640,20 @@
 
             setTimeout(iframeUpdateHeight, 300);
 
+            // Carrega demais anos em background para calcular data_inicio/data_fim/situacao com precisão
+            setTimeout(async () => {
+                const anosParaCarregar = Object.keys(CSV_FILES_BY_YEAR).filter(a => a !== '2026');
+                for (const ano of anosParaCarregar) {
+                    try { await carregarMes(ano, '12'); } catch(e) { /* ignora erros de background */ }
+                }
+                // Reconstrói lista de empregados com TODOS os dados históricos + recalcula situação
+                currentDisplayData.empregadosUnicos = obterTodosEmpregadosUnicos();
+                atualizarOpcoesCache();
+                empregadosFiltradosCI = [...currentDisplayData.empregadosUnicos];
+                paginaAtualCI = 1;
+                atualizarTabelaConsulta();
+            }, 1500);
+
         } catch (erro) {
             console.error('Erro no carregamento inicial:', erro);
             showError('Erro ao carregar dados. Tente novamente mais tarde.');
@@ -1734,7 +1748,78 @@
         for (const i of dados) {
             if (i.matricula && !mapa.has(i.matricula)) mapa.set(i.matricula, { ...i });
         }
-        return Array.from(mapa.values()).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+        const lista = Array.from(mapa.values()).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+        calcularSituacaoEmpregados(lista);
+        return lista;
+    }
+
+    // Retorna TODOS os empregados únicos varrendo todo o cache (todos anos/meses carregados)
+    function obterTodosEmpregadosUnicos() {
+        const mapa = new Map();
+        for (const ano in dataCache) {
+            for (const mes in dataCache[ano]) {
+                for (const reg of (dataCache[ano][mes] || [])) {
+                    if (reg.matricula && !mapa.has(reg.matricula)) {
+                        mapa.set(reg.matricula, { ...reg });
+                    }
+                }
+            }
+        }
+        const lista = Array.from(mapa.values()).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+        calcularSituacaoEmpregados(lista);
+        return lista;
+    }
+
+    // data_inicio = competência mais ANTIGA em que a matrícula aparece no cache
+    // data_fim    = competência mais RECENTE em que aparece, ou null se for a mais atual (vigente)
+    // situacao    = "Em andamento" se aparece na competência mais recente; "Concluído" se sumiu antes
+    function calcularSituacaoEmpregados(lista) {
+        if (!lista || lista.length === 0) return;
+
+        let competenciaMaisRecente = '';
+        for (const ano in dataCache) {
+            for (const mes in dataCache[ano]) {
+                const comp = `${ano}-${mes}`;
+                if (comp > competenciaMaisRecente) competenciaMaisRecente = comp;
+            }
+        }
+        if (!competenciaMaisRecente) return;
+
+        lista.forEach(emp => {
+            if (!emp.matricula) return;
+
+            let primeira = '';
+            let ultima   = '';
+
+            for (const ano in dataCache) {
+                for (const mes in dataCache[ano]) {
+                    const comp      = `${ano}-${mes}`;
+                    const registros = dataCache[ano][mes] || [];
+                    if (registros.some(r => r.matricula === emp.matricula)) {
+                        if (!primeira || comp < primeira) primeira = comp;
+                        if (!ultima   || comp > ultima)   ultima   = comp;
+                    }
+                }
+            }
+
+            if (!primeira) {
+                emp.data_inicio = emp.ano_mes || null;
+                emp.data_fim    = null;
+                emp.situacao    = 'Concluído';
+                return;
+            }
+
+            emp.data_inicio = primeira;
+
+            if (ultima === competenciaMaisRecente) {
+                // Ainda aparece na tabela mais atual → contrato vigente
+                emp.data_fim = null;
+                emp.situacao = 'Em andamento';
+            } else {
+                emp.data_fim = ultima;
+                emp.situacao = 'Concluído';
+            }
+        });
     }
 
     function atualizarOpcoesCache() {
@@ -1947,7 +2032,7 @@
                 </div>
                 <div class="botoes-abaixo">
                     <button class="btn-pesquisa" onclick="aplicarFiltrosVG()">
-                        <i class="material-icons">search</i>Pesquisar
+                        <i class="material-icons">tune</i>Atualizar Filtros
                     </button>
                     <button class="btn-secondary-custom" onclick="limparFiltrosVG()">
                         <i class="material-icons">clear</i>Limpar Filtros
@@ -2241,11 +2326,12 @@
             let dadosFiltrados = dadosMes;
             if (orgao) dadosFiltrados = dadosMes.filter(d => d.orgao_sigla === orgao);
 
-            currentDisplayData.ano              = ano;
-            currentDisplayData.mes              = mes;
-            currentDisplayData.dados            = dadosFiltrados;
-            currentDisplayData.metrica          = calcularMetricas(dadosFiltrados, mes);
-            currentDisplayData.empregadosUnicos = obterEmpregadosUnicos(dadosFiltrados);
+            currentDisplayData.ano     = ano;
+            currentDisplayData.mes     = mes;
+            currentDisplayData.dados   = dadosFiltrados;
+            currentDisplayData.metrica = calcularMetricas(dadosFiltrados, mes);
+            // Consulta Individual sempre exibe TODOS os empregados históricos do cache
+            currentDisplayData.empregadosUnicos = obterTodosEmpregadosUnicos();
 
             atualizarOpcoesCache();
             empregadosFiltradosCI = [...currentDisplayData.empregadosUnicos];
@@ -2271,7 +2357,7 @@
         currentDisplayData.mes              = '01';
         currentDisplayData.dados            = dataCache['2026']['01'] || [];
         currentDisplayData.metrica          = calcularMetricas(currentDisplayData.dados, '12');
-        currentDisplayData.empregadosUnicos = obterEmpregadosUnicos(currentDisplayData.dados);
+        currentDisplayData.empregadosUnicos = obterTodosEmpregadosUnicos();
 
         atualizarOpcoesCache();
         empregadosFiltradosCI = [...currentDisplayData.empregadosUnicos];
@@ -2365,6 +2451,36 @@
             <div class="filter-container">
                 <div class="consulta-filters-row">
                     <div class="consulta-filter-group">
+                        <label class="filter-label"><i class="material-icons"></i>ANO</label>
+                        <select class="form-select modern-select" id="filtroAnoCI">
+                            <option value="">Todos os anos</option>
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                        </select>
+                    </div>
+                    <div class="consulta-filter-group">
+                        <label class="filter-label"><i class="material-icons"></i>MÊS</label>
+                        <select class="form-select modern-select" id="filtroMesCI">
+                            <option value="">Todos os meses</option>
+                            <option value="01">Janeiro</option>
+                            <option value="02">Fevereiro</option>
+                            <option value="03">Março</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Maio</option>
+                            <option value="06">Junho</option>
+                            <option value="07">Julho</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="consulta-filter-group">
                         <label class="filter-label">Nome</label>
                         <div class="autocomplete-container">
                             <input type="text" class="form-control"
@@ -2376,7 +2492,7 @@
                         </div>
                     </div>
                     <div class="consulta-filter-group">
-                        <label class="filter-label">Matrícula</label>
+                        <label class="filter-label">Matrícula MASP</label>
                         <div class="autocomplete-container">
                             <input type="text" class="form-control"
                                 id="filtroMatriculaCI"
@@ -2385,6 +2501,21 @@
                                 onclick="mostrarSugestoes('filtroMatriculaCI','sugestoesMatricula','matricula')">
                             <div class="autocomplete-suggestions" id="sugestoesMatricula"></div>
                         </div>
+                    </div>
+                    <div class="consulta-filter-group">
+                        <label class="filter-label"><i class="material-icons"></i>SITUAÇÃO</label>
+                        <select class="form-select modern-select" id="filtroSituacaoCI">
+                            <option value="">Todas as situações</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Concluído">Concluído</option>
+                        </select>
+                    </div>
+                    <div class="consulta-filter-group">
+                        <label class="filter-label"><i class="material-icons"></i>ÓRGÃO</label>
+                        <select class="form-select modern-select" id="filtroOrgaoCI">
+                            <option value="">Todos os órgãos</option>
+                            ${opcoesCache.orgaos.map(org => `<option value="${org.sigla}">${org.nome} (${org.sigla})</option>`).join('')}
+                        </select>
                     </div>
                     <div class="consulta-filter-group">
                         <label class="filter-label">Cargo</label>
@@ -2400,7 +2531,7 @@
                 </div>
                 <div class="consulta-buttons-row">
                     <button class="btn-pesquisa" onclick="aplicarFiltrosCI()">
-                        <i class="material-icons">search</i>Pesquisar
+                        <i class="material-icons">tune</i>Atualizar Filtros
                     </button>
                     <button class="btn-secondary-custom" onclick="limparFiltrosCI()">
                         <i class="material-icons">clear</i>Limpar Filtros
@@ -2440,11 +2571,11 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="sortable-header" onclick="ordenarTabela('matricula', 'text')">
-                                    Matrícula <i class="material-icons">${sortConfig.coluna === 'matricula' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
-                                </th>
                                 <th class="sortable-header" onclick="ordenarTabela('nome', 'text')">
                                     Nome <i class="material-icons">${sortConfig.coluna === 'nome' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
+                                </th>
+                                <th class="sortable-header" onclick="ordenarTabela('matricula', 'text')">
+                                    Matrícula MASP <i class="material-icons">${sortConfig.coluna === 'matricula' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
                                 </th>
                                 <th class="sortable-header" onclick="ordenarTabela('orgao', 'text')">
                                     Órgão <i class="material-icons">${sortConfig.coluna === 'orgao' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
@@ -2457,6 +2588,15 @@
                                 </th>
                                 <th class="sortable-header" onclick="ordenarTabela('cnpj_empresa', 'text')">
                                     CNPJ <i class="material-icons">${sortConfig.coluna === 'cnpj_empresa' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
+                                </th>
+                                <th class="sortable-header" onclick="ordenarTabela('data_inicio', 'text')">
+                                    Data Início <i class="material-icons">${sortConfig.coluna === 'data_inicio' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
+                                </th>
+                                <th class="sortable-header" onclick="ordenarTabela('data_fim', 'text')">
+                                    Data Fim <i class="material-icons">${sortConfig.coluna === 'data_fim' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
+                                </th>
+                                <th class="sortable-header" onclick="ordenarTabela('situacao', 'text')">
+                                    Situação <i class="material-icons">${sortConfig.coluna === 'situacao' ? (sortConfig.direcao === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more'}</i>
                                 </th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -2493,6 +2633,10 @@
         filtrosAtivosCI.nome      = document.getElementById('filtroNomeCI')?.value      || '';
         filtrosAtivosCI.matricula = document.getElementById('filtroMatriculaCI')?.value || '';
         filtrosAtivosCI.cargo     = document.getElementById('filtroCargoCI')?.value     || '';
+        filtrosAtivosCI.ano       = document.getElementById('filtroAnoCI')?.value       || '';
+        filtrosAtivosCI.mes       = document.getElementById('filtroMesCI')?.value       || '';
+        filtrosAtivosCI.situacao  = document.getElementById('filtroSituacaoCI')?.value  || '';
+        filtrosAtivosCI.orgao     = document.getElementById('filtroOrgaoCI')?.value     || '';
         aplicarTodosFiltrosCI();
     }
 
@@ -2506,6 +2650,28 @@
             if (filtrosAtivosCI.nome      && !s.nome.toLowerCase().includes(filtrosAtivosCI.nome.toLowerCase()))           return false;
             if (filtrosAtivosCI.matricula && !s.matricula.toLowerCase().includes(filtrosAtivosCI.matricula.toLowerCase())) return false;
             if (filtrosAtivosCI.cargo     && !s.cargo_descricao.toLowerCase().includes(filtrosAtivosCI.cargo.toLowerCase())) return false;
+            if (filtrosAtivosCI.situacao  && s.situacao !== filtrosAtivosCI.situacao)                                      return false;
+            if (filtrosAtivosCI.orgao     && s.orgao_sigla !== filtrosAtivosCI.orgao)                                      return false;
+
+            // Filtro por ano/mês: verifica se o empregado tinha registro naquele período
+            if (filtrosAtivosCI.ano || filtrosAtivosCI.mes) {
+                const ano = filtrosAtivosCI.ano;
+                const mes = filtrosAtivosCI.mes;
+                // Busca em todos os dados carregados se há registro para esta matrícula no período
+                let encontrado = false;
+                outer: for (const anoKey in dataCache) {
+                    if (ano && anoKey !== ano) continue;
+                    for (const mesKey in dataCache[anoKey]) {
+                        if (mes && mesKey !== mes) continue;
+                        const registros = dataCache[anoKey][mesKey] || [];
+                        if (registros.some(r => r.matricula === s.matricula)) {
+                            encontrado = true;
+                            break outer;
+                        }
+                    }
+                }
+                if (!encontrado) return false;
+            }
 
             if (filtrosAtivosCI.buscaTabela) {
                 const termo = filtrosAtivosCI.buscaTabela.toLowerCase();
@@ -2532,8 +2698,16 @@
         document.getElementById('filtroMatriculaCI').value = '';
         document.getElementById('filtroCargoCI').value     = '';
         document.getElementById('buscaTabelaCI').value     = '';
+        const anoEl  = document.getElementById('filtroAnoCI');
+        const mesEl  = document.getElementById('filtroMesCI');
+        const sitEl  = document.getElementById('filtroSituacaoCI');
+        const orgEl  = document.getElementById('filtroOrgaoCI');
+        if (anoEl) anoEl.value = '';
+        if (mesEl) mesEl.value = '';
+        if (sitEl) sitEl.value = '';
+        if (orgEl) orgEl.value = '';
 
-        filtrosAtivosCI       = { nome: '', matricula: '', cargo: '', buscaTabela: '' };
+        filtrosAtivosCI       = { nome: '', matricula: '', cargo: '', buscaTabela: '', ano: '', mes: '', situacao: '', orgao: '' };
         empregadosFiltradosCI = [...currentDisplayData.empregadosUnicos];
         paginaAtualCI         = 1;
         atualizarTabelaConsulta();
@@ -2561,19 +2735,25 @@
                 const cnpjDisplay      = s.cnpj_empresa
                     ? s.cnpj_empresa.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
                     : '-';
+                const situacaoClass = s.situacao === 'Em andamento'
+                    ? 'background:#e8f5e9;color:#2e7d32;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;white-space:nowrap;'
+                    : 'background:#fff3e0;color:#e65100;padding:3px 8px;border-radius:4px;font-weight:600;font-size:12px;white-space:nowrap;';
 
                 return `
                     <tr data-matricula="${matriculaEscaped}" style="cursor:pointer;">
-                        <td>${s.matricula || '-'}</td>
                         <td>
                             <a href="#" class="nome-link" data-matricula="${matriculaEscaped}">
                                 ${s.nome || '-'}
                             </a>
                         </td>
+                        <td>${s.matricula || '-'}</td>
                         <td>${s.orgao || s.orgao_sigla || '-'}</td>
                         <td>${s.cargo_descricao || '-'}</td>
                         <td>${empresaDisplay}</td>
                         <td>${cnpjDisplay}</td>
+                        <td>${s.data_inicio ? formatarData(s.data_inicio) : '-'}</td>
+                        <td>${s.data_fim ? formatarData(s.data_fim) : '-'}</td>
+                        <td><span style="${situacaoClass}">${s.situacao || '-'}</span></td>
                         <td class="text-center">
                             <button class="btn-action" data-matricula="${matriculaEscaped}">
                                 <i class="material-icons">visibility</i>
