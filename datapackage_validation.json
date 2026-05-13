@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 22.723,
+  "time": 24.29,
   "errors": [],
   "tasks": [
     {
@@ -75,7 +75,7 @@
           "rows": 134876
         }
       },
-      "time": 4.032,
+      "time": 4.223,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -175,7 +175,7 @@
           "rows": 129862
         }
       },
-      "time": 3.829,
+      "time": 4.03,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -275,7 +275,7 @@
           "rows": 145942
         }
       },
-      "time": 4.335,
+      "time": 4.631,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -375,7 +375,7 @@
           "rows": 151978
         }
       },
-      "time": 4.502,
+      "time": 4.741,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -475,7 +475,7 @@
           "rows": 158096
         }
       },
-      "time": 4.748,
+      "time": 4.93,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -569,13 +569,13 @@
         "scheme": "file",
         "title": "Terceirizados 2026",
         "stats": {
-          "hash": "24befb03ab636767f65074fd5db1335c",
-          "bytes": 7144055,
+          "hash": "cf6fc9820906c19421dd273051e3486d",
+          "bytes": 9554604,
           "fields": 8,
-          "rows": 39806
+          "rows": 53213
         }
       },
-      "time": 1.212,
+      "time": 1.669,
       "scope": [
         "hash-count-error",
         "byte-count-error",
