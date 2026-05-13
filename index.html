@@ -1368,6 +1368,10 @@
     // Estado de ordenação
     let sortConfig = { coluna: '', direcao: 'asc' };
 
+    // Índice invertido: matricula → Set<"ano-mes"> com todas as competências em que aparece.
+    // Usado para O(1) lookup em vez de percorrer todo o dataCache a cada filtragem.
+    let matriculaIndex = new Map();
+
     // Constantes de formatação
     const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     const monthNames = {
@@ -1545,19 +1549,31 @@
 
         const sigla     = linha['sigla']  || linha['SIGLA'] || '';
         const orgaoNome = linha['orgao']  || linha['ÓRGÃO'] || linha['Orgao'] || sigla || '';
+        const matricula      = linha['matricula'] || linha['MAT'] || linha['Matrícula'] || linha['mat'] || '';
+        const nome           = linha['nome']      || linha['NOME'] || linha['Nome'] || '';
+        const cargo_descricao = linha['cargo']    || linha['CARGO'] || linha['Cargo'] || '';
+        const empresa        = linha['empresa']   || linha['EMPRESA'] || linha['Empresa'] || '';
+        const cnpj_empresa   = linha['cnpj_empresa'] || linha['CNPJ EMPRESA'] || linha['cnpj'] || linha['CNPJ'] || '';
 
         return {
-            matricula:       linha['matricula'] || linha['MAT'] || linha['Matrícula'] || linha['mat'] || '',
-            nome:            linha['nome']      || linha['NOME'] || linha['Nome'] || '',
+            matricula,
+            nome,
             orgao_sigla:     sigla,
             orgao:           orgaoNome,
-            cargo_descricao: linha['cargo']     || linha['CARGO'] || linha['Cargo'] || '',
-            empresa:         linha['empresa']   || linha['EMPRESA'] || linha['Empresa'] || '',
-            cnpj_empresa:    linha['cnpj_empresa'] || linha['CNPJ EMPRESA'] || linha['cnpj'] || linha['CNPJ'] || '',
+            cargo_descricao,
+            empresa,
+            cnpj_empresa,
             mes_referencia:  competencia,
             ano_mes:         competencia,
             ANO:             year,
-            MES_NUM:         mes
+            MES_NUM:         mes,
+            // Campos pré-normalizados para filtragem sem toLowerCase() repetido
+            _nome_lc:        nome.toLowerCase(),
+            _matricula_lc:   matricula.toLowerCase(),
+            _cargo_lc:       cargo_descricao.toLowerCase(),
+            _empresa_lc:     empresa.toLowerCase(),
+            _orgao_lc:       orgaoNome.toLowerCase(),
+            _orgao_sigla_lc: sigla.toLowerCase(),
         };
     }
 
@@ -1616,6 +1632,9 @@
 
             dataCache['2026'] = dadosPorMes;
 
+            // Reconstrói índice invertido com os dados do ano inicial
+            reconstruirIndiceMatriculas();
+
             // Usa o mês com mais dados se dezembro não existir
             if (!dadosPorMes['12'] || dadosPorMes['12'].length === 0) {
                 let melhorMes = '12', maiorQuantidade = 0;
@@ -1647,6 +1666,7 @@
                     try { await carregarMes(ano, '12'); } catch(e) { /* ignora erros de background */ }
                 }
                 // Reconstrói lista de empregados com TODOS os dados históricos + recalcula situação
+                reconstruirIndiceMatriculas();
                 currentDisplayData.empregadosUnicos = obterTodosEmpregadosUnicos();
                 atualizarOpcoesCache();
                 empregadosFiltradosCI = [...currentDisplayData.empregadosUnicos];
@@ -1713,6 +1733,9 @@
                 });
             }
 
+            // Atualiza índice invertido com os novos dados carregados
+            reconstruirIndiceMatriculas();
+
             return dataCache[ano][mes] || [];
 
         } catch (erro) {
@@ -1770,12 +1793,34 @@
         return lista;
     }
 
+    // ============================================================
+    // 8b. ÍNDICE INVERTIDO DE MATRÍCULAS (performance)
+    // ============================================================
+
+    // Reconstrói o índice matricula → Set<"ano-mes"> a partir do dataCache.
+    // Deve ser chamado sempre que o dataCache recebe novos dados.
+    function reconstruirIndiceMatriculas() {
+        matriculaIndex = new Map();
+        for (const ano in dataCache) {
+            for (const mes in dataCache[ano]) {
+                const comp = `${ano}-${mes}`;
+                for (const reg of (dataCache[ano][mes] || [])) {
+                    if (!reg.matricula) continue;
+                    let set = matriculaIndex.get(reg.matricula);
+                    if (!set) { set = new Set(); matriculaIndex.set(reg.matricula, set); }
+                    set.add(comp);
+                }
+            }
+        }
+    }
+
     // data_inicio = competência mais ANTIGA em que a matrícula aparece no cache
     // data_fim    = competência mais RECENTE em que aparece, ou null se for a mais atual (vigente)
     // situacao    = "Em andamento" se aparece na competência mais recente; "Concluído" se sumiu antes
     function calcularSituacaoEmpregados(lista) {
         if (!lista || lista.length === 0) return;
 
+        // Determina a competência mais recente presente no cache (O(anos × meses))
         let competenciaMaisRecente = '';
         for (const ano in dataCache) {
             for (const mes in dataCache[ano]) {
@@ -1785,41 +1830,34 @@
         }
         if (!competenciaMaisRecente) return;
 
-        lista.forEach(emp => {
-            if (!emp.matricula) return;
+        // Agora cada empregado é resolvido em O(competências dessa matrícula) via índice
+        for (const emp of lista) {
+            if (!emp.matricula) continue;
 
-            let primeira = '';
-            let ultima   = '';
-
-            for (const ano in dataCache) {
-                for (const mes in dataCache[ano]) {
-                    const comp      = `${ano}-${mes}`;
-                    const registros = dataCache[ano][mes] || [];
-                    if (registros.some(r => r.matricula === emp.matricula)) {
-                        if (!primeira || comp < primeira) primeira = comp;
-                        if (!ultima   || comp > ultima)   ultima   = comp;
-                    }
-                }
-            }
-
-            if (!primeira) {
+            const competencias = matriculaIndex.get(emp.matricula);
+            if (!competencias || competencias.size === 0) {
                 emp.data_inicio = emp.ano_mes || null;
                 emp.data_fim    = null;
                 emp.situacao    = 'Concluído';
-                return;
+                continue;
+            }
+
+            let primeira = '';
+            let ultima   = '';
+            for (const comp of competencias) {
+                if (!primeira || comp < primeira) primeira = comp;
+                if (!ultima   || comp > ultima)   ultima   = comp;
             }
 
             emp.data_inicio = primeira;
-
             if (ultima === competenciaMaisRecente) {
-                // Ainda aparece na tabela mais atual → contrato vigente
                 emp.data_fim = null;
                 emp.situacao = 'Em andamento';
             } else {
                 emp.data_fim = ultima;
                 emp.situacao = 'Concluído';
             }
-        });
+        }
     }
 
     function atualizarOpcoesCache() {
@@ -2629,6 +2667,22 @@
     // 16. FILTROS — CONSULTA INDIVIDUAL
     // ============================================================
 
+    // Utilitário de debounce para evitar filtragens excessivas durante digitação
+    function debounce(fn, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+    }
+
+    const aplicarBuscaTabelaCIDebounced = debounce(function () {
+        filtrosAtivosCI.buscaTabela = document.getElementById('buscaTabelaCI')?.value || '';
+        aplicarTodosFiltrosCI();
+    }, 250);
+
+    window.aplicarBuscaTabelaCI = aplicarBuscaTabelaCIDebounced;
+
     function aplicarFiltrosCI() {
         filtrosAtivosCI.nome      = document.getElementById('filtroNomeCI')?.value      || '';
         filtrosAtivosCI.matricula = document.getElementById('filtroMatriculaCI')?.value || '';
@@ -2640,49 +2694,46 @@
         aplicarTodosFiltrosCI();
     }
 
-    window.aplicarBuscaTabelaCI = function () {
-        filtrosAtivosCI.buscaTabela = document.getElementById('buscaTabelaCI')?.value || '';
-        aplicarTodosFiltrosCI();
-    };
-
     function aplicarTodosFiltrosCI() {
-        empregadosFiltradosCI = currentDisplayData.empregadosUnicos.filter(s => {
-            if (filtrosAtivosCI.nome      && !s.nome.toLowerCase().includes(filtrosAtivosCI.nome.toLowerCase()))           return false;
-            if (filtrosAtivosCI.matricula && !s.matricula.toLowerCase().includes(filtrosAtivosCI.matricula.toLowerCase())) return false;
-            if (filtrosAtivosCI.cargo     && !s.cargo_descricao.toLowerCase().includes(filtrosAtivosCI.cargo.toLowerCase())) return false;
-            if (filtrosAtivosCI.situacao  && s.situacao !== filtrosAtivosCI.situacao)                                      return false;
-            if (filtrosAtivosCI.orgao     && s.orgao_sigla !== filtrosAtivosCI.orgao)                                      return false;
+        // Pré-normaliza os termos de busca uma única vez fora do loop
+        const fNome      = filtrosAtivosCI.nome      ? filtrosAtivosCI.nome.toLowerCase()      : '';
+        const fMatricula = filtrosAtivosCI.matricula ? filtrosAtivosCI.matricula.toLowerCase() : '';
+        const fCargo     = filtrosAtivosCI.cargo     ? filtrosAtivosCI.cargo.toLowerCase()     : '';
+        const fBusca     = filtrosAtivosCI.buscaTabela ? filtrosAtivosCI.buscaTabela.toLowerCase() : '';
 
-            // Filtro por ano/mês: verifica se o empregado tinha registro naquele período
+        empregadosFiltradosCI = currentDisplayData.empregadosUnicos.filter(s => {
+            if (fNome      && !(s._nome_lc      || '').includes(fNome))      return false;
+            if (fMatricula && !(s._matricula_lc || '').includes(fMatricula)) return false;
+            if (fCargo     && !(s._cargo_lc     || '').includes(fCargo))     return false;
+            if (filtrosAtivosCI.situacao  && s.situacao !== filtrosAtivosCI.situacao)   return false;
+            if (filtrosAtivosCI.orgao     && s.orgao_sigla !== filtrosAtivosCI.orgao)   return false;
+
+            // Filtro por ano/mês: usa índice invertido para lookup O(1) em vez de varrer o dataCache
             if (filtrosAtivosCI.ano || filtrosAtivosCI.mes) {
                 const ano = filtrosAtivosCI.ano;
                 const mes = filtrosAtivosCI.mes;
-                // Busca em todos os dados carregados se há registro para esta matrícula no período
+                const competencias = matriculaIndex.get(s.matricula);
+                if (!competencias) return false;
                 let encontrado = false;
-                outer: for (const anoKey in dataCache) {
-                    if (ano && anoKey !== ano) continue;
-                    for (const mesKey in dataCache[anoKey]) {
-                        if (mes && mesKey !== mes) continue;
-                        const registros = dataCache[anoKey][mesKey] || [];
-                        if (registros.some(r => r.matricula === s.matricula)) {
-                            encontrado = true;
-                            break outer;
-                        }
-                    }
+                for (const comp of competencias) {
+                    const [cAno, cMes] = comp.split('-');
+                    if (ano && cAno !== ano) continue;
+                    if (mes && cMes !== mes) continue;
+                    encontrado = true;
+                    break;
                 }
                 if (!encontrado) return false;
             }
 
-            if (filtrosAtivosCI.buscaTabela) {
-                const termo = filtrosAtivosCI.buscaTabela.toLowerCase();
+            if (fBusca) {
                 const match =
-                    (s.nome            && s.nome.toLowerCase().includes(termo))            ||
-                    (s.matricula       && s.matricula.toLowerCase().includes(termo))       ||
-                    (s.cargo_descricao && s.cargo_descricao.toLowerCase().includes(termo)) ||
-                    (s.empresa         && s.empresa.toLowerCase().includes(termo))         ||
-                    (s.orgao           && s.orgao.toLowerCase().includes(termo))           ||
-                    (s.orgao_sigla     && s.orgao_sigla.toLowerCase().includes(termo))     ||
-                    (s.cnpj_empresa    && s.cnpj_empresa.includes(termo));
+                    (s._nome_lc        || '').includes(fBusca) ||
+                    (s._matricula_lc   || '').includes(fBusca) ||
+                    (s._cargo_lc       || '').includes(fBusca) ||
+                    (s._empresa_lc     || '').includes(fBusca) ||
+                    (s._orgao_lc       || '').includes(fBusca) ||
+                    (s._orgao_sigla_lc || '').includes(fBusca) ||
+                    (s.cnpj_empresa    || '').includes(fBusca);
                 if (!match) return false;
             }
 
