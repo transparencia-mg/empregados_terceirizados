@@ -1209,6 +1209,195 @@
                 width: 100% !important;
             }
         }
+
+        /* ============================================================
+           21b. RESPONSIVIDADE MOBILE APRIMORADA
+        ============================================================ */
+        @media (max-width: 576px) {
+            /* Container e padding */
+            .container-fluid,
+            .dashboard-container {
+                padding: 0 10px !important;
+                max-width: 100% !important;
+            }
+
+            /* Abas — scroll horizontal em vez de quebrar */
+            .nav-tabs-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+            }
+
+            .nav-tabs {
+                flex-wrap: nowrap !important;
+                width: max-content;
+                gap: 6px;
+            }
+
+            .nav-tabs .nav-link {
+                padding: 7px 12px !important;
+                font-size: 12px !important;
+                white-space: nowrap;
+            }
+
+            .nav-tabs .material-icons {
+                display: none !important; /* esconde ícone nas abas para economizar espaço */
+            }
+
+            /* Cards de métricas — 2 por linha */
+            .row .col-md-3.col-6 {
+                padding: 4px !important;
+            }
+
+            .metric-header {
+                font-size: 11px !important;
+                padding: 8px 10px !important;
+            }
+
+            .metric-value {
+                font-size: 16px !important;
+            }
+
+            .metric-body {
+                padding: 8px 10px !important;
+            }
+
+            /* Gráficos empilhados */
+            .row .col-md-6 {
+                margin-bottom: 12px;
+            }
+
+            .chart-pizza-layout {
+                flex-direction: column !important;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .chart-pizza-box {
+                width: 180px !important;
+                height: 180px !important;
+            }
+
+            .legend-grid {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px;
+                font-size: 10px;
+            }
+
+            /* Filtros */
+            .filter-container {
+                padding: 12px !important;
+            }
+
+            .modern-select,
+            .form-select,
+            .form-control {
+                font-size: 14px !important;
+                height: 44px !important;
+            }
+
+            .btn-pesquisa,
+            .btn-primary-custom,
+            .btn-secondary-custom {
+                height: 40px !important;
+                font-size: 13px !important;
+                padding: 0 12px !important;
+                width: 100%;
+                justify-content: center !important;
+            }
+
+            .botoes-abaixo {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .consulta-buttons-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            /* Tabelas — scroll horizontal */
+            .table-fixed-header-container {
+                max-height: 400px !important;
+            }
+
+            .table {
+                font-size: 12px !important;
+            }
+
+            .table thead th {
+                font-size: 11px !important;
+                padding: 8px 6px !important;
+            }
+
+            .table tbody td {
+                padding: 8px 6px !important;
+            }
+
+            /* Toolbar acima da tabela */
+            .d-flex.justify-content-between {
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: stretch !important;
+            }
+
+            .d-flex.gap-2 {
+                gap: 6px !important;
+            }
+
+            .btn-export {
+                font-size: 12px !important;
+                padding: 0 10px !important;
+            }
+
+            .table-search-container {
+                width: 100%;
+            }
+
+            .table-search-input {
+                width: 100% !important;
+            }
+
+            /* Paginação compacta */
+            .pagination-container {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 10px !important;
+            }
+
+            .pagination .page-link {
+                padding: 6px 10px !important;
+                font-size: 13px !important;
+            }
+
+            /* Modal ocupa 95% da tela no mobile */
+            .modal-full-custom {
+                max-width: 95% !important;
+                width: 95% !important;
+                margin: 10px auto !important;
+            }
+
+            .modal-body {
+                padding: 12px !important;
+            }
+
+            .info-card {
+                padding: 12px !important;
+            }
+
+            /* Downloads */
+            .d-flex.flex-wrap {
+                gap: 8px !important;
+            }
+
+            /* Ocultar colunas menos importantes no mobile */
+            .table .col-hide-mobile {
+                display: none;
+            }
+        }
 .orgao-maiusculo {
     text-transform: uppercase;
 }
@@ -1339,16 +1528,20 @@
     // Cache de dados por ano/mês
     const dataCache = { '2026': {} };
 
+    // Mês mais recente com dados disponíveis (atualizar conforme novos meses são publicados)
+    const MES_MAIS_RECENTE = '05';
+    const ANO_MAIS_RECENTE = '2026';
+
     // Estado atual de exibição
     let currentDisplayData = {
-        ano: '2026',
-        mes: '01',
+        ano: ANO_MAIS_RECENTE,
+        mes: MES_MAIS_RECENTE,
         dados: [],
         metrica: {
             totalEmpregados: 0,
             totalOrgaos: 0,
             totalEmpresas: 0,
-            periodo: 'Janeiro/2026'
+            periodo: 'Maio/2026'
         },
         empregadosUnicos: []
     };
@@ -1422,7 +1615,12 @@
     // 3. IFRAME — COMUNICAÇÃO DE ALTURA COM A PÁGINA PAI
     // ============================================================
 
+    // Flag para suprimir atualização de altura enquanto modal estiver aberto
+    let _modalAberto = false;
+
     function iframeUpdateHeight() {
+        if (_modalAberto) return; // não redimensiona com modal aberto
+
         const html = document.documentElement;
         const body = document.body;
 
@@ -1494,6 +1692,15 @@
             if (!e.target.closest('.autocomplete-container')) {
                 document.querySelectorAll('.autocomplete-suggestions').forEach(s => s.classList.remove('show'));
             }
+        });
+
+        // Pausa atualização de altura do iframe enquanto modal estiver aberto
+        document.addEventListener('show.bs.modal', () => {
+            _modalAberto = true;
+        });
+        document.addEventListener('hidden.bs.modal', () => {
+            _modalAberto = false;
+            setTimeout(iframeUpdateHeight, 100);
         });
     }
 
@@ -1583,7 +1790,7 @@
     // ============================================================
 
     async function carregarDadosIniciais() {
-        showLoading(true, 'Carregando Janeiro/2026...');
+        showLoading(true, 'Carregando Maio/2026...');
 
         try {
             const url2026 = `${GITHUB_BASE_URL}${CSV_FILES_BY_YEAR['2026']}`;
@@ -1635,9 +1842,9 @@
             // Reconstrói índice invertido com os dados do ano inicial
             reconstruirIndiceMatriculas();
 
-            // Usa o mês com mais dados se dezembro não existir
-            if (!dadosPorMes['12'] || dadosPorMes['12'].length === 0) {
-                let melhorMes = '12', maiorQuantidade = 0;
+            // Usa o mês mais recente disponível; se não existir, usa o mês com mais dados
+            if (!dadosPorMes[MES_MAIS_RECENTE] || dadosPorMes[MES_MAIS_RECENTE].length === 0) {
+                let melhorMes = MES_MAIS_RECENTE, maiorQuantidade = 0;
                 for (const mes in dadosPorMes) {
                     if (dadosPorMes[mes].length > maiorQuantidade) {
                         maiorQuantidade = dadosPorMes[mes].length;
@@ -1757,9 +1964,9 @@
         const orgaos  = new Set(dados.map(i => i.orgao_sigla).filter(Boolean)).size;
         const empresas = new Set(dados.map(i => i.empresa).filter(Boolean)).size;
 
-        let periodo = 'Janeiro/2026';
+        let periodo = `${monthNames[MES_MAIS_RECENTE]}/${ANO_MAIS_RECENTE}`;
         if (mes && currentDisplayData.ano) {
-            periodo = `${monthNames[mes] || 'Dezembro'}/${currentDisplayData.ano}`;
+            periodo = `${monthNames[mes] || 'Maio'}/${currentDisplayData.ano}`;
         }
 
         return { totalEmpregados, totalOrgaos: orgaos, totalEmpresas: empresas, periodo };
@@ -2035,8 +2242,8 @@
                     <div class="filter-group">
                         <label class="filter-label"><i class="material-icons"></i>ANO</label>
                         <select class="form-select modern-select" id="filtroAnoVG">
-                            <option value="2026" selected>2026</option>
-                            <option value="2025">2025</option>
+                            <option value="2026" ${ANO_MAIS_RECENTE === '2026' ? 'selected' : ''}>2026</option>
+                            <option value="2025" ${ANO_MAIS_RECENTE === '2025' ? 'selected' : ''}>2025</option>
                             <option value="2024">2024</option>
                             <option value="2023">2023</option>
                             <option value="2022">2022</option>
@@ -2046,18 +2253,18 @@
                     <div class="filter-group">
                         <label class="filter-label"><i class="material-icons"></i>MÊS</label>
                         <select class="form-select modern-select" id="filtroMesVG">
-                            <option value="01">Janeiro</option>
-                            <option value="02">Fevereiro</option>
-                            <option value="03">Março</option>
-                            <option value="04">Abril</option>
-                            <option value="05">Maio</option>
-                            <option value="06">Junho</option>
-                            <option value="07">Julho</option>
-                            <option value="08">Agosto</option>
-                            <option value="09">Setembro</option>
-                            <option value="10">Outubro</option>
-                            <option value="11">Novembro</option>
-                            <option value="12" selected>Dezembro</option>
+                            <option value="01" ${MES_MAIS_RECENTE === '01' ? 'selected' : ''}>Janeiro</option>
+                            <option value="02" ${MES_MAIS_RECENTE === '02' ? 'selected' : ''}>Fevereiro</option>
+                            <option value="03" ${MES_MAIS_RECENTE === '03' ? 'selected' : ''}>Março</option>
+                            <option value="04" ${MES_MAIS_RECENTE === '04' ? 'selected' : ''}>Abril</option>
+                            <option value="05" ${MES_MAIS_RECENTE === '05' ? 'selected' : ''}>Maio</option>
+                            <option value="06" ${MES_MAIS_RECENTE === '06' ? 'selected' : ''}>Junho</option>
+                            <option value="07" ${MES_MAIS_RECENTE === '07' ? 'selected' : ''}>Julho</option>
+                            <option value="08" ${MES_MAIS_RECENTE === '08' ? 'selected' : ''}>Agosto</option>
+                            <option value="09" ${MES_MAIS_RECENTE === '09' ? 'selected' : ''}>Setembro</option>
+                            <option value="10" ${MES_MAIS_RECENTE === '10' ? 'selected' : ''}>Outubro</option>
+                            <option value="11" ${MES_MAIS_RECENTE === '11' ? 'selected' : ''}>Novembro</option>
+                            <option value="12" ${MES_MAIS_RECENTE === '12' ? 'selected' : ''}>Dezembro</option>
                         </select>
                     </div>
                     <div class="filter-group">
@@ -2387,14 +2594,14 @@
         const selectMes   = document.getElementById('filtroMesVG');
         const selectOrgao = document.getElementById('filtroOrgaoVG');
 
-        if (selectAno)   selectAno.value   = '2026';
-        if (selectMes)   selectMes.value   = '01';
+        if (selectAno)   selectAno.value   = ANO_MAIS_RECENTE;
+        if (selectMes)   selectMes.value   = MES_MAIS_RECENTE;
         if (selectOrgao) selectOrgao.value = '';
 
-        currentDisplayData.ano              = '2026';
-        currentDisplayData.mes              = '01';
-        currentDisplayData.dados            = dataCache['2026']['01'] || [];
-        currentDisplayData.metrica          = calcularMetricas(currentDisplayData.dados, '12');
+        currentDisplayData.ano              = ANO_MAIS_RECENTE;
+        currentDisplayData.mes              = MES_MAIS_RECENTE;
+        currentDisplayData.dados            = dataCache[ANO_MAIS_RECENTE][MES_MAIS_RECENTE] || [];
+        currentDisplayData.metrica          = calcularMetricas(currentDisplayData.dados, MES_MAIS_RECENTE);
         currentDisplayData.empregadosUnicos = obterTodosEmpregadosUnicos();
 
         atualizarOpcoesCache();

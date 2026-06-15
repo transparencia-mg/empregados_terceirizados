@@ -82,10 +82,10 @@ def atualizar_github():
 
 def converter_mes_referencia(valor):
 
-    dt = pd.to_datetime(valor, dayfirst=True, errors="coerce")
-
     if pd.isna(dt):
         return None
+    
+    valor = str(valor).strip().lower()
 
     meses = {
         1: "jan",
@@ -102,7 +102,44 @@ def converter_mes_referencia(valor):
         12: "dez",
     }
 
-    return f"{meses[dt.month]}/{str(dt.year)[2:]}"
+        # ---------------------------------------------
+    # Caso 1: já está no formato mm/aaaa
+    # ---------------------------------------------
+    m = re.match(r"^(\d{2})/(\d{4})$", valor)
+
+    if m:
+        return valor
+
+    # ---------------------------------------------
+    # Caso 2: formato abr/26, mar/26, etc.
+    # ---------------------------------------------
+    m = re.match(
+        r"^(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)/(\d{2})$",
+        valor
+    )
+
+    if m:
+        mes = meses[m.group(1)]
+        ano = f"20{m.group(2)}"
+        return f"{mes}/{ano}"
+
+    # ---------------------------------------------
+    # Caso 3: data Excel
+    # Ex.: 2026-03-01 00:00:00
+    # ---------------------------------------------
+    try:
+
+        dt = pd.to_datetime(
+            valor,
+            errors="raise"
+        )
+
+        return dt.strftime("%m/%Y")
+
+    except:
+        pass
+
+    return None
 
 
 # =====================================================
