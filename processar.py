@@ -82,7 +82,7 @@ def atualizar_github():
 
 def converter_mes_referencia(valor):
 
-    if pd.isna(dt):
+    if pd.isna(valor):
         return None
     
     valor = str(valor).strip().lower()
