@@ -84,62 +84,58 @@ def converter_mes_referencia(valor):
 
     if pd.isna(valor):
         return None
-    
+
     valor = str(valor).strip().lower()
 
-    meses = {
-        1: "jan",
-        2: "fev",
-        3: "mar",
-        4: "abr",
-        5: "mai",
-        6: "jun",
-        7: "jul",
-        8: "ago",
-        9: "set",
-        10: "out",
-        11: "nov",
-        12: "dez",
+    meses_num = {
+        "01": "jan",
+        "02": "fev",
+        "03": "mar",
+        "04": "abr",
+        "05": "mai",
+        "06": "jun",
+        "07": "jul",
+        "08": "ago",
+        "09": "set",
+        "10": "out",
+        "11": "nov",
+        "12": "dez"
     }
 
-        # ---------------------------------------------
-    # Caso 1: já está no formato mm/aaaa
-    # ---------------------------------------------
+    # já está correto (mai/26)
+    if re.match(
+        r"^(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)/\d{2}$",
+        valor
+    ):
+        return valor
+
+    # formato 05/26
+    m = re.match(r"^(\d{2})/(\d{2})$", valor)
+
+    if m:
+        mes = meses_num[m.group(1)]
+        ano = m.group(2)
+        return f"{mes}/{ano}"
+
+    # formato 05/2026
     m = re.match(r"^(\d{2})/(\d{4})$", valor)
 
     if m:
-        return valor
-
-    # ---------------------------------------------
-    # Caso 2: formato abr/26, mar/26, etc.
-    # ---------------------------------------------
-    m = re.match(
-        r"^(jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)/(\d{2})$",
-        valor
-    )
-
-    if m:
-        mes = meses[m.group(1)]
-        ano = f"20{m.group(2)}"
+        mes = meses_num[m.group(1)]
+        ano = m.group(2)[2:]
         return f"{mes}/{ano}"
 
-    # ---------------------------------------------
-    # Caso 3: data Excel
-    # Ex.: 2026-03-01 00:00:00
-    # ---------------------------------------------
+    # datas Excel / pandas
     try:
+        dt = pd.to_datetime(valor)
 
-        dt = pd.to_datetime(
-            valor,
-            errors="raise"
-        )
+        mes = meses_num[dt.strftime("%m")]
+        ano = dt.strftime("%y")
 
-        return dt.strftime("%m/%Y")
+        return f"{mes}/{ano}"
 
     except:
-        pass
-
-    return None
+        return None
 
 
 # =====================================================
@@ -414,6 +410,11 @@ def processar():
     )
 
     historico = historico.fillna("")
+
+    historico["mes_referencia"] = (
+    historico["mes_referencia"]
+    .apply(converter_mes_referencia)
+    )
 
     if "mes_referencia" in historico.columns:
 
