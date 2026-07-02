@@ -1525,6 +1525,33 @@
         '2026': 'terceirizados_2026.csv'
     };
 
+    // Mapa de código do órgão por sigla, obtido da base pública de estagiários
+    // (https://github.com/transparencia-mg/portal_estagiarios/blob/main/dataset/data/estagiarios_2026.csv, coluna "codigo_orgao").
+    // Cobre os órgãos presentes naquela base; órgãos não mapeados exibem "-".
+    const CODIGO_ORGAO_POR_SIGLA = {
+        'AGE': '1081',
+        'CGE': '1521',
+        'DER': '2301',
+        'FAOP': '2171',
+        'FHA': '2151',
+        'FJP': '2061',
+        'FUNED': '2261',
+        'IMA': '2371',
+        'IPSM': '2121',
+        'SEAPA': '1231',
+        'SECOM': '1711',
+        'SEDS': '1451',
+        'SEE': '1261',
+        'SEF': '1191',
+        'SEPLAG': '1501',
+        'UEMG': '2351',
+        'UNIMONTES': '2311'
+    };
+
+    function obterCodigoOrgao(sigla) {
+        return CODIGO_ORGAO_POR_SIGLA[(sigla || '').toUpperCase()] || '-';
+    }
+
     // Cache de dados por ano/mês
     const dataCache = { '2026': {} };
 
@@ -2084,7 +2111,7 @@
         const mapa = new Map();
         for (const i of dados) {
             const sigla = i.orgao_sigla || 'Não informado';
-            if (!mapa.has(sigla)) mapa.set(sigla, { sigla, orgao: i.orgao || sigla, total: 0 });
+            if (!mapa.has(sigla)) mapa.set(sigla, { sigla, orgao: i.orgao || sigla, codigo: obterCodigoOrgao(sigla), total: 0 });
             mapa.get(sigla).total += 1;
         }
         return Array.from(mapa.values()).sort((a, b) => (a.orgao || '').localeCompare(b.orgao || '', 'pt-BR'));
@@ -2405,6 +2432,9 @@
                                 <th class="sortable-header" onclick="ordenarTabelaVisaoGeral('orgao')">
                                     Órgão <i class="material-icons">unfold_more</i>
                                 </th>
+                                <th class="sortable-header" onclick="ordenarTabelaVisaoGeral('codigo')">
+                                    Código <i class="material-icons">unfold_more</i>
+                                </th>
                                 <th class="sortable-header" onclick="ordenarTabelaVisaoGeral('sigla')">
                                     Sigla <i class="material-icons">unfold_more</i>
                                 </th>
@@ -2422,6 +2452,7 @@
         ${item.orgao}
     </a>
 </td>
+                                    <td>${item.codigo}</td>
                                     <td>${item.sigla}</td>
                                     <td class="text-center">${item.total.toLocaleString()}</td>
                                 </tr>
@@ -2429,7 +2460,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2">Total Geral</td>
+                                <td colspan="3">Total Geral</td>
                                 <td class="text-center">
                                     ${dadosOrgaoGlobal.reduce((a, i) => a + i.total, 0).toLocaleString()}
                                 </td>
@@ -3341,8 +3372,8 @@
 
     window.exportarTabelaVisaoGeralCSV = function () {
         const dados  = agruparPorOrgao(currentDisplayData.dados);
-        const linhas = dados.map(i => [i.orgao, i.sigla, i.total].map(c => `"${String(c).replace(/"/g, '""')}"`).join(';'));
-        const csv    = ['Órgão;Sigla;Empregados', ...linhas].join('\n');
+        const linhas = dados.map(i => [i.orgao, i.codigo, i.sigla, i.total].map(c => `"${String(c).replace(/"/g, '""')}"`).join(';'));
+        const csv    = ['Órgão;Código;Sigla;Empregados', ...linhas].join('\n');
         const blob   = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const link   = document.createElement('a');
         link.href     = URL.createObjectURL(blob);
@@ -3353,12 +3384,12 @@
     window.exportarTabelaVisaoGeralPDF = function () {
         const { jsPDF } = window.jspdf;
         const doc   = new jsPDF({ orientation: 'landscape' });
-        const dados = agruparPorOrgao(currentDisplayData.dados).map(i => [i.orgao, i.sigla, i.total.toLocaleString('pt-BR')]);
+        const dados = agruparPorOrgao(currentDisplayData.dados).map(i => [i.orgao, i.codigo, i.sigla, i.total.toLocaleString('pt-BR')]);
 
         doc.autoTable({
-            head: [['Órgão', 'Sigla', 'Empregados']],
+            head: [['Órgão', 'Código', 'Sigla', 'Empregados']],
             body: dados,
-            foot: [['Total Geral', '', dados.reduce((a, i) => a + parseInt(i[2].replace(/\./g, '')), 0).toLocaleString('pt-BR')]],
+            foot: [['Total Geral', '', '', dados.reduce((a, i) => a + parseInt(i[3].replace(/\./g, '')), 0).toLocaleString('pt-BR')]],
             didDrawPage: (data) => {
                 doc.setFontSize(10);
                 doc.text('Visão Geral - Empregados Terceirizados', 14, 10);
