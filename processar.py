@@ -277,6 +277,13 @@ def processar():
         )
     )
 
+    mapa_codigo = dict(
+        zip(
+            de_para["de_orgao"],
+            de_para["para_codigo"]
+        )
+    )
+
     # -------------------------------------------------
     # ÓRGÃOS NÃO MAPEADOS
     # -------------------------------------------------
@@ -333,6 +340,11 @@ def processar():
         .map(mapa_orgao)
     )
 
+    df["codigo"] = (
+        df["orgao_original"]
+        .map(mapa_codigo)
+    )
+
     df["sigla"] = (
         df["orgao_original"]
         .map(mapa_sigla)
@@ -383,6 +395,7 @@ def processar():
         "matricula",
         "nome",
         "orgao",
+        "codigo",
         "sigla",
         "cargo",
         "empresa",
@@ -408,6 +421,17 @@ def processar():
         arquivo_destino,
         dtype=str
     )
+
+    if "codigo" not in historico.columns:
+        log(
+            "AVISO: arquivo histórico sem coluna 'codigo'. "
+            "Execute o script de preenchimento do passivo antes de continuar."
+        )
+        historico.insert(
+            historico.columns.get_loc("sigla"),
+            "codigo",
+            ""
+        )
 
     historico = historico.fillna("")
 
