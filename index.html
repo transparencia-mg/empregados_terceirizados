@@ -1569,7 +1569,7 @@
             totalEmpregados: 0,
             totalOrgaos: 0,
             totalEmpresas: 0,
-            periodo: 'Maio/2026'
+            periodo: 'Junho/2026'
         },
         empregadosUnicos: []
     };
@@ -1858,7 +1858,7 @@
     // ============================================================
 
     async function carregarDadosIniciais() {
-        showLoading(true, 'Carregando Maio/2026...');
+        showLoading(true, 'Carregando Junho/2026...');
 
         try {
             const url2026 = `${GITHUB_BASE_URL}${CSV_FILES_BY_YEAR['2026']}`;
@@ -2034,7 +2034,7 @@
 
         let periodo = `${monthNames[MES_MAIS_RECENTE]}/${ANO_MAIS_RECENTE}`;
         if (mes && currentDisplayData.ano) {
-            periodo = `${monthNames[mes] || 'Maio'}/${currentDisplayData.ano}`;
+            periodo = `${monthNames[mes] || 'Junho'}/${currentDisplayData.ano}`;
         }
 
         return { totalEmpregados, totalOrgaos: orgaos, totalEmpresas: empresas, periodo };
