@@ -1815,6 +1815,16 @@
         return '';
     }
 
+    // Remove o ".0" que o Excel/CSV às vezes adiciona a códigos numéricos
+    // (ex.: "1521.0" -> "1521"), sem alterar códigos que não sejam numéricos.
+    function normalizarCodigoOrgao(valor) {
+        const texto = String(valor ?? '').trim();
+        if (texto === '') return '';
+        // Remove ",0" / ",00" (padrão brasileiro) ou ".0" / ".00" (padrão internacional)
+        if (/^-?\d+[.,]0+$/.test(texto)) return texto.split(/[.,]/)[0];
+        return texto;
+    }
+
     function formatarLinha(linha, year, mes) {
         const competenciaBruta = linha['mes_referencia'] || linha['MÊS REFERÊNCIA'] || linha['MÊS_REFERENCIA'] || '';
         let competencia = competenciaParaAnoMes(competenciaBruta, year);
@@ -1822,7 +1832,7 @@
 
         const sigla     = linha['sigla']  || linha['SIGLA'] || '';
         const orgaoNome = linha['orgao']  || linha['ÓRGÃO'] || linha['Orgao'] || sigla || '';
-        const codigo    = linha['codigo'] || linha['CODIGO'] || linha['CÓDIGO'] || '';
+        const codigo    = normalizarCodigoOrgao(linha['codigo'] || linha['CODIGO'] || linha['CÓDIGO'] || '');
         const matricula      = linha['matricula'] || linha['MAT'] || linha['Matrícula'] || linha['mat'] || '';
         const nome           = linha['nome']      || linha['NOME'] || linha['Nome'] || '';
         const cargo_descricao = linha['cargo']    || linha['CARGO'] || linha['Cargo'] || '';
