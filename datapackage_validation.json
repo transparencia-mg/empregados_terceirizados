@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 14.766,
+  "time": 14.464,
   "errors": [],
   "tasks": [
     {
@@ -81,7 +81,7 @@
           "rows": 129963
         }
       },
-      "time": 2.737,
+      "time": 2.64,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -111,7 +111,6 @@
     },
     {
       "resource": {
-        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -188,7 +187,7 @@
           "rows": 126849
         }
       },
-      "time": 2.6,
+      "time": 2.565,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -294,7 +293,7 @@
           "rows": 143999
         }
       },
-      "time": 2.971,
+      "time": 2.959,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -400,7 +399,7 @@
           "rows": 149952
         }
       },
-      "time": 3.093,
+      "time": 3.041,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -506,7 +505,7 @@
           "rows": 155874
         }
       },
-      "time": 3.226,
+      "time": 3.138,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -612,7 +611,7 @@
           "rows": 0
         }
       },
-      "time": 0.082,
+      "time": 0.069,
       "scope": [
         "hash-count-error",
         "byte-count-error",
