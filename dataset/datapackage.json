@@ -24,7 +24,9 @@
           },
           {
             "name": "nome",
-            "type": "string"
+            "type": "string",
+            "title": "Nome",
+            "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
           },
           {
             "name": "orgao",
