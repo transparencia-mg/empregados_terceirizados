@@ -2,6 +2,7 @@ name: portal_empregados_terceirizados
 owner_org: secretaria-de-estado-de-planejamento-e-gestao-seplag
 profile: data-package
 resources:
+- description: Insira a descrição/explicação detalhada deste recurso.
   - dialect:
       delimiter: ;
     encoding: utf-8-sig
@@ -79,7 +80,7 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
+    title: Terceirizados 2022
   - description: Insira a descrição/explicação detalhada deste recurso.
     dialect:
       delimiter: ;
