@@ -19,6 +19,8 @@ resources:
           description: Matrícula do empregado terceirizado utilizado para controle e referência do registro
         - name: nome
           type: string
+          title: Nome
+          description: Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo.
         - name: orgao
           type: string
         - name: codigo
