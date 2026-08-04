@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 14.521,
+  "time": 12.859,
   "errors": [],
   "tasks": [
     {
@@ -25,7 +25,9 @@
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
@@ -66,7 +68,7 @@
           "rows": 129963
         }
       },
-      "time": 2.655,
+      "time": 2.346,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -155,7 +157,7 @@
           "rows": 126849
         }
       },
-      "time": 2.574,
+      "time": 2.287,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -244,7 +246,7 @@
           "rows": 143999
         }
       },
-      "time": 2.918,
+      "time": 2.613,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -333,7 +335,7 @@
           "rows": 149952
         }
       },
-      "time": 3.059,
+      "time": 2.692,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -422,7 +424,7 @@
           "rows": 155874
         }
       },
-      "time": 3.177,
+      "time": 2.801,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -511,7 +513,7 @@
           "rows": 0
         }
       },
-      "time": 0.082,
+      "time": 0.072,
       "scope": [
         "hash-count-error",
         "byte-count-error",
