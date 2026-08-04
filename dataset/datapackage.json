@@ -4,63 +4,6 @@
   "profile": "data-package",
   "resources": [
     {
-      "description": "Insira a descrição/explicação detalhada deste recurso.",
-      "dialect": {
-        "delimiter": ";"
-      },
-      "encoding": "utf-8-sig",
-      "format": "csv",
-      "hashing": "md5",
-      "name": "terceirizados_2021",
-      "path": "data/terceirizados_2021.csv",
-      "profile": "tabular-data-resource",
-      "schema": {
-        "fields": [
-          {
-            "name": "matricula",
-            "type": "integer",
-            "title": "Matrícula",
-            "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
-          },
-          {
-            "name": "nome",
-            "type": "string"
-          },
-          {
-            "name": "orgao",
-            "type": "string"
-          },
-          {
-            "name": "codigo",
-            "type": "integer"
-          },
-          {
-            "name": "sigla",
-            "type": "string"
-          },
-          {
-            "name": "cargo",
-            "type": "string"
-          },
-          {
-            "name": "empresa",
-            "type": "string"
-          },
-          {
-            "name": "cnpj_empresa",
-            "type": "string"
-          },
-          {
-            "name": "mes_referencia",
-            "type": "string"
-          }
-        ]
-      },
-      "scheme": "file",
-      "title": "Terceirizados 2021"
-    },
-    {
-      "description": "Insira a descrição/explicação detalhada deste recurso.",
       "dialect": {
         "delimiter": ";"
       },
