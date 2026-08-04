@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 14.948,
+  "time": 14.766,
   "errors": [],
   "tasks": [
     {
@@ -81,7 +81,7 @@
           "rows": 129963
         }
       },
-      "time": 2.726,
+      "time": 2.737,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -125,44 +125,62 @@
           "fields": [
             {
               "name": "matricula",
-              "type": "integer"
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
         "scheme": "file",
-        "title": "Insira um título humanamente legível para este recurso.",
+        "title": "Terceirizados 2022",
         "stats": {
           "hash": "8d7ac95d3f36b1b0a2b79b90796b0d08",
           "bytes": 22393421,
@@ -170,7 +188,7 @@
           "rows": 126849
         }
       },
-      "time": 2.628,
+      "time": 2.6,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -200,7 +218,6 @@
     },
     {
       "resource": {
-        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -214,44 +231,62 @@
           "fields": [
             {
               "name": "matricula",
-              "type": "integer"
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
         "scheme": "file",
-        "title": "Insira um título humanamente legível para este recurso.",
+        "title": "Terceirizados 2023",
         "stats": {
           "hash": "091408180ec21015c0ef412e7c42df2d",
           "bytes": 25438583,
@@ -259,7 +294,7 @@
           "rows": 143999
         }
       },
-      "time": 3.017,
+      "time": 2.971,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -289,7 +324,6 @@
     },
     {
       "resource": {
-        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -303,44 +337,62 @@
           "fields": [
             {
               "name": "matricula",
-              "type": "integer"
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
         "scheme": "file",
-        "title": "Insira um título humanamente legível para este recurso.",
+        "title": "Terceirizados 2024",
         "stats": {
           "hash": "438f4237dc2f1fecd06a32b0d38bdc6f",
           "bytes": 26534953,
@@ -348,7 +400,7 @@
           "rows": 149952
         }
       },
-      "time": 3.154,
+      "time": 3.093,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -378,7 +430,6 @@
     },
     {
       "resource": {
-        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -392,44 +443,62 @@
           "fields": [
             {
               "name": "matricula",
-              "type": "integer"
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
         "scheme": "file",
-        "title": "Insira um título humanamente legível para este recurso.",
+        "title": "Terceirizados 2025",
         "stats": {
           "hash": "30f11bd68433db6d0a4fb6e62edfb91b",
           "bytes": 28120077,
@@ -437,7 +506,7 @@
           "rows": 155874
         }
       },
-      "time": 3.273,
+      "time": 3.226,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -467,7 +536,6 @@
     },
     {
       "resource": {
-        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -481,44 +549,62 @@
           "fields": [
             {
               "name": "matricula",
-              "type": "integer"
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
             },
             {
               "name": "nome",
-              "type": "string"
+              "type": "string",
+              "title": "Nome",
+              "description": "Nome completo do empregado terceirizado vinculado à empresa prestadora de serviços e alocado no órgão ou entidade do Poder Executivo."
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
         "scheme": "file",
-        "title": "Insira um título humanamente legível para este recurso.",
+        "title": "Terceirizados 2026",
         "stats": {
           "hash": "",
           "bytes": 0,
@@ -526,7 +612,7 @@
           "rows": 0
         }
       },
-      "time": 0.085,
+      "time": 0.082,
       "scope": [
         "hash-count-error",
         "byte-count-error",
