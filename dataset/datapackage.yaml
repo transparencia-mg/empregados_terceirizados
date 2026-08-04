@@ -2,7 +2,8 @@ name: portal_empregados_terceirizados
 owner_org: secretaria-de-estado-de-planejamento-e-gestao-seplag
 profile: data-package
 resources:
-  - dialect:
+- description: Insira a descrição/explicação detalhada deste recurso.
+   - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
