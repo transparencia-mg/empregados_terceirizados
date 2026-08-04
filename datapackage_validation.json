@@ -1,10 +1,102 @@
 {
   "version": "4.16.6",
-  "time": 11.555,
+  "time": 14.63,
   "errors": [],
   "tasks": [
     {
       "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
+        "dialect": {
+          "delimiter": ";"
+        },
+        "encoding": "utf-8-sig",
+        "format": "csv",
+        "hashing": "md5",
+        "name": "terceirizados_2021",
+        "path": "data/terceirizados_2021.csv",
+        "profile": "tabular-data-resource",
+        "schema": {
+          "fields": [
+            {
+              "name": "matricula",
+              "type": "integer",
+              "title": "Matrícula",
+              "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
+            },
+            {
+              "name": "nome",
+              "type": "string"
+            },
+            {
+              "name": "orgao",
+              "type": "string"
+            },
+            {
+              "name": "codigo",
+              "type": "integer"
+            },
+            {
+              "name": "sigla",
+              "type": "string"
+            },
+            {
+              "name": "cargo",
+              "type": "string"
+            },
+            {
+              "name": "empresa",
+              "type": "string"
+            },
+            {
+              "name": "cnpj_empresa",
+              "type": "string"
+            },
+            {
+              "name": "mes_referencia",
+              "type": "string"
+            }
+          ]
+        },
+        "scheme": "file",
+        "title": "Terceirizados 2021",
+        "stats": {
+          "hash": "984547c5e325af3fa99dd5a424f4cf58",
+          "bytes": 22927669,
+          "fields": 9,
+          "rows": 129963
+        }
+      },
+      "time": 2.679,
+      "scope": [
+        "hash-count-error",
+        "byte-count-error",
+        "field-count-error",
+        "row-count-error",
+        "blank-header",
+        "extra-label",
+        "missing-label",
+        "blank-label",
+        "duplicate-label",
+        "incorrect-label",
+        "blank-row",
+        "primary-key-error",
+        "foreign-key-error",
+        "extra-cell",
+        "missing-cell",
+        "type-error",
+        "constraint-error",
+        "unique-error"
+      ],
+      "partial": false,
+      "errors": [],
+      "stats": {
+        "errors": 0
+      },
+      "valid": true
+    },
+    {
+      "resource": {
+        "description": "Insira a descrição/explicação detalhada deste recurso.",
         "dialect": {
           "delimiter": ";"
         },
@@ -63,7 +155,7 @@
           "rows": 126849
         }
       },
-      "time": 2.494,
+      "time": 2.594,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -152,7 +244,7 @@
           "rows": 143999
         }
       },
-      "time": 2.818,
+      "time": 2.93,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -241,7 +333,7 @@
           "rows": 149952
         }
       },
-      "time": 2.983,
+      "time": 3.062,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -330,7 +422,7 @@
           "rows": 155874
         }
       },
-      "time": 3.129,
+      "time": 3.229,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -419,7 +511,7 @@
           "rows": 0
         }
       },
-      "time": 0.08,
+      "time": 0.081,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -29451,7 +29543,7 @@
   ],
   "stats": {
     "errors": 1000,
-    "tasks": 5
+    "tasks": 6
   },
   "valid": false
 }
