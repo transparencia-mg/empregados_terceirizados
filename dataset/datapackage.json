@@ -18,7 +18,9 @@
         "fields": [
           {
             "name": "matricula",
-            "type": "integer"
+            "type": "integer",
+            "title": "Matrícula",
+            "description": "Matrícula do empregado terceirizado utilizado para controle e referência do registro"
           },
           {
             "name": "nome",
@@ -55,7 +57,7 @@
         ]
       },
       "scheme": "file",
-      "title": "Insira um título humanamente legível para este recurso."
+      "title": "Terceirizados 2021"
     },
     {
       "description": "Insira a descrição/explicação detalhada deste recurso.",
