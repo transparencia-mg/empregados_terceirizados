@@ -15,24 +15,42 @@ resources:
       fields:
         - name: matricula
           type: integer
+          title: Matrícula
+          description: Matrícula do empregado terceirizado utilizado para controle e referência do registro
         - name: nome
           type: string
+          title:
+          description:
         - name: orgao
           type: string
+          title:
+          description:
         - name: codigo
           type: integer
+          title:
+          description:
         - name: sigla
           type: string
+          title:
+          description:
         - name: cargo
           type: string
+          title:
+          description:
         - name: empresa
           type: string
+          title:
+          description:
         - name: cnpj_empresa
           type: string
+          title:
+          description:
         - name: mes_referencia
           type: string
+          title:
+          description:
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
+    title: Terceirizados 2021
   - description: Insira a descrição/explicação detalhada deste recurso.
     dialect:
       delimiter: ;
