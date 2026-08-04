@@ -80,9 +80,8 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
-  - description: Insira a descrição/explicação detalhada deste recurso.
-    dialect:
+    title: Terceirizados 2022
+  - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
@@ -111,9 +110,8 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
-  - description: Insira a descrição/explicação detalhada deste recurso.
-    dialect:
+    title: Terceirizados 2023
+  - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
@@ -142,9 +140,8 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
-  - description: Insira a descrição/explicação detalhada deste recurso.
-    dialect:
+    title: Terceirizados 2024
+  - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
@@ -173,9 +170,8 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
-  - description: Insira a descrição/explicação detalhada deste recurso.
-    dialect:
+    title: Terceirizados 2025
+  - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
@@ -204,5 +200,5 @@ resources:
         - name: mes_referencia
           type: string
     scheme: file
-    title: Insira um título humanamente legível para este recurso.
+    title: Terceirizados 2026
 title: Terceirizados
