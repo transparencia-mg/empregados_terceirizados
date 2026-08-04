@@ -1,6 +1,6 @@
 {
   "version": "4.16.6",
-  "time": 14.311,
+  "time": 14.948,
   "errors": [],
   "tasks": [
     {
@@ -30,31 +30,45 @@
             },
             {
               "name": "orgao",
-              "type": "string"
+              "type": "string",
+              "title": "Órgão",
+              "description": "Órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "codigo",
-              "type": "integer"
+              "type": "integer",
+              "title": "Código",
+              "description": "Código do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "sigla",
-              "type": "string"
+              "type": "string",
+              "title": "Sigla",
+              "description": "Sigla do órgão ou entidade do Poder Executivo do Estado de Minas Gerais ao qual o empregado terceirizado está vinculado para a execução das atividades contratadas."
             },
             {
               "name": "cargo",
-              "type": "string"
+              "type": "string",
+              "title": "Cargo",
+              "description": "Função ou atividade desempenhada pelo empregado terceirizado no âmbito do contrato de prestação de serviços."
             },
             {
               "name": "empresa",
-              "type": "string"
+              "type": "string",
+              "title": "Empresa",
+              "description": "Nome da empresa contratada pelo órgão ou entidade para a prestação de serviços terceirizados."
             },
             {
               "name": "cnpj_empresa",
-              "type": "string"
+              "type": "string",
+              "title": "CNPJ da Empresa",
+              "description": "Número de inscrição da empresa prestadora de serviços no Cadastro Nacional da Pessoa Jurídica (CNPJ)"
             },
             {
               "name": "mes_referencia",
-              "type": "string"
+              "type": "string",
+              "title": "Data",
+              "description": "Mês e ano de referência das informações apresentadas no registro, indicando o período ao qual os dados se referem."
             }
           ]
         },
@@ -67,7 +81,7 @@
           "rows": 129963
         }
       },
-      "time": 2.617,
+      "time": 2.726,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -156,7 +170,7 @@
           "rows": 126849
         }
       },
-      "time": 2.572,
+      "time": 2.628,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -245,7 +259,7 @@
           "rows": 143999
         }
       },
-      "time": 2.87,
+      "time": 3.017,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -334,7 +348,7 @@
           "rows": 149952
         }
       },
-      "time": 2.989,
+      "time": 3.154,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -423,7 +437,7 @@
           "rows": 155874
         }
       },
-      "time": 3.141,
+      "time": 3.273,
       "scope": [
         "hash-count-error",
         "byte-count-error",
@@ -512,7 +526,7 @@
           "rows": 0
         }
       },
-      "time": 0.071,
+      "time": 0.085,
       "scope": [
         "hash-count-error",
         "byte-count-error",
