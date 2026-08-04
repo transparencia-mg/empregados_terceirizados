@@ -3,7 +3,7 @@ owner_org: secretaria-de-estado-de-planejamento-e-gestao-seplag
 profile: data-package
 resources:
 - description: Insira a descrição/explicação detalhada deste recurso.
-  - dialect:
+   - dialect:
       delimiter: ;
     encoding: utf-8-sig
     format: csv
