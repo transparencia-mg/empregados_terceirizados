@@ -571,6 +571,11 @@
             font-weight: 700;
         }
 
+        /* Realce de busca no dicionário de dados */
+        .dic-row-highlight {
+            background: #fff8dc !important;
+        }
+
         /* Tabela com bordas (dicionário) */
         .table-bordered {
             border: 1px solid #dee2e6;
@@ -1427,6 +1432,12 @@
                     </button>
                 </li>
                 <li class="nav-item">
+                    <button class="nav-link" id="dicionario-tab"
+                        data-bs-toggle="tab" data-bs-target="#dicionario">
+                        <i class="material-icons">menu_book</i>Dicionário de Dados
+                    </button>
+                </li>
+                <li class="nav-item">
                     <button class="nav-link" id="downloads-tab"
                         data-bs-toggle="tab" data-bs-target="#downloads">
                         <i class="material-icons">download</i>Downloads
@@ -1449,6 +1460,9 @@
             </div>
             <div class="tab-pane fade" id="consulta" role="tabpanel">
                 <div id="consulta-content"></div>
+            </div>
+            <div class="tab-pane fade" id="dicionario" role="tabpanel">
+                <div id="dicionario-content"></div>
             </div>
             <div class="tab-pane fade" id="downloads" role="tabpanel">
                 <div id="downloads-content"></div>
@@ -1940,6 +1954,7 @@
             atualizarOpcoesCache();
             renderizarVisaoGeral();
             renderizarConsulta();
+            renderizarDicionario();
             renderizarDownloads();
 
             setTimeout(iframeUpdateHeight, 300);
@@ -3548,9 +3563,41 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <div class="mb-3">
-                    <h5 style="border:none; margin-bottom:8px;">Dicionário de Dados</h5>
+        `;
+    }
+
+
+    // ============================================================
+    // 23-B. DICIONÁRIO DE DADOS — RENDERIZAÇÃO (aba própria)
+    // ============================================================
+
+    const DICIONARIO_TERCEIRIZADOS = [
+        { campo: 'matricula',      descricao: 'Matrícula do empregado terceirizado',      tipo: 'Texto/Número' },
+        { campo: 'nome',           descricao: 'Nome completo do empregado',               tipo: 'Texto' },
+        { campo: 'orgao',          descricao: 'Nome por extenso do órgão de trabalho',    tipo: 'Texto' },
+        { campo: 'sigla',          descricao: 'Sigla do órgão de trabalho',               tipo: 'Texto' },
+        { campo: 'cargo',          descricao: 'Cargo exercido',                           tipo: 'Texto' },
+        { campo: 'empresa',        descricao: 'Nome da empresa terceirizada',             tipo: 'Texto' },
+        { campo: 'cnpj_empresa',   descricao: 'CNPJ da empresa',                          tipo: 'Texto/Número' },
+        { campo: 'mes_referencia', descricao: 'Mês de referência',                        tipo: 'Texto/Data' }
+    ];
+
+    function renderizarDicionario() {
+        const container = document.getElementById('dicionario-content');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="table-header">
+                <h6 class="table-title"><i class="material-icons" style="font-size:16px;vertical-align:middle;">menu_book</i> Dicionário de Dados</h6>
+                <span class="table-badge">${DICIONARIO_TERCEIRIZADOS.length} campos</span>
+            </div>
+
+            <div class="filter-container" style="border-radius:0;">
+                <div class="d-flex gap-2 flex-wrap align-items-center justify-content-between">
+                    <div class="table-search-container" style="max-width:340px;">
+                        <input type="text" class="table-search-input" id="dicBusca"
+                            placeholder="Buscar campo ou descrição..." oninput="buscarDicionario(this.value)">
+                    </div>
                     <div class="d-flex gap-2">
                         <button class="btn-export" onclick="baixarDicionarioCSV()">
                             <i class="material-icons">description</i> CSV
@@ -3566,7 +3613,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="dicTabela">
                     <thead>
                         <tr>
                             <th>Campo</th>
@@ -3575,19 +3622,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>matricula</td>      <td>Matrícula do empregado terceirizado</td>      <td>Texto/Número</td></tr>
-                        <tr><td>nome</td>           <td>Nome completo do empregado</td>               <td>Texto</td></tr>
-                        <tr><td>orgao</td>          <td>Nome por extenso do órgão de trabalho</td>    <td>Texto</td></tr>
-                        <tr><td>sigla</td>          <td>Sigla do órgão de trabalho</td>               <td>Texto</td></tr>
-                        <tr><td>cargo</td>          <td>Cargo exercido</td>                           <td>Texto</td></tr>
-                        <tr><td>empresa</td>        <td>Nome da empresa terceirizada</td>             <td>Texto</td></tr>
-                        <tr><td>cnpj_empresa</td>   <td>CNPJ da empresa</td>                          <td>Texto/Número</td></tr>
-                        <tr><td>mes_referencia</td> <td>Mês de referência</td>                        <td>Texto/Data</td></tr>
+                        ${DICIONARIO_TERCEIRIZADOS.map(row => `
+                        <tr class="dic-linha">
+                            <td><code>${row.campo}</code></td>
+                            <td>${row.descricao}</td>
+                            <td>${row.tipo}</td>
+                        </tr>`).join('')}
                     </tbody>
                 </table>
             </div>
         `;
     }
+
+    window.buscarDicionario = function (termo) {
+        const t = (termo || '').toLowerCase().trim();
+        document.querySelectorAll('#dicTabela .dic-linha').forEach(row => {
+            const texto = row.textContent.toLowerCase();
+            const match = !t || texto.includes(t);
+            row.style.display = match ? '' : 'none';
+            row.classList.toggle('dic-row-highlight', !!t && match);
+        });
+    };
 
     window.baixarCSVAno = async function () {
         const ano = document.getElementById('anoDownload')?.value;
