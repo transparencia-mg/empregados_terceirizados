@@ -11,7 +11,7 @@ import pandas as pd
 # CONFIGURAÇÕES
 # =====================================================
 
-PASTA_PROJETO = r"G:\Meu Drive\CGE\bi_atualizacao\portal_empregados_terceirizados"
+PASTA_PROJETO = r"C:\Users\Silviana\Documents\.CGE\portal_empregados_terceirizados"
 PASTA_UPLOAD = os.path.join(PASTA_PROJETO, "upload")
 
 ARQUIVO_DE_PARA = os.path.join(
